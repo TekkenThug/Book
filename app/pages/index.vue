@@ -1,11 +1,25 @@
 <template>
   <section :class="$style.section">
     <div :class="$style.header">
-      <NuxtLink
-        :to="{ name: 'auth' }"
-      >
-        {{ authStore.authenticated ? "Profile" : "Login" }}
-      </NuxtLink>
+      <ul :class="$style.navList">
+        <template v-if="authStore.authenticated">
+          <li :class="$style.navItem">
+            <NuxtLink :to="{ name: 'profile' }">
+              Profile
+            </NuxtLink>
+          </li>
+
+          <li :class="$style.navItem" @click="logout">
+            Logout
+          </li>
+        </template>
+
+        <li v-else :class="$style.navItem">
+          <NuxtLink :to="{ name: 'auth' }">
+            Login
+          </NuxtLink>
+        </li>
+      </ul>
     </div>
 
     <div :class="$style.content">
@@ -87,6 +101,14 @@ const requestToTheServer = _debounce((search: string) => {
   }
 }, 250)
 
+const logout = async () => {
+  try {
+    await authStore.logout();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 watch(() => searchingString.value, requestToTheServer);
 </script>
 
@@ -162,5 +184,14 @@ watch(() => searchingString.value, requestToTheServer);
   padding-top: 10px;
   display: flex;
   justify-content: space-between;
+}
+
+.navList {
+  display: flex;
+  gap: 40px;
+}
+
+.navItem {
+  cursor: pointer;
 }
 </style>
