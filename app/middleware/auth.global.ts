@@ -10,14 +10,14 @@ export default defineNuxtRouteMiddleware((to) => {
   }
 
   if (to.name === "index") {
-    return ;
+    return;
   }
 
-  if (token.value && to.name === "auth") {
+  if (token.value && ["auth", "register"].includes(to.name as string)) {
     return navigateTo("/");
   }
 
-  if (!token.value && to?.name !== "auth") {
+  if (!token.value && !["auth", "register"].includes(to.name as string)) {
     abortNavigation();
     return navigateTo("/auth");
   }
