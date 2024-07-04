@@ -6,6 +6,8 @@ import { ApiError } from "@/utils/errors";
 
 interface RegisterCredentials {
   email: string;
+  first_name: string;
+  last_name: string;
   password: string;
 }
 
@@ -17,6 +19,8 @@ export default class UserService {
 
     user.email = data.email;
     user.password = data.password;
+    user.first_name = data.first_name;
+    user.last_name = data.last_name;
 
     return await UserService.repository.save(user);
   }
@@ -28,7 +32,10 @@ export default class UserService {
       throw new ApiError(status("Unprocessable Entity"), "User already exist");
     }
 
-    return await UserService.create({ ...credentials, password: await bcrypt.hash(credentials.password, 8) });
+    return await UserService.create({
+      ...credentials,
+      password: await bcrypt.hash(credentials.password, 8),
+    });
   }
 
   static async getAll() {
