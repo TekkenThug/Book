@@ -1,13 +1,8 @@
+@import "_transitions.css";
+
 :root {
     --app-bg-color: #141414;
     --app-text-color: #FFFFFF;
-
-    --nav-height: 60px;
-
-    --color-primary-1: #E6FE58;
-    --color-primary-2: #b5c442;
-
-    --color-secondary-1: #000000;
 }
 
 * {
@@ -34,6 +29,11 @@ button {
     background-color: transparent;
     border: none;
     outline: none;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
 }
 
 .h1 {

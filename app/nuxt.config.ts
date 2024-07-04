@@ -3,10 +3,17 @@ export default defineNuxtConfig({
 
   ssr: false,
 
-  modules: ["nuxt-svgo", "nuxt-icon", "@vite-pwa/nuxt", "@pinia/nuxt"],
+  modules: [
+    "nuxt-svgo",
+    "nuxt-icon",
+    "@primevue/nuxt-module",
+    "@pinia/nuxt",
+    "@nuxt/eslint"
+  ],
 
   app: {
     head: {
+      title: "Book",
       link: [
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com" },
@@ -18,15 +25,25 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      baseURL: process.env.NODE_ENV === "prod" ? "http://localhost:8000/api/v1" : "http://147.45.251.245:8000/api/v1"
+      baseURL: process.env.NODE_ENV === "production" ? "https://localhost:8000/api/v1" : "http://localhost:8000/api/v1"
     }
   },
 
   css: [
     "normalize.css",
     "reset-css",
+    "primeicons/primeicons.css",
     "~/assets/styles/global.css"
   ],
 
-  pwa: {}
+  primevue: {
+    importTheme: {
+      from: '@/themes/theme.ts'
+    },
+    options: {
+      unstyled: false,
+      ripple: true,
+      inputVariant: 'filled'
+    }
+  }
 })

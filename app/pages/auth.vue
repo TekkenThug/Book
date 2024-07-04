@@ -1,23 +1,15 @@
 <template>
-  <section :class="$style.auth">
+  <section :class="$style.section">
     <div :class="$style.content">
-      <h1 :class="['h1', $style.title]">
-        Training App
-      </h1>
-
       <div :class="$style.fields">
-        <UiInput v-model="authCredentials.email" placeholder="Email" />
+        <InputText v-model="authCredentials.email" type="text" placeholder="Email" />
 
-        <UiInput v-model="authCredentials.password" placeholder="Password" type="password" />
+        <InputText v-model="authCredentials.password" type="password" placeholder="Password" />
       </div>
 
-      <UiButton
-          :disabled="buttonIsDisabled"
-          :is-loadind="isLoading"
-          @click="auth"
-      >
+      <Button :disabled="buttonIsDisabled" :loading="isLoading" @click="auth">
         Log in
-      </UiButton>
+      </Button>
     </div>
   </section>
 </template>
@@ -54,27 +46,21 @@ const auth = async () => {
 </script>
 
 <style module>
-.auth {
-  background-image: url("~/assets/images/auth.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center 0;
-  height: 100dvh;
+.section {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
 }
 
 .content {
   padding: 50px 20px;
   display: flex;
   flex-direction: column;
-  box-shadow: inset 0 -300px 40px rgba(0 0 0 / 75%);
-}
-
-.title {
-  text-align: center;
-  margin-bottom: 40px;
+  background-color: black;
+  border-radius: 20px;
+  border: 1px solid gray;
 }
 
 .fields {
