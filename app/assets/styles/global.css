@@ -1,13 +1,8 @@
+@import "_transitions.css";
+
 :root {
     --app-bg-color: #141414;
     --app-text-color: #FFFFFF;
-
-    --nav-height: 60px;
-
-    --color-primary-1: #E6FE58;
-    --color-primary-2: #b5c442;
-
-    --color-secondary-1: #000000;
 }
 
 * {
@@ -28,23 +23,20 @@ body {
     min-height: 100dvh;
 }
 
-button {
-    padding: 0;
-    color: var(--app-text-color);
-    background-color: transparent;
-    border: none;
-    outline: none;
+a {
+    color: inherit;
+    text-decoration: none;
 }
 
 .h1 {
     font-size: 48px;
-    font-family: "Viga", sans-serif;
-    font-weight: 400;
+    line-height: 56px;
+    font-weight: 600;
 }
 
 .main {
     position: relative;
-    height: calc(100dvh - var(--nav-height));
+    height: 100dvh;
     overflow: auto;
 }
 

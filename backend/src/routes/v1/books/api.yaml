@@ -1,0 +1,22 @@
+tags:
+  name: Books
+  description: Work with books
+
+/books:
+  get:
+    summary: Get all books
+    tags: [Books]
+    parameters:
+      - in: query
+        name: search
+        type: string
+        description: Find by title
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Book'

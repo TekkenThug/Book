@@ -5,7 +5,7 @@ const swaggerDef: Options = {
   definition: {
     openapi: "3.1.0",
     info: {
-      title: "Training API documentation",
+      title: "Books API documentation",
       version: config.appVersion,
     },
     servers: [

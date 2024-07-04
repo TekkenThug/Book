@@ -1,0 +1,12 @@
+services:
+  nuxt:
+    build:
+      context: ./app
+      dockerfile: prod.Dockerfile
+    container_name: nuxt
+    command: npm run prod
+
+  api:
+    container_name: node-api
+    command: npm run prod:start
+

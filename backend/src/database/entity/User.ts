@@ -1,5 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Program } from "@/database/entity/Program";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: "users" })
 export class User {
@@ -11,7 +10,4 @@ export class User {
 
   @Column("varchar")
   password: string;
-
-  @OneToMany(() => Program, (program) => program.user)
-  programs: Program[];
 }

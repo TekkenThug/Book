@@ -1,25 +1,27 @@
 <template>
-  <section :class="$style.auth">
+  <section :class="$style.section">
+    <h1 class="h1">
+      Book
+    </h1>
+
     <div :class="$style.content">
-      <h1 :class="['h1', $style.title]">
-        Training App
-      </h1>
-
       <div :class="$style.fields">
-        <UiInput v-model="authCredentials.email" placeholder="Email" />
+        <InputText v-model="authCredentials.email" type="text" placeholder="Email" />
 
-        <UiInput v-model="authCredentials.password" placeholder="Password" type="password" />
+        <InputText v-model="authCredentials.password" type="password" placeholder="Password" />
       </div>
 
-      <UiButton
-          :disabled="buttonIsDisabled"
-          :is-loadind="isLoading"
-          @click="auth"
-      >
+      <p :class="$style.registerInvitation">
+        Don`t have an account? <NuxtLink :to="{ name: 'register' }">Register now!</NuxtLink>
+      </p>
+
+      <Button :disabled="buttonIsDisabled" :loading="isLoading" @click="auth">
         Log in
-      </UiButton>
+      </Button>
     </div>
   </section>
+
+  <Toast position="bottom-right" />
 </template>
 
 <script lang="ts" setup>
@@ -36,6 +38,7 @@ const buttonIsDisabled = computed(() => !authCredentials.email || !authCredentia
 
 const router = useRouter();
 const authStore = useAuthStore();
+const toast = useToast();
 const auth = async () => {
   if (isLoading.value) {
     return;
@@ -44,9 +47,9 @@ const auth = async () => {
   try {
     isLoading.value = true;
     await authStore.authenticateUser(authCredentials);
-    await router.push("/");
+    await router.push({ name: "profile" });
   } catch (e) {
-    console.log(e);
+    toast.add({ severity: "error", summary: "Error", detail: (e as Error).message })
   } finally {
     isLoading.value = false;
   }
@@ -54,33 +57,33 @@ const auth = async () => {
 </script>
 
 <style module>
-.auth {
-  background-image: url("~/assets/images/auth.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center 0;
-  height: 100dvh;
+.section {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 20px;
 }
 
 .content {
-  padding: 50px 20px;
   display: flex;
   flex-direction: column;
-  box-shadow: inset 0 -300px 40px rgba(0 0 0 / 75%);
-}
-
-.title {
-  text-align: center;
-  margin-bottom: 40px;
+  margin-top: 40px;
 }
 
 .fields {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
+}
+
+.registerInvitation {
+  margin: 20px 0 30px;
+}
+
+.registerInvitation a {
+  color: #5AA9E6;
 }
 </style>

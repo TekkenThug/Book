@@ -1,0 +1,29 @@
+name: Deploy from main
+
+on:
+  push:
+    branches:
+      - no-branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Executing commands"
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          APP_ENV: ${{ secrets.APP_ENV }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          envs: APP_ENV
+          script: |
+            cd ~/projects/TrainingApp
+            git checkout main
+            git pull origin main
+            echo "${APP_ENV}" > ./.env
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            bash scripts/prod.sh

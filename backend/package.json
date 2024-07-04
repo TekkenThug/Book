@@ -13,6 +13,7 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.11.5",
+    "pm2": "^5.4.0",
     "reflect-metadata": "^0.2.2",
     "statuses": "^2.0.1",
     "swagger-jsdoc": "^6.2.8",
@@ -23,16 +24,17 @@
     "zod": "^3.23.8",
     "zod-validation-error": "^3.3.0"
   },
-  "name": "training-api",
+  "name": "books-api",
   "version": "0.1.0",
-  "description": "Backed API for Training mobile app",
-  "main": "src/app.js",
+  "description": "Backed API for Book meetings club",
+  "main": "src/index.ts",
   "type": "module",
   "engines": {
     "node": "20.14.0"
   },
   "scripts": {
     "dev": "tsx watch ./src/index.ts",
+    "prod:start": "pm2 start pm2.config.json --no-daemon",
     "prepare": "husky",
     "lint": "eslint --ext .ts .",
     "lint:fix": "eslint --fix --ext .ts .",

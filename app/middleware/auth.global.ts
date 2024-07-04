@@ -4,17 +4,20 @@ import { useLocalStorage } from "@vueuse/core";
 export default defineNuxtRouteMiddleware((to) => {
   const { authenticated } = storeToRefs(useAuthStore());
   const token = useLocalStorage("token", null);
-  const tokenExpires = useLocalStorage("token_exp", null);
 
   if (token.value) {
     authenticated.value = true;
   }
 
-  if (token.value && to.name === "auth") {
+  if (to.name === "index") {
+    return;
+  }
+
+  if (token.value && ["auth", "register"].includes(to.name as string)) {
     return navigateTo("/");
   }
 
-  if (!token.value && to?.name !== "auth") {
+  if (!token.value && !["auth", "register"].includes(to.name as string)) {
     abortNavigation();
     return navigateTo("/auth");
   }

@@ -1,7 +1,8 @@
 import { DataSource } from "typeorm";
 import config from "@/configs/config";
 import { User } from "@/database/entity/User";
-import { Program } from "@/database/entity/Program";
+import { Event } from "@/database/entity/Event";
+import { Book } from "@/database/entity/Book";
 import { Token } from "@/database/entity/Token";
 
 export const AppDataSource = new DataSource({
@@ -11,7 +12,7 @@ export const AppDataSource = new DataSource({
   username: config.db.user,
   password: config.db.password,
   database: config.db.name,
-  entities: [User, Program, Token],
+  entities: [User, Book, Event, Token],
   synchronize: true,
   logging: false,
 });

@@ -39,7 +39,10 @@ export const useAuthStore = defineStore("auth", () => {
         email,
         password,
       },
-      credentials: "include"
+      credentials: "include",
+      onResponseError({ response}) {
+        throw Error(response._data.message);
+      }
     });
 
     token.value = data.token;

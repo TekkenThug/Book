@@ -1,3 +1,5 @@
+import https from "https";
+import fs from "fs";
 import { AppDataSource } from "@/database";
 import logger from "@/configs/logger";
 import config from "@/configs/config";
@@ -7,7 +9,17 @@ let server: ReturnType<typeof app.listen> | null = null;
 AppDataSource.initialize().then(() => {
   logger.info("Connected to Postgres");
 
-  server = app.listen(config.port, () => {
+  server = (
+    config.env === "prod"
+      ? https.createServer(
+          {
+            key: fs.readFileSync("localhost-key.pem"),
+            cert: fs.readFileSync("localhost.pem"),
+          },
+          app,
+        )
+      : app
+  ).listen(config.port, () => {
     logger.info(`Server started at ${config.port}`);
   });
 });

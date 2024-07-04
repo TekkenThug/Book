@@ -20,36 +20,47 @@ components:
         message:
           type: string
 
-    Program:
+    Book:
       type: object
       properties:
         id:
           type: number
         title:
           type: string
-        set_count:
-          type: number
-        rest:
-          type: number
-          description: Rest between sets in seconds
-        completed_count:
-          type: number
-          description: Completed programs count
       example:
         id: 5
-        title: Pull-ups
-        set_count: 5
-        rest: 60
-        completed_count: 12
+        title: Martin Eden
 
-    CreateProgramPayload:
+    Event:
       type: object
       properties:
+        id:
+          type: number
+          description: Event id
         title:
           type: string
-        setCount:
+          description: Title of event
+        date:
+          type: string
+          format: date-time
+          description: Datetime of beginning
+        bookId:
           type: number
-        rest:
+          description: Related book id
+        duration:
+          type: string
+          description: Event duration
+        members_count:
           type: number
-          description: Rest between sets in seconds
-
+          description: Event members count
+        authorId:
+          type: number
+          description: User id, who was create this event
+      example:
+        id: 4
+        title: Who was Martin Eden?
+        bookId: 1
+        authorId: 2
+        date: 2020-02-12T07:20:50.52Z
+        duration: 1 hours 30 minutes
+        members_count: 12

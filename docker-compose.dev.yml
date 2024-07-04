@@ -1,6 +1,8 @@
-version: "3.9"
 services:
   nuxt:
+    build:
+      context: ./app
+      dockerfile: dev.Dockerfile
     container_name: nuxt
     command: npm run dev
 
