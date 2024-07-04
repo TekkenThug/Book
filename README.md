@@ -8,16 +8,17 @@ Books - the platform for book clubs meetings
 
 **Frontend:**
 
--   `Nuxt v3`
+-   `Nuxt 3`
 -   `TypeScript`
+-   `PrimeVue`
 
 **Backend:**
 
 -   `Node.js`
+-   `TypeScript`
 -   `Express`
 -   `PostgreSQL`
--   `OpenAPI`
--   `TypeScript`
+-   `Swagger`
 
 ## Installation
 
@@ -37,8 +38,8 @@ bash scripts/local.sh
 
 To run this project, you will need to add the following environment variables to your .env file
 
--   `API_URL`
--   `APP_WHITELIST` - allowed client-side urls, separated by `;`
+-   `API_URL` - Hosted URL
+-   `APP_WHITELIST` - Allowed client-side urls, separated by `;`
 -   `DB_HOST` - Host of database
 -   `DB_PORT` - Port of database
 -   `DB_NAME` - Name of database
@@ -50,11 +51,19 @@ To run this project, you will need to add the following environment variables to
 -   `JWT_ACCESS_EXPIRATION_MINUTES` - JWT access token expiration in minutes
 -   `JWT_REFRESH_EXPIRATION_DAYS` - JWT refresh token expiration in days
 
+## API docs
+
+Visit `{YOUR API_URL}/api/v1/docs ` for view Swagger page
+
 ## Roadmap
 
 -   Make create event page
--   Make private meeting rooms
+-   Make meeting rooms
+-   Make profile page
 
 ## Changelog
 
-### To be soon
+### `v0.1.0`
+
+- `Added` Registration
+- `Added` Search events by book title
