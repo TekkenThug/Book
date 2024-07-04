@@ -8,7 +8,8 @@ export default defineNuxtConfig({
     "nuxt-icon",
     "@primevue/nuxt-module",
     "@pinia/nuxt",
-    "@nuxt/eslint"
+    "@nuxt/eslint",
+    "@vee-validate/nuxt"
   ],
 
   app: {

@@ -15,12 +15,9 @@ const setRefreshToken = (res: Response, token: Awaited<ReturnType<typeof TokenSe
 };
 
 const register = catchAsync(async (req, res) => {
-  const user = await UserService.registerNewUser(req.body);
+  await UserService.registerNewUser(req.body);
 
-  const tokens = await TokenService.generateAuthTokens(user);
-  setRefreshToken(res, tokens.refresh);
-
-  res.status(status("Created")).send(user);
+  res.status(status("Created")).send({ message: "Check your email for confirmation registration" });
 });
 
 const login = catchAsync(async (req, res) => {

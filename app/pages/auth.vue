@@ -4,56 +4,59 @@
       Book
     </h1>
 
-    <div :class="$style.content">
+    <form :class="$style.content">
       <div :class="$style.fields">
-        <InputText v-model="authCredentials.email" type="text" placeholder="Email" />
+        <InputText v-model="email" v-bind="emailAttrs" type="text" placeholder="Email" />
 
-        <InputText v-model="authCredentials.password" type="password" placeholder="Password" />
+        <InputText v-model="password" v-bind="passwordAttrs" type="password" placeholder="Password" />
       </div>
 
       <p :class="$style.registerInvitation">
         Don`t have an account? <NuxtLink :to="{ name: 'register' }">Register now!</NuxtLink>
       </p>
 
-      <Button :disabled="buttonIsDisabled" :loading="isLoading" @click="auth">
+      <Button :disabled="!meta.valid" :loading="isLoading" @click="auth">
         Log in
       </Button>
-    </div>
+    </form>
   </section>
 
   <Toast position="bottom-right" />
 </template>
 
 <script lang="ts" setup>
+import { login } from "~/validation/schemas";
+import { toTypedSchema } from "@vee-validate/zod";
+
 definePageMeta({
   layout: false,
 });
 
-const isLoading = ref(false);
-const authCredentials = reactive({
-  email: "",
-  password: ""
-});
-const buttonIsDisabled = computed(() => !authCredentials.email || !authCredentials.password);
-
 const router = useRouter();
-const authStore = useAuthStore();
 const toast = useToast();
-const auth = async () => {
+const authStore = useAuthStore();
+const { meta, defineField, handleSubmit, values } = useForm({
+  validationSchema: toTypedSchema(login)
+});
+const [email, emailAttrs] = defineField("email");
+const [password, passwordAttrs] = defineField("password");
+
+const isLoading = ref(false);
+const auth = handleSubmit(async (values) => {
   if (isLoading.value) {
     return;
   }
 
   try {
     isLoading.value = true;
-    await authStore.authenticateUser(authCredentials);
+    await authStore.authenticateUser(values);
     await router.push({ name: "profile" });
   } catch (e) {
     toast.add({ severity: "error", summary: "Error", detail: (e as Error).message })
   } finally {
     isLoading.value = false;
   }
-}
+})
 </script>
 
 <style module>
