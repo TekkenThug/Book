@@ -53,7 +53,7 @@ To run this project, you will need to add the following environment variables to
 
 ## API docs
 
-Visit `{YOUR API_URL}/api/v1/docs ` for view Swagger page
+Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 
 ## Roadmap
 
