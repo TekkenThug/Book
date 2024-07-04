@@ -60,18 +60,26 @@ security:
             type: object
             required:
               - email
+              - first_name
+              - last_name
               - password
-              - repeatPassword
+              - repeat_password
             properties:
               email:
                 type: string
                 format: email
                 description: must be unique
+              first_name:
+                type: string
+                minLength: 2
+              last_name:
+                type: string
+                minLength: 2
               password:
                 type: string
                 format: password
                 minLength: 8
-                description: At least one number and one letter
+                description: At least one number, one letter in upper/lower case and one symbol
               repeatPassword:
                 type: string
                 format: password
@@ -79,15 +87,22 @@ security:
                 description: Must be the same with password
             example:
               email: fake@example.com
+              first_name: "John"
+              last_name: "Down"
               password: password1
-              repeatPassword: password1
+              repeat_password: password1
     responses:
       201:
         description: Created
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Token'
+              type: object
+              properties:
+                message:
+                  type: string
+            example:
+              message: "Check your email for confirmation registration"
       400:
         description: Bad request
         content:
