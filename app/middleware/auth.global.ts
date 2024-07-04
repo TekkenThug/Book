@@ -9,6 +9,10 @@ export default defineNuxtRouteMiddleware((to) => {
     authenticated.value = true;
   }
 
+  if (to.name === "index") {
+    return ;
+  }
+
   if (token.value && to.name === "auth") {
     return navigateTo("/");
   }
