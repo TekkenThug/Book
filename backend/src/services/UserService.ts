@@ -3,6 +3,8 @@ import status from "statuses";
 import { User } from "@/database/entity/User";
 import { AppDataSource } from "@/database";
 import { ApiError } from "@/utils/errors";
+import MailService from "@/services/MailService";
+import TokenService from "@/services/TokenService";
 
 interface RegisterCredentials {
   email: string;
@@ -32,10 +34,13 @@ export default class UserService {
       throw new ApiError(status("Unprocessable Entity"), "User already exist");
     }
 
-    return await UserService.create({
+    const createdUser = await UserService.create({
       ...credentials,
       password: await bcrypt.hash(credentials.password, 8),
     });
+
+    const token = await TokenService.generateEmailToken(createdUser);
+    MailService.sendWelcomeMail(credentials.first_name, token);
   }
 
   static async getAll() {

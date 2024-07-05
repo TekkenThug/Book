@@ -12,6 +12,7 @@ const EnvSchema = z.object({
   JWT_SECRET: z.string(),
   JWT_ACCESS_EXPIRATION_MINUTES: z.coerce.number().default(30),
   JWT_REFRESH_EXPIRATION_DAYS: z.coerce.number().default(30),
+  JWT_EMAIL_VERIFY_EXPIRATION_MINUTES: z.coerce.number().default(30),
   NODE_ENV: z.union([z.literal("prod"), z.literal("dev")]),
   PORT: z.coerce.number().default(8000),
   SMTP_HOST: z.string(),
@@ -39,6 +40,7 @@ export default {
     secret: env.JWT_SECRET,
     accessExpirationMinutes: env.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: env.JWT_REFRESH_EXPIRATION_DAYS,
+    emailVerifyExpirationMinutes: env.JWT_EMAIL_VERIFY_EXPIRATION_MINUTES,
   },
   smtp: {
     host: env.SMTP_HOST,

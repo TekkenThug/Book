@@ -83,4 +83,11 @@ export default class TokenService {
 
     return tokenRecord;
   }
+
+  static async generateEmailToken(user: User) {
+    const expires = getTime(addMinutes(new Date(), +config.jwt.emailVerifyExpirationMinutes));
+    const verifyEmailToken = await TokenService.generateToken(user.id, expires, TokenTypes.VERIFY_EMAIL);
+    await TokenService.saveToken(verifyEmailToken, user.id, expires, TokenTypes.VERIFY_EMAIL);
+    return verifyEmailToken;
+  }
 }
