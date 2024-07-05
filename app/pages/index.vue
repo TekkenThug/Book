@@ -110,6 +110,18 @@ const logout = async () => {
 }
 
 watch(() => searchingString.value, requestToTheServer);
+
+const route = useRoute();
+const router = useRouter();
+onBeforeMount(async () => {
+  if (route.query.emailToken) {
+    try {
+      await authStore.verifyEmail(route.query.emailToken as string);
+    } finally {
+      await router.push({ query: {} });
+    }
+  }
+});
 </script>
 
 <style module>
