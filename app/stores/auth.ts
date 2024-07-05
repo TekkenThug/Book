@@ -80,6 +80,19 @@ export const useAuthStore = defineStore("auth", () => {
     return await $fetch<Message>(`${config.public.baseURL}/auth/register`, {
       method: "post",
       body: payload,
+      onResponseError({ response}) {
+        throw Error(response._data.message);
+      }
+    });
+  }
+
+  const verifyEmail = async (token: string) => {
+    return await $fetch<Message>(`${config.public.baseURL}/auth/verify-email`, {
+      method: "post",
+      body: { token },
+      onResponseError({ response}) {
+        throw Error(response._data.message);
+      }
     });
   }
 
@@ -95,6 +108,7 @@ export const useAuthStore = defineStore("auth", () => {
     tokenIsExpired,
     refreshTokens,
     logout,
+    verifyEmail,
     registerUser,
     userId,
     fetchAPI

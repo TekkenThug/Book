@@ -7,13 +7,27 @@
 
       <InputText v-model="email" v-bind="emailAttrs" type="text" placeholder="Email" />
 
-      <InputText v-model="password" v-bind="passwordAttrs" type="password" placeholder="Password" />
+      <Password v-model="password" v-bind="passwordAttrs" placeholder="Password" toggle-mask>
+        <template #content>
+          Password requirements
+        </template>
+        <template #footer>
+          <Divider />
+          <ul :class="$style.passwordPopover">
+            <li>Minimum 8 characters</li>
+            <li>At least one lowercase</li>
+            <li>At least one uppercase</li>
+            <li>At least one numeric</li>
+            <li>At least one symbol</li>
+          </ul>
+        </template>
+      </Password>
 
       <InputText v-model="repeatPassword" v-bind="repeatPasswordAttrs" type="password" placeholder="Repeat password" />
     </div>
 
     <p :class="$style.registerInvitation">
-      Already registered? <span @click="changeMode">Log in!</span>
+      Already registered? <span @click="$emit('change')">Log in!</span>
     </p>
 
     <Button
@@ -31,15 +45,8 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { register } from "~/validation/schemas";
 
 const emit = defineEmits<{
-  (e: "change", message?: string): void
+  (e: "change"): void
 }>();
-const changeMode = () => {
-  if (isLoading.value) {
-    return;
-  }
-
-  emit("change");
-}
 
 const toast = useToast();
 const { meta, defineField, handleSubmit, values } = useForm({
@@ -70,7 +77,7 @@ const registerNewUser = handleSubmit(async (values) => {
     });
 
     toast.add({ severity: "success", summary: "Done", detail: response.message })
-    changeMode();
+    emit("change");
   } catch (e) {
     toast.add({ severity: "error", summary: "Error", detail: (e as Error).message })
   } finally {
@@ -92,6 +99,17 @@ const registerNewUser = handleSubmit(async (values) => {
   flex-direction: column;
   gap: 15px;
   margin-bottom: 20px;
+}
+
+.fields input {
+  width: 100%;
+}
+
+.passwordPopover {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 14px;
 }
 
 .registerInvitation {
