@@ -1,5 +1,13 @@
 components:
   schemas:
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: "You successfully create a meeting"
+
     Token:
       type: object
       properties:

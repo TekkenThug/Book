@@ -70,6 +70,10 @@ export default class TokenService {
     await TokenService.repository.remove(foundToken);
   }
 
+  static async deleteEmailVerifyTokens(user: User) {
+    await TokenService.repository.delete({ user, type: TokenTypes.VERIFY_EMAIL });
+  }
+
   static async verifyToken(token: string, type: TokenTypes) {
     const payload = jwt.verify(token, config.jwt.secret);
     const tokenRecord = await TokenService.repository.findOne({

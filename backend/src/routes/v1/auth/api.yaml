@@ -159,3 +159,40 @@ security:
       "200":
         description: OK
 
+/auth/verify-email:
+  post:
+    summary: Verify email
+    tags: [Auth]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - token
+            properties:
+              token:
+                type: string
+                description: Email token
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+            example:
+              message: 'Email is verified successfully'
+
+      "401":
+        description: "Unauthorized"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
+            example:
+              code: 401
+              message: "Email verification failed"
+
+

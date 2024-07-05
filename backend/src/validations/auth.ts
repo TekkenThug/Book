@@ -27,4 +27,10 @@ const register = z.object({
     }),
 });
 
-export default { login, register };
+const verifyEmail = z.object({
+  body: z.object({
+    token: z.string()
+  })
+})
+
+export default { login, register, verifyEmail };

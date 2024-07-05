@@ -41,4 +41,9 @@ const refreshTokens = catchAsync(async (req, res) => {
   res.send(tokens.access);
 });
 
-export default { register, login, logout, refreshTokens };
+const verifyEmail = catchAsync(async (req, res) => {
+  await AuthService.verifyEmail(req.body.token);
+  res.send({ message: "Email is verified successfully" });
+});
+
+export default { register, login, logout, refreshTokens, verifyEmail };

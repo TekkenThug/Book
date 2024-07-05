@@ -58,4 +58,8 @@ export default class UserService {
   static async comparePasswords(source: string, password: string) {
     return await bcrypt.compare(source, password);
   }
+
+  static async markVerifiedEmail(user: User) {
+    await UserService.repository.update({ id: user.id }, { verified_email: true });
+  }
 }

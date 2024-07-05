@@ -44,4 +44,20 @@ export default class AuthService {
       throw new ApiError(status("Unauthorized"), "Please authenticate");
     }
   }
+
+  static async verifyEmail(token: string) {
+    try {
+      const verifiedToken = await TokenService.verifyToken(token, TokenTypes.VERIFY_EMAIL);
+      const user = await UserService.getById(verifiedToken.user.id);
+
+      if (!user) {
+        throw new ApiError(status("Unauthorized"), 'Email verification failed');
+      }
+
+      await TokenService.deleteEmailVerifyTokens(user);
+      await UserService.markVerifiedEmail(user);
+    } catch (e) {
+      throw new ApiError(status("Unauthorized"), 'Email verification failed');
+    }
+  }
 }
