@@ -66,4 +66,5 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 ### `v0.1.0`
 
 - `Added` Registration
+- `Added` Email verification
 - `Added` Search events by book title
