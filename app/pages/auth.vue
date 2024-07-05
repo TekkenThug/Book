@@ -4,59 +4,33 @@
       Book
     </h1>
 
-    <form :class="$style.content">
-      <div :class="$style.fields">
-        <InputText v-model="email" v-bind="emailAttrs" type="text" placeholder="Email" />
+    <RegisterForm
+      v-if="mode === 'register'"
+      @change="changeMode"
+    />
 
-        <InputText v-model="password" v-bind="passwordAttrs" type="password" placeholder="Password" />
-      </div>
-
-      <p :class="$style.registerInvitation">
-        Don`t have an account? <NuxtLink :to="{ name: 'register' }">Register now!</NuxtLink>
-      </p>
-
-      <Button :disabled="!meta.valid" :loading="isLoading" @click="auth">
-        Log in
-      </Button>
-    </form>
+    <LoginForm v-else @change="changeMode" />
   </section>
-
-  <Toast position="bottom-right" />
 </template>
 
 <script lang="ts" setup>
 import { login } from "~/validation/schemas";
-import { toTypedSchema } from "@vee-validate/zod";
+import RegisterForm from "~/components/forms/register/register-form.vue";
+import LoginForm from "~/components/forms/login/login-form.vue";
 
 definePageMeta({
   layout: false,
 });
 
 const router = useRouter();
-const toast = useToast();
-const authStore = useAuthStore();
-const { meta, defineField, handleSubmit, values } = useForm({
-  validationSchema: toTypedSchema(login)
-});
-const [email, emailAttrs] = defineField("email");
-const [password, passwordAttrs] = defineField("password");
+const route = useRoute();
+const mode = ref<"login" | "register">(route.query.mode as "login" | "register" | null ?? "login");
 
-const isLoading = ref(false);
-const auth = handleSubmit(async (values) => {
-  if (isLoading.value) {
-    return;
-  }
+const changeMode = () => {
+  mode.value = mode.value === "register" ? "login" : "register";
 
-  try {
-    isLoading.value = true;
-    await authStore.authenticateUser(values);
-    await router.push({ name: "profile" });
-  } catch (e) {
-    toast.add({ severity: "error", summary: "Error", detail: (e as Error).message })
-  } finally {
-    isLoading.value = false;
-  }
-})
+  router.push({ query: { mode: mode.value } });
+}
 </script>
 
 <style module>
@@ -67,26 +41,5 @@ const auth = handleSubmit(async (values) => {
   justify-content: center;
   min-height: 100dvh;
   padding: 20px;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  margin-top: 40px;
-}
-
-.fields {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.registerInvitation {
-  margin: 20px 0 30px;
-}
-
-.registerInvitation a {
-  color: #5AA9E6;
 }
 </style>

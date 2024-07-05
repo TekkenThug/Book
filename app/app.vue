@@ -4,6 +4,8 @@
       <NuxtPage />
     </NuxtLayout>
   </div>
+
+  <Toast position="bottom-right" />
 </template>
 
 <script lang="ts" setup>

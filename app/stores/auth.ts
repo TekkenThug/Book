@@ -1,10 +1,19 @@
 import { defineStore } from 'pinia';
 import { useLocalStorage } from "@vueuse/core";
 import { parseJWT } from "~/utils";
+import type { Message } from "~/types/api";
 
 interface UserPayloadInterface {
   email: string;
   password: string;
+}
+
+interface RegisterCredentials {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  repeat_password: string;
 }
 
 interface TokenResponse {
@@ -67,6 +76,12 @@ export const useAuthStore = defineStore("auth", () => {
 
     authenticated.value = false;
   };
+  const registerUser = async (payload: RegisterCredentials) => {
+    return await $fetch<Message>(`${config.public.baseURL}/auth/register`, {
+      method: "post",
+      body: payload,
+    });
+  }
 
   const fetchAPI = computed(() => $fetch.create({
     baseURL: config.public.baseURL,
@@ -80,6 +95,7 @@ export const useAuthStore = defineStore("auth", () => {
     tokenIsExpired,
     refreshTokens,
     logout,
+    registerUser,
     userId,
     fetchAPI
   }
