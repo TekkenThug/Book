@@ -8,7 +8,7 @@ const router = Router();
 
 router
   .route("/")
-  .post(auth, validate(eventsValidation.create), eventController.create)
+  .post(auth(), validate(eventsValidation.create), eventController.create)
   .get(validate(eventsValidation.get), eventController.get);
 
 export default router;

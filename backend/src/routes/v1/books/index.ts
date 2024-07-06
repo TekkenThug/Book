@@ -6,6 +6,6 @@ import bookController from "@/controllers/books";
 
 const router = Router();
 
-router.route("/").get(auth, validate(bookValidation.find), bookController.get);
+router.route("/").get(auth(), validate(bookValidation.find), bookController.get);
 
 export default router;
