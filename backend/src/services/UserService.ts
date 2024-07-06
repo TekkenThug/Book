@@ -43,10 +43,6 @@ export default class UserService {
     MailService.sendWelcomeMail(credentials.first_name, token);
   }
 
-  static async getAll() {
-    return await UserService.repository.find();
-  }
-
   static async getByEmail(email: string) {
     return await UserService.repository.findOneBy({ email });
   }
@@ -61,5 +57,14 @@ export default class UserService {
 
   static async markVerifiedEmail(user: User) {
     await UserService.repository.update({ id: user.id }, { verified_email: true });
+  }
+
+  static async updateUser(user: User, payload: Partial<Pick<User, "first_name" | "last_name" | "password">>) {
+    const processedPayload = { ...payload };
+    if (payload.password) {
+      processedPayload.password = await bcrypt.hash(payload.password, 8);
+    }
+
+    await UserService.repository.update({ id: user.id }, processedPayload);
   }
 }

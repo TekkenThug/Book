@@ -1,0 +1,47 @@
+tags:
+  name: User
+  description: Work with users
+
+security:
+  - mySecurity: []
+
+/users/settings:
+  patch:
+    summary: Update settings
+    tags: [User]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              first_name:
+                type: string
+              last_name:
+                type: string
+              password:
+                type: string
+                minLength: 8
+                description: At least one number, one letter in different cases and one symbol
+            example:
+              first_name: Phil
+              last_name: Diesel
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+            example:
+              message: "Settings successfully updated"
+      400:
+        description: "Bad request"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
+            example:
+              code: 400
+              message: "Bad request"
