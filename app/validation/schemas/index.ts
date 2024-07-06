@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PASSWORD_REGEXP } from "~/data/regexp";
 
 export const login = z.object({
   email: z.string().email(),
@@ -13,7 +14,7 @@ export const register = z.object({
     .string()
     .min(1)
     .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{6,}$/,
+      PASSWORD_REGEXP,
       "Password must contains at least 1 character in lower case, 1 in upper case, symbol and digit",
     ),
   repeatPassword: z.string().min(1),
