@@ -6,6 +6,9 @@ import userController from "@/controllers/users";
 
 const router = Router();
 
-router.route("/settings").patch(auth(), validate(userValidation.update), userController.update);
+router
+  .route("/settings")
+  .patch(auth(), validate(userValidation.update), userController.update)
+  .get(auth(), userController.getSettings);
 
 export default router;

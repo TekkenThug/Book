@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import status from "statuses";
+import pick from "lodash.pick";
 import { User } from "@/database/entity/User";
 import { AppDataSource } from "@/database";
 import { ApiError } from "@/utils/errors";
@@ -66,5 +67,9 @@ export default class UserService {
     }
 
     await UserService.repository.update({ id: user.id }, processedPayload);
+  }
+
+  static async getEditableSettings(user: User) {
+    return pick(await UserService.repository.findOneBy({ id: user.id }), ["first_name", "last_name", "email"])
   }
 }

@@ -7,6 +7,11 @@ const update = catchAsync(async (req, res) => {
   res.send({ message: "User successfully updated" });
 });
 
+const getSettings = catchAsync(async (req, res) => {
+  res.send(await UserService.getEditableSettings(req.user!));
+})
+
 export default {
   update,
+  getSettings,
 };
