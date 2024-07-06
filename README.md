@@ -50,6 +50,7 @@ To run this project, you will need to add the following environment variables to
 -   `JWT_SECRET` - JWT secret key
 -   `JWT_ACCESS_EXPIRATION_MINUTES` - JWT access token expiration in minutes
 -   `JWT_REFRESH_EXPIRATION_DAYS` - JWT refresh token expiration in days
+-   `JWT_EMAIL_VERIFY_EXPIRATION_MINUTES` - JWT email verify token expiration in minutes
 
 ## API docs
 
