@@ -1,13 +1,7 @@
 <template>
-  <section>
-    Profile
-  </section>
+  <Settings />
 </template>
 
 <script setup lang="ts">
-
+import Settings from "~/components/profile/settings";
 </script>
-
-<style scoped>
-
-</style>
