@@ -7,21 +7,7 @@
 
       <InputText v-model="email" v-bind="emailAttrs" type="text" placeholder="Email" />
 
-      <Password v-model="password" v-bind="passwordAttrs" placeholder="Password" toggle-mask>
-        <template #content>
-          Password requirements
-        </template>
-        <template #footer>
-          <Divider />
-          <ul :class="$style.passwordPopover">
-            <li>Minimum 8 characters</li>
-            <li>At least one lowercase</li>
-            <li>At least one uppercase</li>
-            <li>At least one numeric</li>
-            <li>At least one symbol</li>
-          </ul>
-        </template>
-      </Password>
+      <PasswordInput v-model="password" v-bind="passwordAttrs" placeholder="Password" />
 
       <InputText v-model="repeatPassword" v-bind="repeatPasswordAttrs" type="password" placeholder="Repeat password" />
     </div>
@@ -41,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import PasswordInput from "~/components/ui/password-input";
 import { toTypedSchema } from "@vee-validate/zod";
 import { register } from "~/validation/schemas";
 
@@ -48,7 +35,7 @@ const emit = defineEmits<{
   (e: "change"): void
 }>();
 
-const toast = useToast();
+const { showSuccessToast, showErrorToast }= useUI();
 const { meta, defineField, handleSubmit, values } = useForm({
   validationSchema: toTypedSchema(register)
 });
@@ -76,10 +63,10 @@ const registerNewUser = handleSubmit(async (values) => {
       repeat_password: values.repeatPassword
     });
 
-    toast.add({ severity: "success", summary: "Done", detail: response.message })
+    showSuccessToast(response.message)
     emit("change");
   } catch (e) {
-    toast.add({ severity: "error", summary: "Error", detail: (e as Error).message })
+    showErrorToast((e as Error).message)
   } finally {
     isLoading.value = false;
   }
@@ -103,13 +90,6 @@ const registerNewUser = handleSubmit(async (values) => {
 
 .fields input {
   width: 100%;
-}
-
-.passwordPopover {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  font-size: 14px;
 }
 
 .registerInvitation {
