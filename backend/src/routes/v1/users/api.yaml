@@ -9,7 +9,7 @@ security:
   get:
     summary: Get data for settings
     tags: [User]
-    response:
+    responses:
       200:
         description: OK
         content:
