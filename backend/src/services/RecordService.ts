@@ -2,7 +2,7 @@ import status from "statuses";
 import { AppDataSource } from "@/database";
 import { Record } from "@/database/entity/Record";
 import { ApiError } from "@/utils/errors";
-import EventService from "@/services/EventService";
+import EventService from "@/services/event";
 
 export default class RecordService {
   private static readonly repository = AppDataSource.getRepository(Record);

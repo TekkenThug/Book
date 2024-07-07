@@ -1,5 +1,5 @@
 import { catchAsync } from "@/utils/errors";
-import EventService from "@/services/EventService";
+import EventService from "@/services/event";
 
 const get = catchAsync(async (req, res) => {
   res.send(await EventService.get({ book: req.query.book as string }));

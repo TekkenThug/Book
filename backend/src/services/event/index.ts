@@ -1,23 +1,7 @@
 import { AppDataSource } from "@/database";
 import { Event } from "@/database/entity/Event";
+import type { CreatePayload, FilterOptions, EventWithChecked, EventWithRole } from "./types";
 
-interface CreatePayload {
-  userId: number;
-  title: string;
-  date: string;
-  bookId: number;
-  duration: string;
-}
-
-interface FilterOptions {
-  book?: string | null;
-  withChecked?: boolean;
-  userId?: number;
-}
-
-interface EventWithChecked extends Event {
-  checked: boolean;
-}
 export default class EventService {
   private static readonly repository = AppDataSource.getRepository(Event);
 
@@ -64,14 +48,18 @@ export default class EventService {
     return await EventService.repository.findOneBy({ id });
   }
 
-  public static async getEventsOfUser(userId: number): Promise<(Omit<Event, "author"> & { role: "owner" | "member" })[]> {
+  public static async getEventsOfUser(userId: number): Promise<EventWithRole[]> {
     const response = await EventService.repository
       .createQueryBuilder("event")
       .leftJoinAndSelect("event.book", "books")
-      .leftJoin("event.author", "author")
-      .where("event.authorId = :userId", { userId })
+      .leftJoin("event.records", "records", "records.user_id = :userId", { userId })
+      .leftJoinAndSelect("event.author", "author")
       .getMany();
 
-    return response.map((item) => ({ ...item, role: "owner" }));
+    return response.map((item) => {
+      const { author, ...rest } = item;
+
+      return { ...rest, role: author.id === userId ? "owner" : "member" };
+    });
   }
 }

@@ -81,3 +81,23 @@ tags:
                       checked:
                         type: boolean
                         description: User registered at this event
+
+/events/my:
+  get:
+    summary: Get user`s events
+    tags: [ Events ]
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/Event'
+                  - type: object
+                    properties:
+                      role:
+                        type: string
+                        description: Role on this event
