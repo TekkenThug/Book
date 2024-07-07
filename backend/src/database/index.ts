@@ -4,6 +4,7 @@ import { User } from "@/database/entity/User";
 import { Event } from "@/database/entity/Event";
 import { Book } from "@/database/entity/Book";
 import { Token } from "@/database/entity/Token";
+import { Record } from "@/database/entity/Record";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -12,7 +13,7 @@ export const AppDataSource = new DataSource({
   username: config.db.user,
   password: config.db.password,
   database: config.db.name,
-  entities: [User, Book, Event, Token],
+  entities: [User, Book, Event, Token, Record],
   synchronize: true,
   logging: false,
 });

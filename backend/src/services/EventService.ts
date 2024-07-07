@@ -38,4 +38,19 @@ export default class EventService {
       .where("LOWER(books.title) LIKE LOWER(:q)", { q: `%${bookQuery}%` })
       .getMany();
   }
+
+  public static async getById(id: number) {
+    return await EventService.repository.findOneBy({ id });
+  }
+
+  public static async getEventsOfUser(userId: number): Promise<(Omit<Event, "author"> & { role: "owner" | "member" })[]> {
+    const response = await EventService.repository
+      .createQueryBuilder("event")
+      .leftJoinAndSelect("event.book", "books")
+      .leftJoin("event.author", "author")
+      .where("event.authorId = :userId", { userId })
+      .getMany();
+
+    return response.map((item) => ({ ...item, role: "owner" }));
+  }
 }
