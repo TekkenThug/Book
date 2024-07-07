@@ -58,9 +58,9 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 
 ## Roadmap
 
--   Make create event page
--   Make meeting rooms
--   Make profile page
+-   Make create event functionality
+-   Make meeting rooms with WebRTC
+-   Make event detailed page
 
 ## Changelog
 
@@ -70,3 +70,5 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 - `Added` Email verification
 - `Added` Profile settings
 - `Added` Search events by book title
+- `Added` Registration to event
+- `Added` List of subscribed events for user
