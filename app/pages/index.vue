@@ -1,6 +1,6 @@
 <template>
   <section :class="$style.section">
-    <div :class="$style.header">
+    <header :class="$style.header">
       <ul :class="$style.navList">
         <template v-if="authStore.authenticated">
           <li :class="$style.navItem">
@@ -20,9 +20,9 @@
           </NuxtLink>
         </li>
       </ul>
-    </div>
+    </header>
 
-    <div :class="$style.content">
+    <section :class="$style.content">
       <h1 :class="$style.title">
         Find own book community
       </h1>
@@ -44,8 +44,8 @@
       </IconField>
 
       <transition name="slide-up">
-        <ul v-if="result.length" :class="$style.result">
-          <li v-for="event in result" :key="event.id">
+        <ul v-if="events.length" :class="$style.result">
+          <li v-for="event in events" :key="event.id">
             <Card>
               <template #title>
                 {{ event.title }}
@@ -61,16 +61,18 @@
                     </p>
                   </div>
 
-                  <NuxtLink :to="authStore.authenticated ? { name: 'events-id', params: { id: event.id } } : { name: 'auth' }">
-                    <Button label="Register" />
-                  </NuxtLink>
+                  <Button
+                    :label="event.checked ? 'Registered' : 'Register'"
+                    :disabled="event.checked"
+                    @click="registerToEvent(event.id)"
+                  />
                 </div>
               </template>
             </Card>
           </li>
         </ul>
       </transition>
-    </div>
+    </section>
 
     <video playsinline autoplay muted loop :class="$style.videoBackground">
       <source src="~/assets/videos/books.mp4" type="video/mp4">
@@ -80,24 +82,29 @@
 
 <script lang="ts" setup>
 import _debounce from "lodash.debounce";
-import type { Event } from "~/types/events";
+import type { EventWithChecked } from "~/types/events";
 
 const authStore = useAuthStore();
+const { showErrorToast } = useUI();
 
 definePageMeta({
   layout: false,
 });
 
 const searchingString = ref("");
-let result = ref<Event[]>([]);
+let events = ref<EventWithChecked[]>([]);
 
 const requestToTheServer = _debounce((search: string) => {
-  result.value = [];
+  events.value = [];
 
-  if (search) {
-    setTimeout(async () => {
-      result.value = await authStore.fetchAPI("/events", { query: { book: search } });
-    }, 300)
+  try {
+    if (search) {
+      setTimeout(async () => {
+        events.value = await authStore.fetchAPI(authStore.authenticated ? "/events/with-checked" : "/events", { query: { book: search } });
+      }, 300)
+    }
+  } catch (e) {
+    showErrorToast((e as Error).message)
   }
 }, 250)
 
@@ -122,6 +129,31 @@ onBeforeMount(async () => {
     }
   }
 });
+
+const registerToEvent = async (id: number) => {
+  if (!authStore.authenticated) {
+    return await router.push({ name: "auth" });
+  }
+
+  const changedEvent = events.value.find(item => item.id === id);
+
+  if (!changedEvent) {
+    return;
+  }
+
+  try {
+    await authStore.fetchAPI("/records", {
+      method: "post",
+      body: {
+        event_id: id,
+      }
+    });
+
+    changedEvent.checked = true;
+  } catch (e) {
+    showErrorToast((e as Error).message);
+  }
+}
 </script>
 
 <style module>

@@ -14,7 +14,7 @@ export class Record {
   @JoinColumn({ name: "user_id" })
   user: User;
 
-  @ManyToOne(() => Event)
+  @ManyToOne(() => Event, (event) => event.records)
   @JoinColumn({ name: "event_id" })
   event: Event;
 }

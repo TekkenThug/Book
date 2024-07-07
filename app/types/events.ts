@@ -11,3 +11,11 @@ export interface Event {
     minutes?: number;
   }
 }
+
+export interface EventWithChecked extends Event{
+  checked?: boolean
+}
+
+export interface MappedEvent extends Omit<Event, "duration"> {
+  duration: string;
+}

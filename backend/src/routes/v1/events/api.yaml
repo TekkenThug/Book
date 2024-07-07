@@ -62,3 +62,22 @@ tags:
               items:
                 $ref: '#/components/schemas/Event'
 
+/events/with-checked:
+  get:
+    summary: Get events with checked property for authorized users
+    tags: [ Events ]
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/Event'
+                  - type: object
+                    properties:
+                      checked:
+                        type: boolean
+                        description: User registered at this event
