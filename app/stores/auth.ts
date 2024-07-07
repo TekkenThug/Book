@@ -98,7 +98,10 @@ export const useAuthStore = defineStore("auth", () => {
 
   const fetchAPI = computed(() => $fetch.create({
     baseURL: config.public.baseURL,
-    headers: [["Authorization", `bearer ${token.value}`]]
+    headers: [["Authorization", `bearer ${token.value}`]],
+    onResponseError({ response}) {
+      throw Error(response._data.message);
+    }
   }));
 
   return {
