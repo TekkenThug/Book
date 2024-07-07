@@ -25,5 +25,7 @@ export default class RecordService {
       .insert()
       .values({ user: { id: userId }, event: { id: eventId } })
       .execute();
+
+    await EventService.increaseMemberCount(event);
   }
 }

@@ -52,8 +52,9 @@ export default class EventService {
     const response = await EventService.repository
       .createQueryBuilder("event")
       .leftJoinAndSelect("event.book", "books")
-      .leftJoin("event.records", "records", "records.user_id = :userId", { userId })
+      .leftJoin("event.records", "records")
       .leftJoinAndSelect("event.author", "author")
+      .where("records.user_id = :userId", { userId })
       .getMany();
 
     return response.map((item) => {
@@ -61,5 +62,10 @@ export default class EventService {
 
       return { ...rest, role: author.id === userId ? "owner" : "member" };
     });
+  }
+
+  public static async increaseMemberCount(event: Event) {
+    ++event.members_count;
+    await EventService.repository.save(event);
   }
 }

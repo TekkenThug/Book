@@ -1,5 +1,5 @@
 import { catchAsync } from "@/utils/errors";
-import RecordService from "@/services/RecordService";
+import RecordService from "@/services/record";
 
 const createRecordToEvent = catchAsync(async (req, res) => {
   await RecordService.createRecordToEvent(req.user!.id, req.body.event_id);
