@@ -27,7 +27,7 @@
         </TabPanel>
 
         <TabPanel value="1">
-          This is create form
+          <CreateEvent />
         </TabPanel>
       </TabPanels>
     </Tabs>
@@ -37,6 +37,7 @@
 <script lang="ts" setup>
 import Loader from "~/components/common/loader/loader.vue";
 import Section from "~/components/profile/section"
+import CreateEvent from "~/components/profile/events/create";
 import { parseInterval, parseDateTime } from "~/utils/date";
 import type { Event, MappedEvent } from "~/types/events";
 

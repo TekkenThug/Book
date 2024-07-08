@@ -22,3 +22,10 @@ export const register = z.object({
   .refine((data) => data.password === data.repeatPassword, {
     message: "Passwords don`t match",
   })
+
+export const createEvent = z.object({
+  title: z.string().min(5),
+  datetime: z.date(),
+  bookId: z.string(),
+  duration: z.date()
+})
