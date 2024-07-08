@@ -130,7 +130,6 @@ const replaceInitialValuesWithActual = () => {
   grid-template-columns: repeat(3, 1fr);
   gap: 25px;
   flex-wrap: wrap;
-  width: 60%;
   margin-bottom: 20px;
 }
 

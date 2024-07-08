@@ -88,10 +88,6 @@ const registerNewUser = handleSubmit(async (values) => {
   margin-bottom: 20px;
 }
 
-.fields input {
-  width: 100%;
-}
-
 .registerInvitation {
   text-align: center;
   margin: 20px 0 30px;
