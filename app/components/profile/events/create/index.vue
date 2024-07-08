@@ -41,6 +41,7 @@
           date-format="dd.mm.yy"
           show-time
           hour-format="24"
+          :step-minute="10"
           fluid
           :minDate="new Date()"
         />
