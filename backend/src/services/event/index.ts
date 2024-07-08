@@ -16,7 +16,7 @@ export default class EventService {
     const existedEventsOnDate = await this.repository.createQueryBuilder("event")
       .where("event.authorId = :userId", { userId: user.id })
       .andWhere("DATE(event.date) = :date", { date: payload.datetime })
-      .getMany()
+      .getMany();
 
     if (existedEventsOnDate.length >= limitationPerDay) {
       throw new ApiError(status("Not acceptable"), "Too many events on this date");
