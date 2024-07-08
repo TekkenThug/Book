@@ -50,7 +50,7 @@
           time-only
           fluid
           placeholder="Duration"
-          step-minute="10"
+          :step-minute="10"
         />
       </div>
 
