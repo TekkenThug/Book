@@ -1,25 +1,44 @@
+import status from "statuses";
+import omit from "lodash.omit";
 import { AppDataSource } from "@/database";
 import { Event } from "@/database/entity/Event";
 import type { CreatePayload, FilterOptions, EventWithChecked, EventWithRole } from "./types";
+import RecordService from "@/services/record";
+import { User } from "@/database/entity/User";
+import { ApiError } from "@/utils/errors";
+import BookService from "@/services/book";
 
 export default class EventService {
   private static readonly repository = AppDataSource.getRepository(Event);
 
-  public static async createEvent(payload: CreatePayload) {
-    console.log(payload);
-    // return await EventService.repository
-    //   .createQueryBuilder()
-    //   .insert()
-    //   .into(Event)
-    //   .values({
-    //     title: payload.title,
-    //     date: payload.date,
-    //     author: payload.userId,
-    //     duration: payload.duration,
-    //     book: payload.bookId,
-    //     members_count: 0,
-    //   })
-    //   .execute();
+  public static async createEvent(user: User, payload: CreatePayload) {
+    const limitationPerDay = 1;
+    const existedEventsOnDate = await this.repository.createQueryBuilder("event")
+      .where("event.authorId = :userId", { userId: user.id })
+      .andWhere("DATE(event.date) = :date", { date: payload.datetime })
+      .getMany()
+
+    if (existedEventsOnDate.length >= limitationPerDay) {
+      throw new ApiError(status("Not acceptable"), "Too many events on this date");
+    }
+
+    const relatedBook = await BookService.createIfNotExist(payload.bookId);
+
+    let event = new Event();
+    event.title = payload.title;
+    event.date = payload.datetime;
+    event.author = user;
+    event.book = relatedBook;
+    event.duration = payload.duration;
+    event = await this.repository.save(event, {});
+
+    await RecordService.createRecordToEvent(user.id, event.id);
+
+    const savedEvent = await this.repository.findOneBy({ id: event.id });
+
+    if (savedEvent) {
+      return omit(savedEvent, "author", "book");
+    }
   }
 
   public static async get(options?: FilterOptions): Promise<(Event | EventWithChecked)[]> {

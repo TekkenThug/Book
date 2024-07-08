@@ -14,7 +14,7 @@ const getEventsOfUser = catchAsync(async (req, res) => {
 });
 
 const create = catchAsync(async (req, res) => {
-  res.send(await EventService.createEvent({ ...req.body, userId: req.user?.id }));
+  res.send(await EventService.createEvent(req.user!, req.body));
 });
 
 export default {

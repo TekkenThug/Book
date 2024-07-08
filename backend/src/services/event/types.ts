@@ -1,10 +1,9 @@
 import { Event } from "@/database/entity/Event";
 
 export interface CreatePayload {
-  userId: number;
   title: string;
-  date: string;
-  bookId: number;
+  datetime: string;
+  bookId: string;
   duration: string;
 }
 
