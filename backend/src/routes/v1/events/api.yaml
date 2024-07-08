@@ -45,12 +45,15 @@ tags:
               type: object
               $ref: '#/components/schemas/Event'
       406:
-        description: OK
+        description: Too many events on this date
         content:
           application/json:
             schema:
               type: object
-              $ref: '#/components/schemas/Event'
+              $ref: '#/components/schemas/Error'
+              example:
+                code: 406
+                message: Too many events on this date
   get:
     summary: Get events
     tags: [ Events ]
