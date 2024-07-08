@@ -23,7 +23,7 @@ body {
     min-height: 100dvh;
 }
 
-body::-webkit-scrollbar {
+*::-webkit-scrollbar {
   display: none;
 }
 
