@@ -4,11 +4,11 @@ tags:
 
 /books:
   get:
-    summary: Get all books
+    summary: Get books
     tags: [Books]
     parameters:
       - in: query
-        name: search
+        name: title
         type: string
         description: Find by title
     responses:
