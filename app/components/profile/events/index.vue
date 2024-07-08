@@ -1,32 +1,17 @@
 <template>
   <Section title="Events">
-    <Tabs value="0">
+    <Tabs value="list" lazy>
       <TabList>
-        <Tab value="0">List</Tab>
-        <Tab value="1">Create</Tab>
+        <Tab value="list">List</Tab>
+        <Tab value="create">Create</Tab>
       </TabList>
 
       <TabPanels>
-        <TabPanel value="0">
-          <Loader v-if="isLoading" />
-          <DataTable v-else :value="events">
-            <Column field="title" header="Title" />
-            <Column field="book.title" header="Book" />
-            <Column field="date" header="Date" />
-            <Column field="duration" header="Duration" />
-            <Column field="members_count" header="Members" />
-            <Column header="Role">
-              <template #body="slotProps">
-                <Tag
-                  :severity="slotProps.data.role === 'owner' ? 'warn' : 'info'"
-                  :value="slotProps.data.role === 'owner' ? 'Owner': 'Member'"
-                />
-              </template>
-            </Column>
-          </DataTable>
+        <TabPanel value="list">
+          <EventList />
         </TabPanel>
 
-        <TabPanel value="1">
+        <TabPanel value="create">
           <CreateEvent />
         </TabPanel>
       </TabPanels>
@@ -35,31 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import Loader from "~/components/common/loader/loader.vue";
 import Section from "~/components/profile/section"
 import CreateEvent from "~/components/profile/events/create";
-import { parseInterval, parseDateTime } from "~/utils/date";
-import type { Event, MappedEvent } from "~/types/events";
-
-const events = ref<MappedEvent[]>([]);
-
-const authStore = useAuthStore();
-const { showErrorToast } = useUI();
-const isLoading = ref(true);
-const getEvents = async () => {
-  try {
-    events.value = (await authStore.fetchAPI<Event[]>("/events/my")).map(item => ({
-      ...item,
-      date: parseDateTime(item.date) as string,
-      duration: parseInterval(item.duration),
-    }));
-    isLoading.value = false;
-  } catch (e) {
-    showErrorToast((e as Error).message);
-  }
-};
-
-onBeforeMount(async () => {
-  await getEvents();
-})
+import EventList from "~/components/profile/events/list";
 </script>
