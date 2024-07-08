@@ -4,8 +4,6 @@ export default defineNuxtConfig({
   ssr: false,
 
   modules: [
-    "nuxt-svgo",
-    "nuxt-icon",
     "@primevue/nuxt-module",
     "@pinia/nuxt",
     "@nuxt/eslint",
