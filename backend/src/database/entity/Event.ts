@@ -20,7 +20,7 @@ export class Event {
   @Column("timestamp")
   date: string;
 
-  @Column("integer")
+  @Column("integer", { default: 0 })
   members_count: number;
 
   @Column("interval")
