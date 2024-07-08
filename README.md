@@ -58,9 +58,9 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 
 ## Roadmap
 
--   Make create event functionality
 -   Make meeting rooms with WebRTC
 -   Make event detailed page
+-   Rework backend on Nest.js
 
 ## Changelog
 
@@ -72,3 +72,4 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 - `Added` Search events by book title
 - `Added` Registration to event
 - `Added` List of subscribed events for user
+- `Added` Ability to create events
