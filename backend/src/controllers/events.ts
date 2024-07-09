@@ -6,7 +6,7 @@ const get = catchAsync(async (req, res) => {
 });
 
 const getChecked = catchAsync(async (req, res) => {
-  res.send(await EventService.get({ withChecked: true, userId: req.user!.id }));
+  res.send(await EventService.get({ withChecked: true, userId: req.user!.id, book: req.query.book as string  }));
 });
 
 const getEventsOfUser = catchAsync(async (req, res) => {
