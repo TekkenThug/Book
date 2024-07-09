@@ -35,8 +35,8 @@
         <InputIcon class="pi pi-search" />
 
         <InputText
-          type="text"
           v-model="searchingString"
+          type="text"
           variant="filled"
           placeholder="Enter a name of book"
           :class="$style.searchInput"
@@ -92,7 +92,7 @@ definePageMeta({
 });
 
 const searchingString = ref("");
-let events = ref<EventWithChecked[]>([]);
+const events = ref<EventWithChecked[]>([]);
 
 const requestToTheServer = _debounce((search: string) => {
   events.value = [];

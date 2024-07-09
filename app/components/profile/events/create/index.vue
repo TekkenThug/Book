@@ -43,7 +43,7 @@
           hour-format="24"
           :step-minute="10"
           fluid
-          :minDate="new Date()"
+          :min-date="new Date()"
         />
 
         <DatePicker
@@ -89,7 +89,7 @@ const selectBook = ({ value }: AutoCompleteOptionSelectEvent) => {
   bookId.value = value.id;
 }
 
-const { meta, defineField, handleSubmit, values, resetForm, errors } = useForm({
+const { meta, defineField, handleSubmit, resetForm } = useForm({
   validationSchema: toTypedSchema(createEvent)
 });
 const [bookId] = defineField("bookId");

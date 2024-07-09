@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-const model = defineModel();
+const model = defineModel<string>();
 defineProps<{ placeholder?: string }>()
 </script>
 

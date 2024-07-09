@@ -36,7 +36,7 @@ const emit = defineEmits<{
 }>();
 
 const { showSuccessToast, showErrorToast }= useUI();
-const { meta, defineField, handleSubmit, values } = useForm({
+const { meta, defineField, handleSubmit } = useForm({
   validationSchema: toTypedSchema(register)
 });
 const [firstName, firstNameAttrs] = defineField("firstName");

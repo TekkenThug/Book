@@ -3,14 +3,14 @@
     <div class="container">
       <div :class="$style.wrapper">
         <NuxtLink :to="{ name: 'index' }" class="h1">
-          <img src="~/assets/images/orange-book.png" alt="book" :class="$style.logo" />
-          
+          <img src="~/assets/images/orange-book.png" alt="book" :class="$style.logo">
+
           Book
         </NuxtLink>
 
         <nav>
           <ul>
-            <li v-for="link in navigation" :class="$style.navItem">
+            <li v-for="link in navigation" :key="link.name" :class="$style.navItem">
               <NuxtLink :to="{ name: link.name }">
                 {{ link.title }}
               </NuxtLink>

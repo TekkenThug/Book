@@ -14,7 +14,6 @@
 </template>
 
 <script lang="ts" setup>
-import { login } from "~/validation/schemas";
 import RegisterForm from "~/components/forms/register/register-form.vue";
 import LoginForm from "~/components/forms/login/login-form.vue";
 

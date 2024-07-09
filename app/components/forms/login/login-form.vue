@@ -38,7 +38,7 @@ const changeMode = () => {
 
 const router = useRouter();
 const toast = useToast();
-const { meta, defineField, handleSubmit, values } = useForm({
+const { meta, defineField, handleSubmit } = useForm({
   validationSchema: toTypedSchema(login)
 });
 const [email, emailAttrs] = defineField("email");
