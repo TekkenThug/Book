@@ -64,7 +64,7 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 
 ## Changelog
 
-### `v0.1.0`
+### `v0.1.0` - 09.07.2024
 
 - `Added` Registration
 - `Added` Email verification
