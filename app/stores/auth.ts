@@ -28,18 +28,19 @@ export const useAuthStore = defineStore("auth", () => {
   const token = useLocalStorage<string | null>("token", null);
   const tokenExpires = useLocalStorage<number | null>("token_exp", null);
 
-  const tokenIsExpired = computed(() => {
-    if (!tokenExpires.value) return false;
-
-    return new Date().getTime() > tokenExpires.value;
-  });
   const userId = computed(() => {
     if (!token.value) return null;
 
     const payload = parseJWT(token.value);
 
     return payload.sub;
-  })
+  });
+
+  const checkExpiring = () => {
+    if (!tokenExpires.value) return false;
+
+    return new Date().getTime() > tokenExpires.value;
+  }
 
   const authenticateUser = async ({ email, password }: UserPayloadInterface) => {
     const data = await $fetch<TokenResponse>(`${config.public.baseURL}/auth/login`, {
@@ -62,7 +63,8 @@ export const useAuthStore = defineStore("auth", () => {
   const refreshTokens = async () => {
     const data = await $fetch<TokenResponse>(`${config.public.baseURL}/auth/refresh`, {
       method: "post",
-      credentials: "include"
+      credentials: "include",
+      headers: [["Authorization", `bearer ${token.value}`]],
     });
 
     token.value = data.token;
@@ -108,7 +110,7 @@ export const useAuthStore = defineStore("auth", () => {
     authenticated,
     authenticateUser,
     token,
-    tokenIsExpired,
+    checkExpiring,
     refreshTokens,
     logout,
     verifyEmail,
