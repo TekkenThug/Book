@@ -83,8 +83,8 @@ const saveButtonIsDisabled = computed(() => {
 		editableSettings.value.first_name === initialSettings.value.first_name
 		&& initialSettings.value.last_name === editableSettings.value.last_name
 	)
-	&& (editableSettings.value.password
-	&& editableSettings.value.password !== editableSettings.value.repeat_password
+	&& ((editableSettings.value.password
+	&& editableSettings.value.password !== editableSettings.value.repeat_password)
 	|| !PASSWORD_REGEXP.test(editableSettings.value.password));
 });
 
