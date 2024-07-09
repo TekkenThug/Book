@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import PasswordInput from "~/components/ui/password-input";
-import Loader from "~/components/common/loader/loader";
+import Loader from "~/components/common/loader";
 import Section from "~/components/profile/section";
 import type { Settings } from "~/types/users";
 import type { Message } from "~/types/api";

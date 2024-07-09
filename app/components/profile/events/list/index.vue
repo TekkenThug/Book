@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import Loader from "~/components/common/loader/loader.vue";
+import Loader from "~/components/common/loader";
 import type { Event, MappedEvent } from "~/types/events";
 import { parseDateTime, parseInterval } from "~/utils/date";
 
