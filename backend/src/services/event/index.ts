@@ -1,4 +1,5 @@
 import status from "statuses";
+import { MoreThan } from "typeorm";
 import omit from "lodash.omit";
 import { AppDataSource } from "@/database";
 import { Event } from "@/database/entity/Event";
@@ -70,8 +71,8 @@ export default class EventService {
     return await query.getMany();
   }
 
-  public static async getById(id: number) {
-    return await EventService.repository.findOneBy({ id });
+  public static async getFutureEventById(id: number) {
+    return await this.repository.findOneBy({ id, date: MoreThan(new Date().toISOString()) });
   }
 
   public static async getEventsOfUser(userId: number): Promise<EventWithRole[]> {

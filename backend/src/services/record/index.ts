@@ -14,7 +14,7 @@ export default class RecordService {
       throw new ApiError(status("Bad request"), "Record already exists");
     }
 
-    const event = await EventService.getById(eventId);
+    const event = await EventService.getFutureEventById(eventId);
 
     if (!event) {
       throw new ApiError(status("Not found"), "Event not found");
