@@ -1,34 +1,42 @@
 <template>
-  <header :class="$style.header">
-    <div class="container">
-      <div :class="$style.wrapper">
-        <NuxtLink :to="{ name: 'index' }" class="h1">
-          <img src="~/assets/images/orange-book.png" alt="book" :class="$style.logo">
+	<header :class="$style.header">
+		<div class="container">
+			<div :class="$style.wrapper">
+				<NuxtLink :to="{ name: 'index' }" class="h1">
+					<img
+						src="~/assets/images/orange-book.png"
+						alt="book"
+						:class="$style.logo"
+					>
 
-          Book
-        </NuxtLink>
+					Book
+				</NuxtLink>
 
-        <nav>
-          <ul>
-            <li v-for="link in navigation" :key="link.name" :class="$style.navItem">
-              <NuxtLink :to="{ name: link.name }">
-                {{ link.title }}
-              </NuxtLink>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-  </header>
+				<nav>
+					<ul>
+						<li
+							v-for="link in navigation"
+							:key="link.name"
+							:class="$style.navItem"
+						>
+							<NuxtLink :to="{ name: link.name }">
+								{{ link.title }}
+							</NuxtLink>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</header>
 </template>
 
 <script setup lang="ts">
 const navigation = reactive([
-  {
-    name: "profile",
-    title: "Profile"
-  }
-])
+	{
+		name: "profile",
+		title: "Profile",
+	},
+]);
 </script>
 
 <style module>

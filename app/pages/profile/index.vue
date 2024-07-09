@@ -1,7 +1,7 @@
 <template>
-  <Settings />
+	<Settings />
 
-  <Events />
+	<Events />
 </template>
 
 <script setup lang="ts">

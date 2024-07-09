@@ -1,5 +1,5 @@
 <template>
-  <i :class="['pi', 'pi-spin', 'pi-spinner', $style.loader]"/>
+	<i :class="['pi', 'pi-spin', 'pi-spinner', $style.loader]" />
 </template>
 
 <style module>

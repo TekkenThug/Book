@@ -1,16 +1,16 @@
 <template>
-  <section :class="$style.section">
-    <h1 class="h1">
-      Book
-    </h1>
+	<section :class="$style.section">
+		<h1 class="h1">
+			Book
+		</h1>
 
-    <RegisterForm
-      v-if="mode === 'register'"
-      @change="changeMode"
-    />
+		<RegisterForm
+			v-if="mode === 'register'"
+			@change="changeMode"
+		/>
 
-    <LoginForm v-else @change="changeMode" />
-  </section>
+		<LoginForm v-else @change="changeMode" />
+	</section>
 </template>
 
 <script lang="ts" setup>
@@ -18,7 +18,7 @@ import RegisterForm from "~/components/forms/register/register-form.vue";
 import LoginForm from "~/components/forms/login/login-form.vue";
 
 definePageMeta({
-  layout: false,
+	layout: false,
 });
 
 const router = useRouter();
@@ -26,10 +26,10 @@ const route = useRoute();
 const mode = ref<"login" | "register">(route.query.mode as "login" | "register" | null ?? "login");
 
 const changeMode = () => {
-  mode.value = mode.value === "register" ? "login" : "register";
+	mode.value = mode.value === "register" ? "login" : "register";
 
-  router.push({ query: { mode: mode.value } });
-}
+	router.push({ query: { mode: mode.value } });
+};
 </script>
 
 <style module>

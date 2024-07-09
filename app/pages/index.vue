@@ -1,83 +1,89 @@
 <template>
-  <section :class="$style.section">
-    <header :class="$style.header">
-      <ul :class="$style.navList">
-        <template v-if="authStore.authenticated">
-          <li :class="$style.navItem">
-            <NuxtLink :to="{ name: 'profile' }">
-              Profile
-            </NuxtLink>
-          </li>
+	<section :class="$style.section">
+		<header :class="$style.header">
+			<ul :class="$style.navList">
+				<template v-if="authStore.authenticated">
+					<li :class="$style.navItem">
+						<NuxtLink :to="{ name: 'profile' }">
+							Profile
+						</NuxtLink>
+					</li>
 
-          <li :class="$style.navItem" @click="logout">
-            Logout
-          </li>
-        </template>
+					<li :class="$style.navItem" @click="logout">
+						Logout
+					</li>
+				</template>
 
-        <li v-else :class="$style.navItem">
-          <NuxtLink :to="{ name: 'auth' }">
-            Login
-          </NuxtLink>
-        </li>
-      </ul>
-    </header>
+				<li v-else :class="$style.navItem">
+					<NuxtLink :to="{ name: 'auth' }">
+						Login
+					</NuxtLink>
+				</li>
+			</ul>
+		</header>
 
-    <section :class="$style.content">
-      <h1 :class="$style.title">
-        Find own book community
-      </h1>
+		<section :class="$style.content">
+			<h1 :class="$style.title">
+				Find own book community
+			</h1>
 
-      <p :class="$style.subtitle">
-        Discuss about books, characters and subjects. Just register on book meeting.
-      </p>
+			<p :class="$style.subtitle">
+				Discuss about books, characters and subjects. Just register on book meeting.
+			</p>
 
-      <IconField>
-        <InputIcon class="pi pi-search" />
+			<IconField>
+				<InputIcon class="pi pi-search" />
 
-        <InputText
-          v-model="searchingString"
-          type="text"
-          variant="filled"
-          placeholder="Enter a name of book"
-          :class="$style.searchInput"
-        />
-      </IconField>
+				<InputText
+					v-model="searchingString"
+					type="text"
+					variant="filled"
+					placeholder="Enter a name of book"
+					:class="$style.searchInput"
+				/>
+			</IconField>
 
-      <transition name="slide-up">
-        <ul v-if="events.length" :class="$style.result">
-          <li v-for="event in events" :key="event.id">
-            <Card>
-              <template #title>
-                {{ event.title }}
-              </template>
-              <template #content>
-                <div :class="$style.resultItemFooter">
-                  <div>
-                    <p :class="$style.resultItemRow">
-                      Book: {{ event.book.title }}
-                    </p>
-                    <p :class="$style.resultItemRow">
-                      When: {{ new Date(event.date).toLocaleString() }}
-                    </p>
-                  </div>
+			<transition name="slide-up">
+				<ul v-if="events.length" :class="$style.result">
+					<li v-for="event in events" :key="event.id">
+						<Card>
+							<template #title>
+								{{ event.title }}
+							</template>
+							<template #content>
+								<div :class="$style.resultItemFooter">
+									<div>
+										<p :class="$style.resultItemRow">
+											Book: {{ event.book.title }}
+										</p>
+										<p :class="$style.resultItemRow">
+											When: {{ new Date(event.date).toLocaleString() }}
+										</p>
+									</div>
 
-                  <Button
-                    :label="event.checked ? 'Registered' : 'Register'"
-                    :disabled="event.checked"
-                    @click="registerToEvent(event.id)"
-                  />
-                </div>
-              </template>
-            </Card>
-          </li>
-        </ul>
-      </transition>
-    </section>
+									<Button
+										:label="event.checked ? 'Registered' : 'Register'"
+										:disabled="event.checked"
+										@click="registerToEvent(event.id)"
+									/>
+								</div>
+							</template>
+						</Card>
+					</li>
+				</ul>
+			</transition>
+		</section>
 
-    <video playsinline autoplay muted loop :class="$style.videoBackground">
-      <source src="~/assets/videos/books.mp4" type="video/mp4">
-    </video>
-  </section>
+		<video
+			playsinline
+			autoplay
+			muted
+			loop
+			:class="$style.videoBackground"
+		>
+			<source src="~/assets/videos/books.mp4" type="video/mp4">
+		</video>
+	</section>
 </template>
 
 <script lang="ts" setup>
@@ -88,72 +94,76 @@ const authStore = useAuthStore();
 const { showErrorToast } = useUI();
 
 definePageMeta({
-  layout: false,
+	layout: false,
 });
 
 const searchingString = ref("");
 const events = ref<EventWithChecked[]>([]);
 
 const requestToTheServer = _debounce((search: string) => {
-  events.value = [];
+	events.value = [];
 
-  try {
-    if (search) {
-      setTimeout(async () => {
-        events.value = await authStore.fetchAPI(authStore.authenticated ? "/events/with-checked" : "/events", { query: { book: search } });
-      }, 300)
-    }
-  } catch (e) {
-    showErrorToast((e as Error).message)
-  }
-}, 250)
+	try {
+		if (search) {
+			setTimeout(async () => {
+				events.value = await authStore.fetchAPI(authStore.authenticated ? "/events/with-checked" : "/events", { query: { book: search } });
+			}, 300);
+		}
+	}
+	catch (e) {
+		showErrorToast((e as Error).message);
+	}
+}, 250);
 
 const logout = async () => {
-  try {
-    await authStore.logout();
-  } catch (e) {
-    console.log(e);
-  }
-}
+	try {
+		await authStore.logout();
+	}
+	catch (e) {
+		console.log(e);
+	}
+};
 
 watch(() => searchingString.value, requestToTheServer);
 
 const route = useRoute();
 const router = useRouter();
 onBeforeMount(async () => {
-  if (route.query.emailToken) {
-    try {
-      await authStore.verifyEmail(route.query.emailToken as string);
-    } finally {
-      await router.push({ query: {} });
-    }
-  }
+	if (route.query.emailToken) {
+		try {
+			await authStore.verifyEmail(route.query.emailToken as string);
+		}
+		finally {
+			await router.push({ query: {} });
+		}
+	}
 });
 
 const registerToEvent = async (id: number) => {
-  if (!authStore.authenticated) {
-    return await router.push({ name: "auth" });
-  }
+	if (!authStore.authenticated) {
+		return await router.push({ name: "auth" });
+	}
 
-  const changedEvent = events.value.find(item => item.id === id);
+	const changedEvent = events.value.find(item => item.id === id);
 
-  if (!changedEvent) {
-    return;
-  }
+	if (!changedEvent) {
+		return;
+	}
 
-  try {
-    await authStore.fetchAPI("/records", {
-      method: "post",
-      body: {
-        event_id: id,
-      }
-    });
+	try {
+		await authStore.fetchAPI("/records", {
+			method: "post",
+			body: {
+				event_id: id,
+			},
+		});
 
-    changedEvent.checked = true;
-  } catch (e) {
-    showErrorToast((e as Error).message);
-  }
-}
+		changedEvent.checked = true;
+	}
+	catch (e) {
+		showErrorToast((e as Error).message);
+	}
+};
 </script>
 
 <style module>

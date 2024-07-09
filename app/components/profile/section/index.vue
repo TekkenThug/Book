@@ -1,13 +1,13 @@
 <template>
-  <section :class="$style.section">
-    <div class="container">
-      <h2 :class="['h2', $style.title]">
-        {{ title }}
-      </h2>
+	<section :class="$style.section">
+		<div class="container">
+			<h2 :class="['h2', $style.title]">
+				{{ title }}
+			</h2>
 
-      <slot />
-    </div>
-  </section>
+			<slot />
+		</div>
+	</section>
 </template>
 
 <script lang="ts" setup>

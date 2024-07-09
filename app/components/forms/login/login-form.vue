@@ -1,24 +1,33 @@
 <template>
-  <form :class="$style.content">
-    <div :class="$style.fields">
+	<form :class="$style.content">
+		<div :class="$style.fields">
+			<InputText
+				v-model="email"
+				v-bind="emailAttrs"
+				type="text"
+				placeholder="Email"
+			/>
 
-      <InputText v-model="email" v-bind="emailAttrs" type="text" placeholder="Email" />
+			<InputText
+				v-model="password"
+				v-bind="passwordAttrs"
+				type="password"
+				placeholder="Password"
+			/>
+		</div>
 
-      <InputText v-model="password" v-bind="passwordAttrs" type="password" placeholder="Password" />
-    </div>
+		<p :class="$style.registerInvitation">
+			Don't have an account? <span @click="changeMode">Create it!</span>
+		</p>
 
-    <p :class="$style.registerInvitation">
-      Don't have an account? <span @click="changeMode">Create it!</span>
-    </p>
-
-    <Button
-      :disabled="!meta.valid"
-      :loading="isLoading"
-      @click="auth"
-    >
-      Log in
-    </Button>
-  </form>
+		<Button
+			:disabled="!meta.valid"
+			:loading="isLoading"
+			@click="auth"
+		>
+			Log in
+		</Button>
+	</form>
 </template>
 
 <script setup lang="ts">
@@ -26,20 +35,20 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { login } from "~/validation/schemas";
 
 const emit = defineEmits<{
-  (e: "change"): void,
+	(e: "change"): void;
 }>();
 const changeMode = () => {
-  if (isLoading.value) {
-    return;
-  }
+	if (isLoading.value) {
+		return;
+	}
 
-  emit("change");
-}
+	emit("change");
+};
 
 const router = useRouter();
 const toast = useToast();
 const { meta, defineField, handleSubmit } = useForm({
-  validationSchema: toTypedSchema(login)
+	validationSchema: toTypedSchema(login),
 });
 const [email, emailAttrs] = defineField("email");
 const [password, passwordAttrs] = defineField("password");
@@ -47,21 +56,23 @@ const [password, passwordAttrs] = defineField("password");
 const isLoading = ref(false);
 const authStore = useAuthStore();
 const auth = handleSubmit(async (values) => {
-  if (isLoading.value) {
-    return;
-  }
+	if (isLoading.value) {
+		return;
+	}
 
-  try {
-    isLoading.value = true;
+	try {
+		isLoading.value = true;
 
-    await authStore.authenticateUser(values);
-    await router.push({ name: "profile" });
-  } catch (e) {
-    toast.add({ severity: "error", summary: "Error", detail: (e as Error).message })
-  } finally {
-    isLoading.value = false;
-  }
-})
+		await authStore.authenticateUser(values);
+		await router.push({ name: "profile" });
+	}
+	catch (e) {
+		toast.add({ severity: "error", summary: "Error", detail: (e as Error).message });
+	}
+	finally {
+		isLoading.value = false;
+	}
+});
 </script>
 
 <style module>

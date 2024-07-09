@@ -1,11 +1,11 @@
 <template>
-  <Header />
+	<Header />
 
-  <main class="main">
-    <slot />
-  </main>
+	<main class="main">
+		<slot />
+	</main>
 </template>
 
 <script setup lang="ts">
-import Header from "~/components/common/header"
+import Header from "~/components/common/header";
 </script>
