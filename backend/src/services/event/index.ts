@@ -13,7 +13,8 @@ export default class EventService {
 
   public static async createEvent(user: User, payload: CreatePayload) {
     const limitationPerDay = 1;
-    const existedEventsOnDate = await this.repository.createQueryBuilder("event")
+    const existedEventsOnDate = await this.repository
+      .createQueryBuilder("event")
       .where("event.authorId = :userId", { userId: user.id })
       .andWhere("DATE(event.date) = :date", { date: payload.datetime })
       .getMany();
@@ -47,6 +48,12 @@ export default class EventService {
     if (options) {
       if (options.book) {
         query.where("LOWER(books.title) LIKE LOWER(:q)", { q: `%${options.book}%` });
+      }
+
+      if (options.future) {
+        query[options.book ? "andWhere" : "where"]("event.date > :currentDatetime", {
+          currentDatetime: new Date().toISOString(),
+        });
       }
 
       if (options.withChecked && options.userId) {

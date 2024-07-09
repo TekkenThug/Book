@@ -88,7 +88,7 @@ const requestToTheServer = _debounce((search: string) => {
 				events.value = await authStore.fetchAPI(
 					authStore.authenticated
 						? "/events/with-checked"
-						: "/events", { query: { book: search } });
+						: "/events", { query: { book: search, future: true } });
 			}, 300);
 		}
 	}

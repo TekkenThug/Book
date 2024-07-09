@@ -13,7 +13,7 @@ const create = z.object({
 const get = z.object({
   query: z.object({
     book: z.string().optional(),
-    withChecked: z.boolean().optional(),
+    future: z.coerce.boolean().optional(),
   }),
 });
 

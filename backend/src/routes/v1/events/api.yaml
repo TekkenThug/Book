@@ -62,6 +62,10 @@ tags:
         name: book
         type: string
         description: Find by book title
+      - in: query
+        name: future
+        type: boolean
+        description: Only future events
     responses:
       "200":
         description: OK
@@ -76,6 +80,15 @@ tags:
   get:
     summary: Get events with checked property for authorized users
     tags: [ Events ]
+    parameters:
+      - in: query
+        name: book
+        type: string
+        description: Find by book title
+      - in: query
+        name: future
+        type: boolean
+        description: Only future events
     responses:
       200:
         description: OK

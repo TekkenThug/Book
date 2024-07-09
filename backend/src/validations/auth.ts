@@ -30,8 +30,8 @@ const register = z.object({
 
 const verifyEmail = z.object({
   body: z.object({
-    token: z.string()
-  })
-})
+    token: z.string(),
+  }),
+});
 
 export default { login, register, verifyEmail };

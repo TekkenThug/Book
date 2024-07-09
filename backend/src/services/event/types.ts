@@ -11,6 +11,7 @@ export interface FilterOptions {
   book?: string | null;
   withChecked?: boolean;
   userId?: number;
+  future?: boolean;
 }
 
 export interface EventWithChecked extends Event {

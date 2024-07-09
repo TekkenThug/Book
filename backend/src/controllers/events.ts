@@ -2,11 +2,13 @@ import { catchAsync } from "@/utils/errors";
 import EventService from "@/services/event";
 
 const get = catchAsync(async (req, res) => {
-  res.send(await EventService.get({ book: req.query.book as string }));
+  res.send(await EventService.get({ book: req.query.book as string, future: true }));
 });
 
 const getChecked = catchAsync(async (req, res) => {
-  res.send(await EventService.get({ withChecked: true, userId: req.user!.id, book: req.query.book as string  }));
+  res.send(
+    await EventService.get({ withChecked: true, userId: req.user!.id, book: req.query.book as string, future: true }),
+  );
 });
 
 const getEventsOfUser = catchAsync(async (req, res) => {
