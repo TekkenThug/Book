@@ -46,7 +46,7 @@ const changeMode = () => {
 };
 
 const router = useRouter();
-const toast = useToast();
+const { showErrorToast } = useUI();
 const { meta, defineField, handleSubmit } = useForm({
 	validationSchema: toTypedSchema(login),
 });
@@ -67,7 +67,7 @@ const auth = handleSubmit(async (values) => {
 		await router.push({ name: "profile" });
 	}
 	catch (e) {
-		toast.add({ severity: "error", summary: "Error", detail: (e as Error).message });
+    showErrorToast((e as Error).message)
 	}
 	finally {
 		isLoading.value = false;

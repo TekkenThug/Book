@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts" setup>
-import RegisterForm from "~/components/forms/register/register-form.vue";
-import LoginForm from "~/components/forms/login/login-form.vue";
+import RegisterForm from "~/components/forms/register";
+import LoginForm from "~/components/forms/login";
 
 definePageMeta({
 	layout: false,
