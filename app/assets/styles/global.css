@@ -1,8 +1,10 @@
 @import "_transitions.css";
+@import "_classes.css";
 
 :root {
-    --app-bg-color: #141414;
-    --app-text-color: #FFFFFF;
+  --app-header-height: 96px;
+  --app-bg-color: #141414;
+  --app-text-color: #FFFFFF;
 }
 
 * {
@@ -23,23 +25,17 @@ body {
     min-height: 100dvh;
 }
 
+*::-webkit-scrollbar {
+  display: none;
+}
+
 a {
     color: inherit;
     text-decoration: none;
 }
 
-.h1 {
-    font-size: 48px;
-    line-height: 56px;
-    font-weight: 600;
+input {
+  width: 100%;
 }
 
-.main {
-    position: relative;
-    height: 100dvh;
-    overflow: auto;
-}
 
-.page-block {
-    padding: 15px;
-}

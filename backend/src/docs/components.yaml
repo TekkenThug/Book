@@ -1,5 +1,13 @@
 components:
   schemas:
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: "You successfully create a meeting"
+
     Token:
       type: object
       properties:
@@ -24,12 +32,18 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: string
+        author:
+          type: array
+          items:
+            type: string
         title:
           type: string
       example:
-        id: 5
-        title: Martin Eden
+        id: OL17930368W
+        author:
+          - James Clear
+        title: Atomic Habits
 
     Event:
       type: object

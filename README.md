@@ -50,20 +50,26 @@ To run this project, you will need to add the following environment variables to
 -   `JWT_SECRET` - JWT secret key
 -   `JWT_ACCESS_EXPIRATION_MINUTES` - JWT access token expiration in minutes
 -   `JWT_REFRESH_EXPIRATION_DAYS` - JWT refresh token expiration in days
+-   `JWT_EMAIL_VERIFY_EXPIRATION_MINUTES` - JWT email verify token expiration in minutes
 
 ## API docs
 
-Visit `{YOUR API_URL}/api/v1/docs ` for view Swagger page
+Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 
 ## Roadmap
 
--   Make create event page
--   Make meeting rooms
--   Make profile page
+-   Make meeting rooms with WebRTC
+-   Make event detailed page
+-   Rework backend on Nest.js
 
 ## Changelog
 
-### `v0.1.0`
+### `v0.1.0` - 09.07.2024
 
 - `Added` Registration
+- `Added` Email verification
+- `Added` Profile settings
 - `Added` Search events by book title
+- `Added` Registration to event
+- `Added` List of subscribed events for user
+- `Added` Ability to create events

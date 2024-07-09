@@ -15,35 +15,45 @@ tags:
             required:
               - title
               - bookId
-              - date
+              - datetime
               - duration
             properties:
               title:
                 type: string
                 description: Title of event
-              date:
+              datetime:
                 type: string
                 format: date-time
                 description: Datetime of beginning
               bookId:
-                type: number
+                type: string
                 description: Related book id
               duration:
                 type: string
                 description: Event duration
             example:
               title: Who was Martin Eden?
-              bookId: 1
+              bookId: OL17930368W
               date: 2020-02-12T07:20:50.52Z
               duration: 1 hours 30 minutes
     responses:
-      "200":
+      200:
         description: OK
         content:
           application/json:
             schema:
               type: object
               $ref: '#/components/schemas/Event'
+      406:
+        description: Too many events on this date
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Error'
+              example:
+                code: 406
+                message: Too many events on this date
   get:
     summary: Get events
     tags: [ Events ]
@@ -52,6 +62,10 @@ tags:
         name: book
         type: string
         description: Find by book title
+      - in: query
+        name: future
+        type: boolean
+        description: Only future events
     responses:
       "200":
         description: OK
@@ -62,3 +76,51 @@ tags:
               items:
                 $ref: '#/components/schemas/Event'
 
+/events/with-checked:
+  get:
+    summary: Get events with checked property for authorized users
+    tags: [ Events ]
+    parameters:
+      - in: query
+        name: book
+        type: string
+        description: Find by book title
+      - in: query
+        name: future
+        type: boolean
+        description: Only future events
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/Event'
+                  - type: object
+                    properties:
+                      checked:
+                        type: boolean
+                        description: User registered at this event
+
+/events/my:
+  get:
+    summary: Get user`s events
+    tags: [ Events ]
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/Event'
+                  - type: object
+                    properties:
+                      role:
+                        type: string
+                        description: Role on this event

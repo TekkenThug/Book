@@ -1,8 +1,11 @@
 import bcrypt from "bcrypt";
 import status from "statuses";
+import pick from "lodash.pick";
 import { User } from "@/database/entity/User";
 import { AppDataSource } from "@/database";
 import { ApiError } from "@/utils/errors";
+import MailService from "@/services/MailService";
+import TokenService from "@/services/TokenService";
 
 interface RegisterCredentials {
   email: string;
@@ -32,14 +35,13 @@ export default class UserService {
       throw new ApiError(status("Unprocessable Entity"), "User already exist");
     }
 
-    return await UserService.create({
+    const createdUser = await UserService.create({
       ...credentials,
       password: await bcrypt.hash(credentials.password, 8),
     });
-  }
 
-  static async getAll() {
-    return await UserService.repository.find();
+    const token = await TokenService.generateEmailToken(createdUser);
+    MailService.sendWelcomeMail(credentials.first_name, token);
   }
 
   static async getByEmail(email: string) {
@@ -52,5 +54,22 @@ export default class UserService {
 
   static async comparePasswords(source: string, password: string) {
     return await bcrypt.compare(source, password);
+  }
+
+  static async markVerifiedEmail(user: User) {
+    await UserService.repository.update({ id: user.id }, { verified_email: true });
+  }
+
+  static async updateUser(user: User, payload: Partial<Pick<User, "first_name" | "last_name" | "password">>) {
+    const processedPayload = { ...payload };
+    if (payload.password) {
+      processedPayload.password = await bcrypt.hash(payload.password, 8);
+    }
+
+    await UserService.repository.update({ id: user.id }, processedPayload);
+  }
+
+  static async getEditableSettings(user: User) {
+    return pick(await UserService.repository.findOneBy({ id: user.id }), ["first_name", "last_name", "email"])
   }
 }

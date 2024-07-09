@@ -1,115 +1,142 @@
 <template>
-  <section :class="$style.section">
-    <div :class="$style.header">
-      <ul :class="$style.navList">
-        <template v-if="authStore.authenticated">
-          <li :class="$style.navItem">
-            <NuxtLink :to="{ name: 'profile' }">
-              Profile
-            </NuxtLink>
-          </li>
+	<section :class="$style.section">
+		<section :class="$style.content">
+			<h1 :class="$style.title">
+				Find own book community
+			</h1>
 
-          <li :class="$style.navItem" @click="logout">
-            Logout
-          </li>
-        </template>
+			<p :class="$style.subtitle">
+				Discuss about books, characters and subjects. Just register on book meeting.
+			</p>
 
-        <li v-else :class="$style.navItem">
-          <NuxtLink :to="{ name: 'auth' }">
-            Login
-          </NuxtLink>
-        </li>
-      </ul>
-    </div>
+			<IconField>
+				<InputIcon class="pi pi-search" />
 
-    <div :class="$style.content">
-      <h1 :class="$style.title">
-        Find own book community
-      </h1>
+				<InputText
+					v-model="searchingString"
+					type="text"
+					variant="filled"
+					placeholder="Enter a name of book"
+					:class="$style.searchInput"
+				/>
+			</IconField>
 
-      <p :class="$style.subtitle">
-        Discuss about books, characters and subjects. Just register on book meeting.
-      </p>
+			<transition name="slide-up">
+				<ul v-if="events.length" :class="$style.result">
+					<li v-for="event in events" :key="event.id">
+						<Card>
+							<template #title>
+								{{ event.title }}
+							</template>
+							<template #content>
+								<div :class="$style.resultItemFooter">
+									<div>
+										<p :class="$style.resultItemRow">
+											Book: {{ event.book.title }}
+										</p>
+										<p :class="$style.resultItemRow">
+											When: {{ new Date(event.date).toLocaleString() }}
+										</p>
+									</div>
 
-      <IconField>
-        <InputIcon class="pi pi-search" />
+									<Button
+										:label="event.checked ? 'Registered' : 'Register'"
+										:disabled="event.checked"
+										@click="registerToEvent(event.id)"
+									/>
+								</div>
+							</template>
+						</Card>
+					</li>
+				</ul>
+			</transition>
+		</section>
 
-        <InputText
-          type="text"
-          v-model="searchingString"
-          variant="filled"
-          placeholder="Enter a name of book"
-          :class="$style.searchInput"
-        />
-      </IconField>
-
-      <transition name="slide-up">
-        <ul v-if="result.length" :class="$style.result">
-          <li v-for="event in result" :key="event.id">
-            <Card>
-              <template #title>
-                {{ event.title }}
-              </template>
-              <template #content>
-                <div :class="$style.resultItemFooter">
-                  <div>
-                    <p :class="$style.resultItemRow">
-                      Book: {{ event.book.title }}
-                    </p>
-                    <p :class="$style.resultItemRow">
-                      When: {{ new Date(event.date).toLocaleString() }}
-                    </p>
-                  </div>
-
-                  <NuxtLink :to="authStore.authenticated ? { name: 'events-id', params: { id: event.id } } : { name: 'auth' }">
-                    <Button label="Register" />
-                  </NuxtLink>
-                </div>
-              </template>
-            </Card>
-          </li>
-        </ul>
-      </transition>
-    </div>
-
-    <video playsinline autoplay muted loop :class="$style.videoBackground">
-      <source src="~/assets/videos/books.mp4" type="video/mp4">
-    </video>
-  </section>
+		<video
+			playsinline
+			autoplay
+			muted
+			loop
+			:class="$style.videoBackground"
+		>
+			<source src="~/assets/videos/books.mp4" type="video/mp4">
+		</video>
+	</section>
 </template>
 
 <script lang="ts" setup>
 import _debounce from "lodash.debounce";
-import type { Event } from "~/types/events";
-
-const authStore = useAuthStore();
+import type { EventWithChecked } from "~/types/events";
+import { definePageMeta } from "#imports";
 
 definePageMeta({
-  layout: false,
+	layout: "full-page",
 });
 
+const authStore = useAuthStore();
+const { showErrorToast } = useUI();
+
 const searchingString = ref("");
-let result = ref<Event[]>([]);
+const events = ref<EventWithChecked[]>([]);
 
 const requestToTheServer = _debounce((search: string) => {
-  result.value = [];
+	events.value = [];
 
-  if (search) {
-    setTimeout(async () => {
-      result.value = await authStore.fetchAPI("/events", { query: { book: search } });
-    }, 300)
-  }
-}, 250)
-
-const logout = async () => {
-  try {
-    await authStore.logout();
-  } catch (e) {
-    console.log(e);
-  }
-}
+	try {
+		if (search) {
+			setTimeout(async () => {
+				events.value = await authStore.fetchAPI(
+					authStore.authenticated
+						? "/events/with-checked"
+						: "/events", { query: { book: search, future: true } });
+			}, 300);
+		}
+	}
+	catch (e) {
+		showErrorToast((e as Error).message);
+	}
+}, 250);
 
 watch(() => searchingString.value, requestToTheServer);
+
+const route = useRoute();
+const router = useRouter();
+onBeforeMount(async () => {
+	if (route.query.emailToken) {
+		try {
+			await authStore.verifyEmail(route.query.emailToken as string);
+		}
+		finally {
+			await router.push({ query: {} });
+		}
+	}
+});
+
+const registerToEvent = async (id: number) => {
+	if (!authStore.authenticated) {
+		return await router.push({ name: "auth" });
+	}
+
+	const changedEvent = events.value.find(item => item.id === id);
+
+	if (!changedEvent) {
+		return;
+	}
+
+	try {
+		await authStore.fetchAPI("/records", {
+			method: "post",
+			body: {
+				event_id: id,
+			},
+		});
+
+		changedEvent.checked = true;
+	}
+	catch (e) {
+		showErrorToast((e as Error).message);
+	}
+};
 </script>
 
 <style module>
@@ -122,12 +149,6 @@ watch(() => searchingString.value, requestToTheServer);
   min-height: 100dvh;
   background: rgba(30, 26, 38, .9);
   overflow: hidden;
-}
-
-.header {
-  top: 20px;
-  right: 40px;
-  position: absolute;
 }
 
 .content {
@@ -184,14 +205,5 @@ watch(() => searchingString.value, requestToTheServer);
   padding-top: 10px;
   display: flex;
   justify-content: space-between;
-}
-
-.navList {
-  display: flex;
-  gap: 40px;
-}
-
-.navItem {
-  cursor: pointer;
 }
 </style>

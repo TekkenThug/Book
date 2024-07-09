@@ -1,6 +1,7 @@
-import { Column, ManyToOne, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, ManyToOne, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Book } from "@/database/entity/Book";
 import { User } from "@/database/entity/User";
+import { Record } from "@/database/entity/Record";
 
 @Entity({ name: "events" })
 export class Event {
@@ -19,9 +20,12 @@ export class Event {
   @Column("timestamp")
   date: string;
 
-  @Column("integer")
+  @Column("integer", { default: 0 })
   members_count: number;
 
   @Column("interval")
   duration: string;
+
+  @OneToMany(() => Record, (record) => record.event)
+  records: Record[];
 }

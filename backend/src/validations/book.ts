@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const find = z.object({
   query: z.object({
-    search: z.string().optional(),
+    title: z.string().optional(),
   }),
 });
 

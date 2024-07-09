@@ -8,7 +8,10 @@ const router = Router();
 
 router
   .route("/")
-  .post(auth, validate(eventsValidation.create), eventController.create)
+  .post(auth(), validate(eventsValidation.create), eventController.create)
   .get(validate(eventsValidation.get), eventController.get);
+
+router.get("/my", auth(), eventController.getEventsOfUser);
+router.get("/with-checked", auth(), validate(eventsValidation.get), eventController.getChecked);
 
 export default router;

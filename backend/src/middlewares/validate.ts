@@ -13,5 +13,7 @@ export default (schema: ZodSchema) => (req: Request, _: Response, next: NextFunc
     return next(new ApiError(status("Bad request"), fromError(result.error).toString()));
   }
 
+  Object.assign(req, result.data)
+
   return next();
 };

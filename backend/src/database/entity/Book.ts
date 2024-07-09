@@ -1,13 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany, PrimaryColumn } from "typeorm";
 import { Event } from "@/database/entity/Event";
 
 @Entity({ name: "books" })
 export class Book {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn("varchar")
+  id: string;
 
   @Column("varchar")
   title: string;
+
+  @Column("varchar", { array: true })
+  author: string[];
 
   @OneToMany(() => Event, (event) => event.book)
   events: Event[];

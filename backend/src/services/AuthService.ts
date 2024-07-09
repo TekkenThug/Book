@@ -1,8 +1,8 @@
 import status from "statuses";
-import UserService from "@/services/UserService.ts";
-import { ApiError } from "@/utils/errors.ts";
-import TokenService from "@/services/TokenService.ts";
-import { TokenTypes } from "@/configs/tokens.ts";
+import UserService from "@/services/UserService";
+import { ApiError } from "@/utils/errors";
+import TokenService from "@/services/TokenService";
+import { TokenTypes } from "@/configs/tokens";
 
 interface Credentials {
   email: string;
@@ -15,6 +15,10 @@ export default class AuthService {
 
     if (!user || !(await UserService.comparePasswords(credentials.password, user.password))) {
       throw new ApiError(status("Unauthorized"), "Incorrect email or password");
+    }
+
+    if (!user.verified_email) {
+      throw new ApiError(status("Unauthorized"), "Email is not verified");
     }
 
     return user;
@@ -38,6 +42,22 @@ export default class AuthService {
       return await TokenService.generateAuthTokens(user);
     } catch (e) {
       throw new ApiError(status("Unauthorized"), "Please authenticate");
+    }
+  }
+
+  static async verifyEmail(token: string) {
+    try {
+      const verifiedToken = await TokenService.verifyToken(token, TokenTypes.VERIFY_EMAIL);
+      const user = await UserService.getById(verifiedToken.user.id);
+
+      if (!user) {
+        throw new ApiError(status("Unauthorized"), 'Email verification failed');
+      }
+
+      await TokenService.deleteEmailVerifyTokens(user);
+      await UserService.markVerifiedEmail(user);
+    } catch (e) {
+      throw new ApiError(status("Unauthorized"), 'Email verification failed');
     }
   }
 }
