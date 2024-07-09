@@ -106,7 +106,10 @@ const requestToTheServer = _debounce((search: string) => {
 	try {
 		if (search) {
 			setTimeout(async () => {
-				events.value = await authStore.fetchAPI(authStore.authenticated ? "/events/with-checked" : "/events", { query: { book: search } });
+				events.value = await authStore.fetchAPI(
+					authStore.authenticated
+						? "/events/with-checked"
+						: "/events", { query: { book: search } });
 			}, 300);
 		}
 	}

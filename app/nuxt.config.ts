@@ -16,7 +16,10 @@ export default defineNuxtConfig({
 			link: [
 				{ rel: "preconnect", href: "https://fonts.googleapis.com" },
 				{ rel: "preconnect", href: "https://fonts.gstatic.com" },
-				{ rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" },
+				{
+					rel: "stylesheet",
+					href: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
+				},
 				{ rel: "manifest", href: "/site.webmanifest" },
 			],
 		},
@@ -24,7 +27,9 @@ export default defineNuxtConfig({
 
 	runtimeConfig: {
 		public: {
-			baseURL: process.env.NODE_ENV === "production" ? "https://localhost:8000/api/v1" : "http://localhost:8000/api/v1",
+			baseURL: process.env.NODE_ENV === "production"
+				? "https://localhost:8000/api/v1"
+				: "http://localhost:8000/api/v1",
 		},
 	},
 

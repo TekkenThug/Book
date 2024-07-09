@@ -63,12 +63,19 @@ const authStore = useAuthStore();
 const isLoading = ref(true);
 
 const initialSettings = ref<Settings | null>(null);
-const editableSettings = ref<Omit<Settings, "email"> & { password: string; repeat_password: string } | null>(null);
+const editableSettings = ref<
+  Omit<Settings, "email"> & { password: string; repeat_password: string } | null
+>(null);
 const { showErrorToast, showSuccessToast } = useUI();
 onBeforeMount(async () => {
 	try {
 		initialSettings.value = await authStore.fetchAPI<Settings>("/users/settings");
-		editableSettings.value = { first_name: initialSettings.value.first_name, last_name: initialSettings.value.last_name, password: "", repeat_password: "" };
+		editableSettings.value = {
+			first_name: initialSettings.value.first_name,
+			last_name: initialSettings.value.last_name,
+			password: "",
+			repeat_password: "",
+		};
 		isLoading.value = false;
 	}
 	catch (e) {

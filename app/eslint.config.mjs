@@ -12,6 +12,10 @@ export default withNuxt(
 					max: 1,
 				},
 			}],
+			"vue/max-len": ["error", {
+				code: 110,
+				template: 120,
+			}],
 		},
 	},
 );
