@@ -10,7 +10,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "lint:inspect": "npx @eslint/config-inspector"
   },
   "dependencies": {
     "@nuxt/eslint": "^0.3.13",
@@ -32,6 +33,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@eslint/config-inspector": "^0.5.1",
     "@types/lodash.debounce": "^4.0.9"
   }
 }
