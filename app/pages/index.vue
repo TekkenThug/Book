@@ -1,27 +1,5 @@
 <template>
 	<section :class="$style.section">
-		<header :class="$style.header">
-			<ul :class="$style.navList">
-				<template v-if="authStore.authenticated">
-					<li :class="$style.navItem">
-						<NuxtLink :to="{ name: 'profile' }">
-							Profile
-						</NuxtLink>
-					</li>
-
-					<li :class="$style.navItem" @click="logout">
-						Logout
-					</li>
-				</template>
-
-				<li v-else :class="$style.navItem">
-					<NuxtLink :to="{ name: 'auth' }">
-						Login
-					</NuxtLink>
-				</li>
-			</ul>
-		</header>
-
 		<section :class="$style.content">
 			<h1 :class="$style.title">
 				Find own book community
@@ -89,13 +67,14 @@
 <script lang="ts" setup>
 import _debounce from "lodash.debounce";
 import type { EventWithChecked } from "~/types/events";
+import { definePageMeta } from "#imports";
+
+definePageMeta({
+	layout: "full-page",
+});
 
 const authStore = useAuthStore();
 const { showErrorToast } = useUI();
-
-definePageMeta({
-	layout: false,
-});
 
 const searchingString = ref("");
 const events = ref<EventWithChecked[]>([]);
@@ -117,15 +96,6 @@ const requestToTheServer = _debounce((search: string) => {
 		showErrorToast((e as Error).message);
 	}
 }, 250);
-
-const logout = async () => {
-	try {
-		await authStore.logout();
-	}
-	catch (e) {
-		console.log(e);
-	}
-};
 
 watch(() => searchingString.value, requestToTheServer);
 
@@ -179,12 +149,6 @@ const registerToEvent = async (id: number) => {
   min-height: 100dvh;
   background: rgba(30, 26, 38, .9);
   overflow: hidden;
-}
-
-.header {
-  top: 20px;
-  right: 40px;
-  position: absolute;
 }
 
 .content {
@@ -241,14 +205,5 @@ const registerToEvent = async (id: number) => {
   padding-top: 10px;
   display: flex;
   justify-content: space-between;
-}
-
-.navList {
-  display: flex;
-  gap: 40px;
-}
-
-.navItem {
-  cursor: pointer;
 }
 </style>

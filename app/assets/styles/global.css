@@ -1,8 +1,10 @@
 @import "_transitions.css";
+@import "_classes.css";
 
 :root {
-    --app-bg-color: #141414;
-    --app-text-color: #FFFFFF;
+  --app-header-height: 96px;
+  --app-bg-color: #141414;
+  --app-text-color: #FFFFFF;
 }
 
 * {
@@ -36,33 +38,4 @@ input {
   width: 100%;
 }
 
-.h1 {
-    font-size: 48px;
-    line-height: 56px;
-    font-weight: 600;
-}
-
-.h2 {
-  font-size: 32px;
-  line-height: 36px;
-  font-weight: 500;
-}
-
-.h3 {
-  font-size: 24px;
-  line-height: 32px;
-  font-weight: 500;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
-
-.main {
-    position: relative;
-    height: 100dvh;
-    overflow: auto;
-}
 
