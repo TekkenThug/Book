@@ -25,3 +25,14 @@ export class UpdateSettingsDto {
   @Match('password', { message: "Passwords don't match" })
   repeat_password?: string;
 }
+
+export class SettingsDataDto {
+  @ApiProperty({ example: 'John' })
+  first_name: string;
+
+  @ApiProperty({ example: 'Daw' })
+  last_name: string;
+
+  @ApiProperty({ example: 'johndaw@example.com' })
+  email: string;
+}
