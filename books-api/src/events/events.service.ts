@@ -1,12 +1,18 @@
-import { forwardRef, Inject, Injectable, NotAcceptableException, NotFoundException } from "@nestjs/common";
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import omit from 'lodash.omit';
 import { Event } from './event.entity';
-import { MoreThan, Repository } from "typeorm";
+import { MoreThan, Repository } from 'typeorm';
 import { CreateEventDto } from './events.dto';
 import { BooksService } from '../books/books.service';
-import { UsersService } from "../users/users.service";
-import { RecordsService } from "../records/records.service";
+import { UsersService } from '../users/users.service';
+import { RecordsService } from '../records/records.service';
 
 export interface FilterOptions {
   book?: string | null;
@@ -111,7 +117,9 @@ export class EventsService {
       throw new NotAcceptableException('Too many events on this date');
     }
 
-    const relatedBook = await this.booksService.createIfNotExist(payload.book_id)
+    const relatedBook = await this.booksService.createIfNotExist(
+      payload.book_id,
+    );
 
     let event = new Event();
     event.title = payload.title;
@@ -131,7 +139,10 @@ export class EventsService {
   }
 
   public async getFutureEventById(id: number) {
-    return await this.eventsRepository.findOneBy({ id, date: MoreThan(new Date().toISOString()) });
+    return await this.eventsRepository.findOneBy({
+      id,
+      date: MoreThan(new Date().toISOString()),
+    });
   }
 
   public async increaseMemberCount(event: Event) {

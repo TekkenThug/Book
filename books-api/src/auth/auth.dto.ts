@@ -1,14 +1,21 @@
 import { PASSWORD_REGEXP } from '../data/regexp';
-import { IsEmail, IsNotEmpty, Length, Matches } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Length,
+  Matches,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Match } from '../decorators/validation/match.decorator';
 
 export class SignInDto {
-  @ApiProperty()
+  @ApiProperty({ example: 'admin@gmail.com' })
   @IsEmail()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'SomeStrongPswd.123' })
   @IsNotEmpty()
   password: string;
 }
@@ -43,4 +50,14 @@ export class VerifyEmailDto {
   @ApiProperty()
   @IsNotEmpty()
   token: string;
+}
+
+export class TokenDto {
+  @ApiProperty({ example: 'somejwttoken' })
+  @IsString()
+  token: string;
+
+  @ApiProperty({ example: 1720878528 })
+  @IsNumber()
+  expires: number;
 }

@@ -1,12 +1,14 @@
 import {
-  BadRequestException, forwardRef, Inject,
+  BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
-  NotFoundException
-} from "@nestjs/common";
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Record } from './record.entity';
-import { EventsService } from "../events/events.service";
+import { EventsService } from '../events/events.service';
 
 @Injectable()
 export class RecordsService {
@@ -14,7 +16,7 @@ export class RecordsService {
     @InjectRepository(Record)
     private recordsRepository: Repository<Record>,
     @Inject(forwardRef(() => EventsService))
-    private eventsService: EventsService
+    private eventsService: EventsService,
   ) {}
 
   public async createRecordToEvent(userId: number, eventId: number) {

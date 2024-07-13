@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { ApiTags } from "@nestjs/swagger";
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Books')
 @Controller('books')
