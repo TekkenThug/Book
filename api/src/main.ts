@@ -4,13 +4,13 @@ import { AppModule } from './app.module';
 import { EnvService } from './env/env.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-import morgan from 'morgan';
+import morganConfig from '@/config/morgan.config';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.use(morgan('tiny'))
+  app.use(morganConfig)
 
   app.setGlobalPrefix('/api/v1');
 
