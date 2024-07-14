@@ -5,9 +5,9 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
 } from 'typeorm';
-import { Book } from '../books/book.entity';
-import { User } from '../users/user.entity';
-import { Record } from '../records/record.entity';
+import { Book } from '@/modules/books/book.entity';
+import { User } from '@/modules/users/user.entity';
+import { Record } from '@/modules/records/record.entity';
 
 @Entity({ name: 'events' })
 export class Event {

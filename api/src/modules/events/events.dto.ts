@@ -1,4 +1,4 @@
-import { INTERVAL_REGEXP } from '../data/regexp';
+import { INTERVAL_REGEXP } from '@/data/regexp';
 import { IsDateString, IsNotEmpty, Length, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 

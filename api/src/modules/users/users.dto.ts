@@ -1,7 +1,7 @@
-import { PASSWORD_REGEXP } from '../data/regexp';
+import { PASSWORD_REGEXP } from '@/data/regexp';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, Matches, ValidateIf } from 'class-validator';
-import { Match } from '../decorators/validation/match.decorator';
+import { Match } from '@/decorators/validation/match.decorator';
 
 export class UpdateSettingsDto {
   @ApiProperty({ required: false })

@@ -3,11 +3,11 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
-import { EnvModule } from '../env/env.module';
-import { EnvService } from '../env/env.service';
+import { EnvModule } from '@/env/env.module';
+import { EnvService } from '@/env/env.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Token } from './token.entity';
-import { MailModule } from '../modules/mail/mail.module';
+import { MailModule } from '@/modules/mail/mail.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.guard';
 

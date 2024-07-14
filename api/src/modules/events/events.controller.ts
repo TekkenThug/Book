@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
-import { Public } from '../decorators/public/public.decorator';
+import { Public } from '@/decorators/public/public.decorator';
 import { EventsService } from './events.service';
 import { Request } from 'express';
 import { CreateEventDto, EventDto, EventDtoChecked } from './events.dto';
@@ -13,7 +13,7 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { ApiErrorDto } from '../data/dto';
+import { ApiErrorDto } from '@/data/dto';
 
 @ApiTags('Events')
 @Controller('events')

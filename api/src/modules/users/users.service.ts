@@ -4,7 +4,7 @@ import pick from 'lodash.pick';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
-import { SignUpDto } from '../auth/auth.dto';
+import { SignUpDto } from '@/modules/auth/auth.dto';
 import { UpdateSettingsDto } from './users.dto';
 
 @Injectable()

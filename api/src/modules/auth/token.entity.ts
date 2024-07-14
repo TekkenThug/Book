@@ -5,8 +5,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from '../users/user.entity';
-import { TokenTypes } from '../data/enums';
+import { User } from '@/modules/users/user.entity';
+import { TokenTypes } from '@/data/enums';
 
 @Entity({ name: 'tokens' })
 export class Token {

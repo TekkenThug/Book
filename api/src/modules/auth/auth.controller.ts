@@ -11,7 +11,7 @@ import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 import { getUnixTime } from 'date-fns';
 import { SignInDto, SignUpDto, VerifyEmailDto, TokenDto } from './auth.dto';
-import { Public } from '../decorators/public/public.decorator';
+import { Public } from '@/decorators/public/public.decorator';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -21,7 +21,7 @@ import {
   ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
-import { ApiErrorDto, ApiMessageDto } from '../data/dto';
+import { ApiErrorDto, ApiMessageDto } from '@/data/dto';
 
 const setRefreshToken = (
   res: Response,

@@ -8,7 +8,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { ApiErrorDto, ApiMessageDto } from '../data/dto';
+import { ApiErrorDto, ApiMessageDto } from '@/data/dto';
 
 @ApiTags('User')
 @Controller('users')

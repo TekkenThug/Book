@@ -8,7 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Record } from './record.entity';
-import { EventsService } from '../events/events.service';
+import { EventsService } from '@/modules/events/events.service';
 
 @Injectable()
 export class RecordsService {

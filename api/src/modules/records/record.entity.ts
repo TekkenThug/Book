@@ -1,6 +1,6 @@
 import { PrimaryColumn, JoinColumn, ManyToOne, Entity } from 'typeorm';
-import { Event } from '../events/event.entity';
-import { User } from '../users/user.entity';
+import { Event } from "@/modules/events/event.entity";
+import { User } from "@/modules/users/user.entity";
 
 @Entity({ name: 'records' })
 export class Record {

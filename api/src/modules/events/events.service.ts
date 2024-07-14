@@ -10,9 +10,9 @@ import omit from 'lodash.omit';
 import { Event } from './event.entity';
 import { MoreThan, Repository } from 'typeorm';
 import { CreateEventDto } from './events.dto';
-import { BooksService } from '../books/books.service';
-import { UsersService } from '../users/users.service';
-import { RecordsService } from '../records/records.service';
+import { BooksService } from '@/modules/books/books.service';
+import { UsersService } from '@/modules/users/users.service';
+import { RecordsService } from '@/modules/records/records.service';
 
 export interface FilterOptions {
   book?: string | null;

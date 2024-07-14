@@ -4,15 +4,15 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
+import { UsersService } from '@/modules/users/users.service';
 import { addDays, addMinutes, getTime } from 'date-fns';
-import { EnvService } from '../env/env.service';
+import { EnvService } from '@/env/env.service';
 import { Token } from './token.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TokenTypes } from '../data/enums';
+import { TokenTypes } from '@/data/enums';
 import { SignUpDto, VerifyEmailDto } from './auth.dto';
-import { MailService } from '../modules/mail/mail.service';
+import { MailService } from '@/modules/mail/mail.service';
 
 @Injectable()
 export class AuthService {

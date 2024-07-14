@@ -3,9 +3,9 @@ import { EventsController } from './events.controller';
 import { EventsService } from './events.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Event } from './event.entity';
-import { BooksModule } from '../books/books.module';
-import { UsersModule } from '../users/users.module';
-import { RecordsModule } from '../records/records.module';
+import { BooksModule } from '@/modules/books/books.module';
+import { UsersModule } from '@/modules/users/users.module';
+import { RecordsModule } from '@/modules/records/records.module';
 
 @Module({
   imports: [

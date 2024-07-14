@@ -1,4 +1,4 @@
-import { PASSWORD_REGEXP } from '../data/regexp';
+import { PASSWORD_REGEXP } from '@/data/regexp';
 import {
   IsEmail,
   IsNotEmpty,
@@ -8,7 +8,7 @@ import {
   Matches,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Match } from '../decorators/validation/match.decorator';
+import { Match } from '@/decorators/validation/match.decorator';
 
 export class SignInDto {
   @ApiProperty({ example: 'admin@gmail.com' })
