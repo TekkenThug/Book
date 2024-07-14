@@ -60,7 +60,6 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 
 -   Make meeting rooms with WebRTC
 -   Make event detailed page
--   Rework backend on Nest.js
 
 -   Readable errors from validation
 -   Make email unique on db level
@@ -68,6 +67,8 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 ## Changelog
 
 ### `v0.2.0`
+
+- `Changed` Rework backend on Nest.js
 
 ### `v0.1.0` - 09.07.2024
 
