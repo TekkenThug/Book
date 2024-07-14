@@ -62,7 +62,12 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 -   Make event detailed page
 -   Rework backend on Nest.js
 
+-   Readable errors from validation
+-   Make email unique on db level
+
 ## Changelog
+
+### `v0.2.0`
 
 ### `v0.1.0` - 09.07.2024
 
