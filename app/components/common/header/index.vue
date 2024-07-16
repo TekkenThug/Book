@@ -40,6 +40,7 @@
 
 <script setup lang="ts">
 const authStore = useAuthStore();
+const router = useRouter();
 
 withDefaults(defineProps<{ fixed?: boolean }>(), { fixed: false });
 
@@ -58,6 +59,7 @@ const navigation = computed(() => [
 const logout = async () => {
 	try {
 		await authStore.logout();
+    await router.push({ name: 'index' })
 	}
 	catch (e) {
 		console.log(e);
