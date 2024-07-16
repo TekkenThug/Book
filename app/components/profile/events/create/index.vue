@@ -116,6 +116,7 @@ const sendToCreateEvent = handleSubmit(async (values) => {
 				...values,
 				datetime: values.datetime.toISOString(),
 				duration: mapToInterval(values.duration),
+        book_id: values.bookId
 			},
 		});
 
