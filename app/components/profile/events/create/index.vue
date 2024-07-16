@@ -12,6 +12,10 @@
 			<li>
 				- Title must be more than 5 characters
 			</li>
+
+      <li>
+        - Date must be more than current date
+      </li>
 		</ul>
 
 		<form>
@@ -47,7 +51,7 @@
 					hour-format="24"
 					:step-minute="10"
 					fluid
-					:min-date="new Date()"
+					:min-date="tomorrowDate"
 				/>
 
 				<DatePicker
@@ -71,6 +75,7 @@
 </template>
 
 <script lang="ts" setup>
+import { add } from 'date-fns'
 import { toTypedSchema } from "@vee-validate/zod";
 import type { AutoCompleteCompleteEvent, AutoCompleteOptionSelectEvent } from "primevue/autocomplete";
 import { createEvent } from "~/validation/schemas";
@@ -82,6 +87,7 @@ const { showErrorToast, showSuccessToast } = useUI();
 const suggestedBooks = ref<Book[]>([]);
 const searchingBook = ref("");
 const isLoading = ref(false);
+const tomorrowDate = add(new Date(), { days: 1 })
 const searchBooks = async ({ query: title }: AutoCompleteCompleteEvent) => {
 	try {
 		suggestedBooks.value = await authStore.fetchAPI("/books", { query: { title } });
