@@ -39,7 +39,8 @@ bash scripts/local.sh
 To run this project, you will need to add the following environment variables to your .env file
 
 -   `API_URL` - Hosted URL
--   `APP_WHITELIST` - Allowed client-side urls, separated by `;`
+-   `API_CLIENT_URL` - Allowed client-side url
+-   `DB_TYPE` - Type of database (postgres by default)
 -   `DB_HOST` - Host of database
 -   `DB_PORT` - Port of database
 -   `DB_NAME` - Name of database
@@ -51,6 +52,10 @@ To run this project, you will need to add the following environment variables to
 -   `JWT_ACCESS_EXPIRATION_MINUTES` - JWT access token expiration in minutes
 -   `JWT_REFRESH_EXPIRATION_DAYS` - JWT refresh token expiration in days
 -   `JWT_EMAIL_VERIFY_EXPIRATION_MINUTES` - JWT email verify token expiration in minutes
+-   `SMTP_HOST` - SMTP host
+-   `SMTP_PORT` - SMTP port
+-   `SMTP_USER` - SMTP user
+-   `SMTP_PASSWORD` - SMTP password
 
 ## API docs
 
@@ -62,7 +67,6 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 -   Make event detailed page
 
 -   Readable errors from validation
--   Make email unique on db level
 
 ## Changelog
 
