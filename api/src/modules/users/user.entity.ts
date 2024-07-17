@@ -23,4 +23,7 @@ export class User {
 
   @Column({ type: 'enum', enum: Roles, default: Roles.USER })
   role: Roles;
+
+  @Column({ type: 'varchar', nullable: true })
+  avatar: string;
 }

@@ -36,3 +36,8 @@ export class SettingsDataDto {
   @ApiProperty({ example: 'johndaw@example.com' })
   email: string;
 }
+
+export class UserMetadataDto {
+  @ApiProperty({ example: 'https://some.bucket.com/images/avatar.png' })
+  avatar: string;
+}

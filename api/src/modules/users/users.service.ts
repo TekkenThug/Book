@@ -1,11 +1,15 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import pick from 'lodash.pick';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { SignUpDto } from '@/modules/auth/auth.dto';
-import { UpdateSettingsDto } from './users.dto';
+import { UpdateSettingsDto, UserMetadataDto } from './users.dto';
 
 @Injectable()
 export class UsersService {
@@ -64,5 +68,15 @@ export class UsersService {
     }
 
     await this.usersRepository.update({ id }, processedPayload);
+  }
+
+  async getUserMetadata(id: number): Promise<UserMetadataDto> {
+    const user = await this.getById(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return pick(user, 'avatar');
   }
 }
