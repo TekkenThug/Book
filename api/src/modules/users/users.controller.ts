@@ -11,11 +11,13 @@ import { Request } from 'express';
 import { UsersService } from './users.service';
 import {
   SettingsDataDto,
+  UpdateAvatarDto,
   UpdateSettingsDto,
   UserMetadataDto,
 } from './users.dto';
 import {
   ApiBadRequestResponse,
+  ApiBody,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -52,16 +54,19 @@ export class UsersController {
     return { message: 'Settings successfully updated' };
   }
 
-  @ApiOperation({ summary: 'Update avatar' })
+  @ApiOperation({
+    summary: 'Update avatar',
+  })
+  @ApiBody({ type: UpdateAvatarDto })
   @ApiOkResponse(createMessageCod(200, 'Avatar successfully uploaded'))
   @ApiBadRequestResponse(createErrorDoc(400))
   @UseInterceptors(FileInterceptor('avatar'))
   @Patch('avatar')
   async updateAvatar(
     @Req() request: Request,
-    @UploadedFile() avatar: Pick<UpdateSettingsDto, 'avatar'>,
+    @UploadedFile() avatar: Express.Multer.File,
   ) {
-    await this.usersService.updateUser(request.user!.sub, { avatar });
+    await this.usersService.updateAvatar(request.user!.sub, { avatar });
     return { message: 'Avatar successfully uploaded' };
   }
 

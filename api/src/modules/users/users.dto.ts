@@ -6,10 +6,6 @@ import { Match } from '@/decorators/validation/match.decorator';
 export class UpdateSettingsDto {
   @ApiProperty({ required: false })
   @IsOptional()
-  avatar?: Express.Multer.File;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
   first_name?: string;
 
   @ApiProperty({ required: false })
@@ -28,6 +24,11 @@ export class UpdateSettingsDto {
   @ValidateIf((o) => o.password)
   @Match('password', { message: "Passwords don't match" })
   repeat_password?: string;
+}
+
+export class UpdateAvatarDto {
+  @ApiProperty({ format: 'binary', type: 'string' })
+  avatar: Express.Multer.File;
 }
 
 export class SettingsDataDto {

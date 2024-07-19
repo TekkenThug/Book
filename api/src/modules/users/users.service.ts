@@ -9,7 +9,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { SignUpDto } from '@/modules/auth/auth.dto';
-import { UpdateSettingsDto, UserMetadataDto } from './users.dto';
+import {
+  UpdateAvatarDto,
+  UpdateSettingsDto,
+  UserMetadataDto,
+} from './users.dto';
 import { StorageService } from '@/modules/storage/storage.service';
 
 @Injectable()
@@ -64,21 +68,19 @@ export class UsersService {
   async updateUser(id: number, payload: UpdateSettingsDto) {
     delete payload.repeat_password;
 
-    const processedPayload: Omit<UpdateSettingsDto, 'avatar'> & {
-      avatar?: string;
-    } = { ...payload, avatar: undefined };
+    const processedPayload = { ...payload };
     if (payload.password) {
       processedPayload.password = await bcrypt.hash(payload.password, 8);
     }
 
-    if (payload.avatar) {
-      processedPayload.avatar = await this.storageService.putFile(
-        payload.avatar,
-        'images',
-      );
-    }
-
     await this.usersRepository.update({ id }, processedPayload);
+  }
+
+  async updateAvatar(id: number, payload: UpdateAvatarDto) {
+    await this.usersRepository.update(
+      { id },
+      { avatar: await this.storageService.putFile(payload.avatar, 'images') },
+    );
   }
 
   async getUserMetadata(id: number): Promise<UserMetadataDto> {
