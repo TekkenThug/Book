@@ -10,12 +10,14 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { SignUpDto } from '@/modules/auth/auth.dto';
 import { UpdateSettingsDto, UserMetadataDto } from './users.dto';
+import { StorageService } from '@/modules/storage/storage.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private storageService: StorageService,
   ) {}
 
   async createUser(dto: SignUpDto) {
@@ -62,9 +64,18 @@ export class UsersService {
   async updateUser(id: number, payload: UpdateSettingsDto) {
     delete payload.repeat_password;
 
-    const processedPayload = { ...payload };
+    const processedPayload: Omit<UpdateSettingsDto, 'avatar'> & {
+      avatar?: string;
+    } = { ...payload, avatar: undefined };
     if (payload.password) {
       processedPayload.password = await bcrypt.hash(payload.password, 8);
+    }
+
+    if (payload.avatar) {
+      processedPayload.avatar = await this.storageService.putFile(
+        payload.avatar,
+        'images',
+      );
     }
 
     await this.usersRepository.update({ id }, processedPayload);

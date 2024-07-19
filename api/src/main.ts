@@ -10,7 +10,7 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.use(morganConfig)
+  app.use(morganConfig);
 
   app.setGlobalPrefix('/api/v1');
 

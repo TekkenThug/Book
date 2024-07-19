@@ -52,6 +52,24 @@ class EnvVariables {
 
   @IsString()
   SMTP_PASSWORD: string;
+
+  @IsString()
+  S3_HOST: string;
+
+  @IsString()
+  S3_EXTERNAL_URL: string;
+
+  @IsNumber()
+  S3_PORT: number;
+
+  @IsString()
+  S3_BUCKET: string;
+
+  @IsString()
+  S3_ACCESS_KEY: string;
+
+  @IsString()
+  S3_SECRET_KEY: string;
 }
 
 export const validate = (env: Record<string, unknown>) => {

@@ -1,4 +1,12 @@
-import { Controller, Req, Get, Patch, Body } from '@nestjs/common';
+import {
+  Controller,
+  Req,
+  Get,
+  Patch,
+  Body,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { UsersService } from './users.service';
 import {
@@ -18,6 +26,7 @@ import {
   createMessageCod,
   createSuccessDoc,
 } from '@/utils/api';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('User')
 @Controller('users')
@@ -41,6 +50,19 @@ export class UsersController {
   ) {
     await this.usersService.updateUser(request.user!.sub, payload);
     return { message: 'Settings successfully updated' };
+  }
+
+  @ApiOperation({ summary: 'Update avatar' })
+  @ApiOkResponse(createMessageCod(200, 'Avatar successfully uploaded'))
+  @ApiBadRequestResponse(createErrorDoc(400))
+  @UseInterceptors(FileInterceptor('avatar'))
+  @Patch('avatar')
+  async updateAvatar(
+    @Req() request: Request,
+    @UploadedFile() avatar: Pick<UpdateSettingsDto, 'avatar'>,
+  ) {
+    await this.usersService.updateUser(request.user!.sub, { avatar });
+    return { message: 'Avatar successfully uploaded' };
   }
 
   @ApiOperation({ summary: 'Get user`s metadata' })

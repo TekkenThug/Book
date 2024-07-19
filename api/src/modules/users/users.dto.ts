@@ -6,6 +6,10 @@ import { Match } from '@/decorators/validation/match.decorator';
 export class UpdateSettingsDto {
   @ApiProperty({ required: false })
   @IsOptional()
+  avatar?: Express.Multer.File;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
   first_name?: string;
 
   @ApiProperty({ required: false })

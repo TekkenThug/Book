@@ -10,6 +10,7 @@ import { RecordsModule } from '@/modules/records/records.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { EnvModule } from '@/env/env.module';
 import { MailModule } from '@/modules/mail/mail.module';
+import { StorageModule } from './modules/storage/storage.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { MailModule } from '@/modules/mail/mail.module';
     AuthModule,
     EnvModule,
     MailModule,
+    StorageModule,
   ],
 })
 export class AppModule {}
