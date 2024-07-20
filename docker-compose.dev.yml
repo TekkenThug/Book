@@ -3,9 +3,7 @@ services:
     build:
       context: ./app
       dockerfile: dev.Dockerfile
-    container_name: nuxt
     command: npm run dev
 
   api:
-    container_name: node-api
-    command: npm run dev
+    command: npm run start:dev
