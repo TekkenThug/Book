@@ -4,7 +4,6 @@
 
 <style module>
 .loader {
-  display: block;
   font-size: 32px;
 }
 </style>
