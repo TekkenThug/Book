@@ -23,15 +23,15 @@
 								{{ link.title }}
 							</NuxtLink>
 						</li>
-
-						<li
-							v-if="authStore.authenticated"
-							:class="$style.navItem"
-							@click="logout"
-						>
-							Logout
-						</li>
 					</ul>
+
+					<Avatar
+						v-if="authStore.authenticated && userStore.user"
+						:image="userStore.user.avatar"
+						shape="circle"
+						:class="$style.avatar"
+						@click="goToProfile"
+					/>
 				</nav>
 			</div>
 		</div>
@@ -39,31 +39,23 @@
 </template>
 
 <script setup lang="ts">
+import Avatar from "~/components/ui/avatar";
+
 const authStore = useAuthStore();
+const userStore = useUserStore();
 const router = useRouter();
 
 withDefaults(defineProps<{ fixed?: boolean }>(), { fixed: false });
 
 const navigation = computed(() => [
 	{
-		name: "profile",
-		title: "Profile",
-		auth: true,
-	},
-	{
 		name: "auth",
 		title: "Login",
 	},
 ].filter(item => authStore.authenticated ? item.auth : !item.auth));
 
-const logout = async () => {
-	try {
-		await authStore.logout();
-    await router.push({ name: 'index' })
-	}
-	catch (e) {
-		console.log(e);
-	}
+const goToProfile = async () => {
+	await router.push({ name: "profile" });
 };
 </script>
 
@@ -98,5 +90,12 @@ const logout = async () => {
   font-weight: 500;
   line-height: 21px;
   cursor: pointer;
+}
+
+.avatar {
+  cursor: pointer;
+  border: 2px solid var(--p-inputtext-border-color);
+  width: 42px;
+  height: 42px;
 }
 </style>
