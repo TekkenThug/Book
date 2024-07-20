@@ -16,8 +16,9 @@ Books - the platform for book clubs meetings
 
 -   `Node.js`
 -   `TypeScript`
--   `Express`
+-   `Nest.js`
 -   `PostgreSQL`
+-   `MinIO`
 -   `Swagger`
 
 ## Installation
@@ -56,6 +57,14 @@ To run this project, you will need to add the following environment variables to
 -   `SMTP_PORT` - SMTP port
 -   `SMTP_USER` - SMTP user
 -   `SMTP_PASSWORD` - SMTP password
+-   `S3_HOST`
+-   `S3_EXTERNAL_URL`
+-   `S3_PORT`
+-   `S3_BUCKET`
+-   `S3_ACCESS_KEY`
+-   `S3_SECRET_KEY`
+-   `S3_USER`
+-   `S3_PASSWORD`
 
 ## API docs
 
@@ -72,6 +81,9 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 
 ### `v0.2.0`
 
+- `Added` User avatar loading
+- `Added` Profile menu
+- `Added` Message for empty events
 - `Changed` Rework backend on Nest.js
 
 ### `v0.1.0` - 09.07.2024
