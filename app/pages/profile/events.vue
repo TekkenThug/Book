@@ -1,30 +1,28 @@
 <template>
 	<Section title="Events">
-		<Tabs value="list" lazy>
-			<TabList>
-				<Tab value="list">
-					List
-				</Tab>
-				<Tab value="create">
-					Create
-				</Tab>
-			</TabList>
+		<Button
+			icon="pi pi-calendar-plus"
+			label="Create event"
+			:class="$style.createButton"
+			@click="goToCreate"
+		/>
 
-			<TabPanels>
-				<TabPanel value="list">
-					<EventList />
-				</TabPanel>
-
-				<TabPanel value="create">
-					<CreateEvent />
-				</TabPanel>
-			</TabPanels>
-		</Tabs>
+		<EventList />
 	</Section>
 </template>
 
 <script lang="ts" setup>
 import Section from "~/components/profile/section";
-import CreateEvent from "~/components/profile/events/create";
 import EventList from "~/components/profile/events/list";
+
+const router = useRouter();
+const goToCreate = async () => {
+	await router.push({ name: "events-create" });
+};
 </script>
+
+<style module>
+.createButton {
+  margin-bottom: 40px;
+}
+</style>

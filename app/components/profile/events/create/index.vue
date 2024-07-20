@@ -88,6 +88,9 @@ const suggestedBooks = ref<Book[]>([]);
 const searchingBook = ref("");
 const isLoading = ref(false);
 const tomorrowDate = add(new Date(), { days: 1 });
+const emit = defineEmits<{
+	(e: "submit");
+}>();
 const searchBooks = async ({ query: title }: AutoCompleteCompleteEvent) => {
 	try {
 		suggestedBooks.value = await authStore.fetchAPI("/books", { query: { title } });
@@ -130,6 +133,8 @@ const sendToCreateEvent = handleSubmit(async (values) => {
 		resetForm();
 
 		showSuccessToast("Event successfully created");
+
+		emit("submit");
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);

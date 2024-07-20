@@ -2,9 +2,9 @@
 	<Loader v-if="isLoading" />
 
 	<DataTable v-else :value="events">
-    <template #empty>
-      No events
-    </template>
+		<template #empty>
+			No events
+		</template>
 
 		<Column field="title" header="Title" />
 		<Column field="book.title" header="Book" />
