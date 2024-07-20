@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
 import { Public } from '@/decorators/public/public.decorator';
 import { EventsService } from './events.service';
 import { Request } from 'express';
@@ -7,13 +7,15 @@ import {
   ApiCreatedResponse,
   ApiExtraModels,
   ApiNotAcceptableResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { ApiErrorDto } from '@/data/dto';
+import { createErrorDoc, createSuccessDoc } from '@/utils/api';
 
 @ApiTags('Events')
 @Controller('events')
@@ -81,16 +83,8 @@ export class EventsController {
   }
 
   @ApiOperation({ summary: 'Create event' })
-  @ApiCreatedResponse({ description: 'OK', type: EventDto })
-  @ApiNotAcceptableResponse({
-    description: 'Too many events on this date',
-    type: ApiErrorDto,
-    example: {
-      message: 'Too many events on this date',
-      statusCode: 406,
-      error: 'Not Acceptable',
-    },
-  })
+  @ApiCreatedResponse(createSuccessDoc(201, EventDto))
+  @ApiNotAcceptableResponse(createErrorDoc(406, 'Too many events on this date'))
   @Post()
   async create(
     @Body() createEventDto: CreateEventDto,
@@ -100,5 +94,14 @@ export class EventsController {
       request.user!.sub,
       createEventDto,
     );
+  }
+
+  @ApiOperation({ summary: 'Get event by id' })
+  @ApiOkResponse(createSuccessDoc(200, EventDto))
+  @ApiNotFoundResponse(createErrorDoc(404))
+  @ApiParam({ name: 'id', description: 'Event`s id' })
+  @Get(':id')
+  async findById(@Param('id') id: number) {
+    return await this.eventsService.getById(id);
   }
 }

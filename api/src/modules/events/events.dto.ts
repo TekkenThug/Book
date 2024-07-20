@@ -1,5 +1,5 @@
 import { INTERVAL_REGEXP } from '@/data/regexp';
-import { IsDateString, IsNotEmpty, Length, Matches } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsOptional, IsString, Length, Matches } from "class-validator";
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateEventDto {
@@ -21,6 +21,11 @@ export class CreateEventDto {
     message: 'Duration is not to match interval template',
   })
   duration: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  description: string;
 }
 
 export class EventDto {

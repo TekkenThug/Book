@@ -32,6 +32,9 @@ export class Event {
   @Column('interval')
   duration: string;
 
+  @Column('text', { select: false, nullable: true })
+  description: string;
+
   @OneToMany(() => Record, (record) => record.event)
   records: Record[];
 }

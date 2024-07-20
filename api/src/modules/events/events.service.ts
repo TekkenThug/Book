@@ -83,6 +83,16 @@ export class EventsService {
     return await query.getMany();
   }
 
+  public async getById(id: number) {
+    const event = await this.eventsRepository.findOneBy({ id });
+
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
+
+    return event;
+  }
+
   public async getEventsOfUser(userId: number): Promise<EventWithRole[]> {
     const response = await this.eventsRepository
       .createQueryBuilder('event')
