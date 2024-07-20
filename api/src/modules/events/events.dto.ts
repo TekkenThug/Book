@@ -25,7 +25,7 @@ export class CreateEventDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
-  description: string;
+  description?: string;
 }
 
 export class EventDto {

@@ -137,6 +137,11 @@ export class EventsService {
     event.author = user;
     event.book = relatedBook;
     event.duration = payload.duration;
+
+    if (payload.description) {
+      event.description = payload.description;
+    }
+
     event = await this.eventsRepository.save(event);
 
     await this.recordsService.createRecordToEvent(user.id, event.id);
