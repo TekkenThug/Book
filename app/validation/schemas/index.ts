@@ -28,4 +28,5 @@ export const createEvent = z.object({
 	datetime: z.date(),
 	bookId: z.string(),
 	duration: z.date(),
+	description: z.string().optional(),
 });

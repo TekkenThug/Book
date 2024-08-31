@@ -6,11 +6,19 @@
 			No events
 		</template>
 
-		<Column field="title" header="Title" />
+		<Column header="Title">
+			<template #body="slotProps">
+				<NuxtLink class="link" :to="{ name: 'events-id', params: { id: slotProps.data.id } }">
+					{{ slotProps.data.title }}
+				</NuxtLink>
+			</template>
+		</Column>
+
 		<Column field="book.title" header="Book" />
 		<Column field="date" header="Date" />
 		<Column field="duration" header="Duration" />
 		<Column field="members_count" header="Members" />
+
 		<Column header="Role">
 			<template #body="slotProps">
 				<Tag
@@ -24,25 +32,22 @@
 
 <script setup lang="ts">
 import Loader from "~/components/common/loader";
-import type { Event, MappedEvent } from "~/types/events";
-import { parseDateTime, parseInterval } from "~/utils/date";
+import type { MappedEvent } from "~/services/events";
+import { eventsService } from "~/services/events";
 
+const { showErrorToast } = useUI();
+
+const isLoading = ref(true);
 const events = ref<MappedEvent[]>([]);
 
-const authStore = useAuthStore();
-const { showErrorToast } = useUI();
-const isLoading = ref(true);
 const getEvents = async () => {
 	try {
-		events.value = (await authStore.fetchAPI<Event[]>("/events/my")).map(item => ({
-			...item,
-			date: parseDateTime(item.date) as string,
-			duration: parseInterval(item.duration),
-		}));
+		events.value = await eventsService.getUsersEvent();
+
 		isLoading.value = false;
 	}
-	catch (e) {
-		showErrorToast((e as Error).message);
+	catch (error) {
+		showErrorToast(error.message);
 	}
 };
 

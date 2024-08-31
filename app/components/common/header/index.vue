@@ -2,15 +2,7 @@
 	<header :class="[$style.header, { [$style.fixed]: fixed }]">
 		<div class="container">
 			<div :class="$style.wrapper">
-				<NuxtLink :to="{ name: 'index' }" class="h1">
-					<img
-						src="~/assets/images/orange-book.png"
-						alt="book"
-						:class="$style.logo"
-					>
-
-					Book
-				</NuxtLink>
+				<MainLogo />
 
 				<nav>
 					<ul :class="$style.navList">
@@ -39,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+import MainLogo from "~/components/common/main-link";
 import Avatar from "~/components/ui/avatar";
 
 const authStore = useAuthStore();
@@ -68,10 +61,6 @@ const goToProfile = async () => {
   width: 100%;
   position: fixed;
   z-index: 1000;
-}
-
-.logo {
-  width: 40px;
 }
 
 .wrapper {

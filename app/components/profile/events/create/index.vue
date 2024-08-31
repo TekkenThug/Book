@@ -18,7 +18,7 @@
 			</li>
 		</ul>
 
-		<form>
+		<form :class="$style.form">
 			<div :class="$style.fields">
 				<AutoComplete
 					v-model="searchingBook"
@@ -63,6 +63,12 @@
 				/>
 			</div>
 
+			<Editor
+				v-model="description"
+				placeholder="Describe event"
+				:class="$style.editor"
+			/>
+
 			<Button
 				label="Create"
 				icon="pi pi-check"
@@ -78,6 +84,8 @@
 import { add } from "date-fns";
 import { toTypedSchema } from "@vee-validate/zod";
 import type { AutoCompleteCompleteEvent, AutoCompleteOptionSelectEvent } from "primevue/autocomplete";
+import Editor from "~/components/ui/editor";
+import { eventsService } from "~/services/events";
 import { createEvent } from "~/validation/schemas";
 import type { Book } from "~/types/books";
 import { mapToInterval } from "~/utils/date";
@@ -110,6 +118,7 @@ const [bookId] = defineField("bookId");
 const [title, titleAttrs] = defineField("title");
 const [datetime, datetimeAttrs] = defineField("datetime");
 const [duration] = defineField("duration");
+const [description] = defineField("description");
 
 const sendToCreateEvent = handleSubmit(async (values) => {
 	if (isLoading.value) {
@@ -119,14 +128,23 @@ const sendToCreateEvent = handleSubmit(async (values) => {
 	try {
 		isLoading.value = true;
 
-		await authStore.fetchAPI("/events", {
-			method: "post",
-			body: {
-				...values,
-				datetime: values.datetime.toISOString(),
-				duration: mapToInterval(values.duration),
-				book_id: values.bookId,
-			},
+		// await authStore.fetchAPI("/events", {
+		// 	method: "post",
+		// 	body: {
+		// 		...values,
+		// 		datetime: values.datetime.toISOString(),
+		// 		duration: mapToInterval(values.duration),
+		// 		book_id: values.bookId,
+		// 		description: values.description,
+		// 	},
+		// });
+
+		await eventsService.create({
+			...values,
+			datetime: values.datetime.toISOString(),
+			duration: mapToInterval(values.duration),
+			book_id: values.bookId,
+			description: values.description,
 		});
 
 		searchingBook.value = "";
@@ -161,6 +179,10 @@ const sendToCreateEvent = handleSubmit(async (values) => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+  margin-bottom: 20px;
+}
+
+.editor {
   margin-bottom: 20px;
 }
 
