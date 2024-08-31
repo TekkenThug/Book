@@ -12,9 +12,13 @@
 			<li>
 				- Title must be more than 5 characters
 			</li>
+
+			<li>
+				- Date must be more than current date
+			</li>
 		</ul>
 
-		<form>
+		<form :class="$style.form">
 			<div :class="$style.fields">
 				<AutoComplete
 					v-model="searchingBook"
@@ -47,7 +51,7 @@
 					hour-format="24"
 					:step-minute="10"
 					fluid
-					:min-date="new Date()"
+					:min-date="tomorrowDate"
 				/>
 
 				<DatePicker
@@ -58,6 +62,12 @@
 					:step-minute="10"
 				/>
 			</div>
+
+			<Editor
+				v-model="description"
+				placeholder="Describe event"
+				:class="$style.editor"
+			/>
 
 			<Button
 				label="Create"
@@ -71,8 +81,11 @@
 </template>
 
 <script lang="ts" setup>
+import { add } from "date-fns";
 import { toTypedSchema } from "@vee-validate/zod";
 import type { AutoCompleteCompleteEvent, AutoCompleteOptionSelectEvent } from "primevue/autocomplete";
+import Editor from "~/components/ui/editor";
+import { eventsService } from "~/services/events";
 import { createEvent } from "~/validation/schemas";
 import type { Book } from "~/types/books";
 import { mapToInterval } from "~/utils/date";
@@ -82,6 +95,10 @@ const { showErrorToast, showSuccessToast } = useUI();
 const suggestedBooks = ref<Book[]>([]);
 const searchingBook = ref("");
 const isLoading = ref(false);
+const tomorrowDate = add(new Date(), { days: 1 });
+const emit = defineEmits<{
+	(e: "submit");
+}>();
 const searchBooks = async ({ query: title }: AutoCompleteCompleteEvent) => {
 	try {
 		suggestedBooks.value = await authStore.fetchAPI("/books", { query: { title } });
@@ -101,6 +118,7 @@ const [bookId] = defineField("bookId");
 const [title, titleAttrs] = defineField("title");
 const [datetime, datetimeAttrs] = defineField("datetime");
 const [duration] = defineField("duration");
+const [description] = defineField("description");
 
 const sendToCreateEvent = handleSubmit(async (values) => {
 	if (isLoading.value) {
@@ -110,19 +128,31 @@ const sendToCreateEvent = handleSubmit(async (values) => {
 	try {
 		isLoading.value = true;
 
-		await authStore.fetchAPI("/events", {
-			method: "post",
-			body: {
-				...values,
-				datetime: values.datetime.toISOString(),
-				duration: mapToInterval(values.duration),
-			},
+		// await authStore.fetchAPI("/events", {
+		// 	method: "post",
+		// 	body: {
+		// 		...values,
+		// 		datetime: values.datetime.toISOString(),
+		// 		duration: mapToInterval(values.duration),
+		// 		book_id: values.bookId,
+		// 		description: values.description,
+		// 	},
+		// });
+
+		await eventsService.create({
+			...values,
+			datetime: values.datetime.toISOString(),
+			duration: mapToInterval(values.duration),
+			book_id: values.bookId,
+			description: values.description,
 		});
 
 		searchingBook.value = "";
 		resetForm();
 
 		showSuccessToast("Event successfully created");
+
+		emit("submit");
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);
@@ -149,6 +179,10 @@ const sendToCreateEvent = handleSubmit(async (values) => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+  margin-bottom: 20px;
+}
+
+.editor {
   margin-bottom: 20px;
 }
 

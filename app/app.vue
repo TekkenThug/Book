@@ -14,4 +14,12 @@ useHead({
 		class: "p-dark",
 	},
 });
+
+const authStore = useAuthStore();
+const userStore = useUserStore();
+onBeforeMount(async () => {
+	if (authStore.authenticated) {
+		userStore.user = await authStore.fetchAPI("/users/me");
+	}
+});
 </script>

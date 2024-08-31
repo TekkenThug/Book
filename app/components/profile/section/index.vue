@@ -16,7 +16,8 @@ defineProps<{ title: string }>();
 
 <style module>
 .section {
-  padding: 40px 0;
+  padding: 0;
+  flex-grow: 1;
 }
 
 .title {

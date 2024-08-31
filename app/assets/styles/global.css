@@ -5,6 +5,9 @@
   --app-header-height: 96px;
   --app-bg-color: #141414;
   --app-text-color: #FFFFFF;
+  --link-color: var(--blue-500);
+
+  --blue-500: #5C7AFF;
 }
 
 * {

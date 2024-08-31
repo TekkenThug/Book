@@ -67,7 +67,7 @@ const auth = handleSubmit(async (values) => {
 		await router.push({ name: "profile" });
 	}
 	catch (e) {
-    showErrorToast((e as Error).message)
+		showErrorToast((e as Error).message);
 	}
 	finally {
 		isLoading.value = false;

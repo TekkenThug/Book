@@ -35,7 +35,7 @@
 											Book: {{ event.book.title }}
 										</p>
 										<p :class="$style.resultItemRow">
-											When: {{ new Date(event.date).toLocaleString() }}
+											When: {{ parseDateTime(event.date) }}
 										</p>
 									</div>
 
@@ -66,8 +66,7 @@
 
 <script lang="ts" setup>
 import _debounce from "lodash.debounce";
-import type { EventWithChecked } from "~/types/events";
-import { definePageMeta } from "#imports";
+import { eventsService, type EventWithChecked } from "~/services/events";
 
 definePageMeta({
 	layout: "full-page",
@@ -79,21 +78,18 @@ const { showErrorToast } = useUI();
 const searchingString = ref("");
 const events = ref<EventWithChecked[]>([]);
 
-const requestToTheServer = _debounce((search: string) => {
+const requestToTheServer = _debounce((book: string) => {
 	events.value = [];
 
 	try {
-		if (search) {
+		if (book) {
 			setTimeout(async () => {
-				events.value = await authStore.fetchAPI(
-					authStore.authenticated
-						? "/events/with-checked"
-						: "/events", { query: { book: search, future: true } });
+				events.value = await eventsService.get({ future: true, book, withChecked: authStore.authenticated });
 			}, 300);
 		}
 	}
-	catch (e) {
-		showErrorToast((e as Error).message);
+	catch (error) {
+		showErrorToast(error.message);
 	}
 }, 250);
 

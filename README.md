@@ -16,8 +16,9 @@ Books - the platform for book clubs meetings
 
 -   `Node.js`
 -   `TypeScript`
--   `Express`
+-   `Nest.js`
 -   `PostgreSQL`
+-   `MinIO`
 -   `Swagger`
 
 ## Installation
@@ -39,7 +40,8 @@ bash scripts/local.sh
 To run this project, you will need to add the following environment variables to your .env file
 
 -   `API_URL` - Hosted URL
--   `APP_WHITELIST` - Allowed client-side urls, separated by `;`
+-   `API_CLIENT_URL` - Allowed client-side url
+-   `DB_TYPE` - Type of database (postgres by default)
 -   `DB_HOST` - Host of database
 -   `DB_PORT` - Port of database
 -   `DB_NAME` - Name of database
@@ -51,6 +53,18 @@ To run this project, you will need to add the following environment variables to
 -   `JWT_ACCESS_EXPIRATION_MINUTES` - JWT access token expiration in minutes
 -   `JWT_REFRESH_EXPIRATION_DAYS` - JWT refresh token expiration in days
 -   `JWT_EMAIL_VERIFY_EXPIRATION_MINUTES` - JWT email verify token expiration in minutes
+-   `SMTP_HOST` - SMTP host
+-   `SMTP_PORT` - SMTP port
+-   `SMTP_USER` - SMTP user
+-   `SMTP_PASSWORD` - SMTP password
+-   `S3_HOST`
+-   `S3_EXTERNAL_URL`
+-   `S3_PORT`
+-   `S3_BUCKET`
+-   `S3_ACCESS_KEY`
+-   `S3_SECRET_KEY`
+-   `S3_USER`
+-   `S3_PASSWORD`
 
 ## API docs
 
@@ -58,11 +72,23 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 
 ## Roadmap
 
+-   Rework API calls on axios
+-   Make restore password
 -   Make meeting rooms with WebRTC
--   Make event detailed page
--   Rework backend on Nest.js
+-   Readable errors from validation
+-   Unsubscribe from event
+-   Delete event
 
 ## Changelog
+
+### `v0.2.0` - 31.08.2024
+
+- `Added` User avatar loading
+- `Added` Profile menu
+- `Added` Message for empty events
+- `Added` Event creation page
+- `Added` Event detailed page
+- `Changed` Rework backend on Nest.js
 
 ### `v0.1.0` - 09.07.2024
 

@@ -2,15 +2,7 @@
 	<header :class="[$style.header, { [$style.fixed]: fixed }]">
 		<div class="container">
 			<div :class="$style.wrapper">
-				<NuxtLink :to="{ name: 'index' }" class="h1">
-					<img
-						src="~/assets/images/orange-book.png"
-						alt="book"
-						:class="$style.logo"
-					>
-
-					Book
-				</NuxtLink>
+				<MainLogo />
 
 				<nav>
 					<ul :class="$style.navList">
@@ -23,15 +15,15 @@
 								{{ link.title }}
 							</NuxtLink>
 						</li>
-
-						<li
-							v-if="authStore.authenticated"
-							:class="$style.navItem"
-							@click="logout"
-						>
-							Logout
-						</li>
 					</ul>
+
+					<Avatar
+						v-if="authStore.authenticated && userStore.user"
+						:image="userStore.user.avatar"
+						shape="circle"
+						:class="$style.avatar"
+						@click="goToProfile"
+					/>
 				</nav>
 			</div>
 		</div>
@@ -39,29 +31,24 @@
 </template>
 
 <script setup lang="ts">
+import MainLogo from "~/components/common/main-link";
+import Avatar from "~/components/ui/avatar";
+
 const authStore = useAuthStore();
+const userStore = useUserStore();
+const router = useRouter();
 
 withDefaults(defineProps<{ fixed?: boolean }>(), { fixed: false });
 
 const navigation = computed(() => [
-	{
-		name: "profile",
-		title: "Profile",
-		auth: true,
-	},
 	{
 		name: "auth",
 		title: "Login",
 	},
 ].filter(item => authStore.authenticated ? item.auth : !item.auth));
 
-const logout = async () => {
-	try {
-		await authStore.logout();
-	}
-	catch (e) {
-		console.log(e);
-	}
+const goToProfile = async () => {
+	await router.push({ name: "profile" });
 };
 </script>
 
@@ -74,10 +61,6 @@ const logout = async () => {
   width: 100%;
   position: fixed;
   z-index: 1000;
-}
-
-.logo {
-  width: 40px;
 }
 
 .wrapper {
@@ -96,5 +79,12 @@ const logout = async () => {
   font-weight: 500;
   line-height: 21px;
   cursor: pointer;
+}
+
+.avatar {
+  cursor: pointer;
+  border: 2px solid var(--p-inputtext-border-color);
+  width: 42px;
+  height: 42px;
 }
 </style>

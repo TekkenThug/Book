@@ -1,8 +1,6 @@
 <template>
 	<section :class="$style.section">
-		<h1 class="h1">
-			Book
-		</h1>
+    <MainLogo />
 
 		<RegisterForm
 			v-if="mode === 'register'"
@@ -14,6 +12,7 @@
 </template>
 
 <script lang="ts" setup>
+import MainLogo from "~/components/common/main-link";
 import RegisterForm from "~/components/forms/register";
 import LoginForm from "~/components/forms/login";
 
@@ -23,6 +22,7 @@ definePageMeta({
 
 const router = useRouter();
 const route = useRoute();
+
 const mode = ref<"login" | "register">(route.query.mode as "login" | "register" | null ?? "login");
 
 const changeMode = () => {
