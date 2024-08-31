@@ -21,6 +21,7 @@
     "@vee-validate/nuxt": "^4.13.1",
     "@vee-validate/zod": "^4.13.1",
     "@vueuse/core": "^10.9.0",
+    "axios": "^1.7.6",
     "date-fns": "^3.6.0",
     "lodash.debounce": "^4.0.8",
     "normalize.css": "^8.0.1",
