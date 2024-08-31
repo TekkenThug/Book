@@ -72,18 +72,22 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 
 ## Roadmap
 
+-   Rework API calls on axios
+-   Make restore password
 -   Make meeting rooms with WebRTC
--   Make event detailed page
-
 -   Readable errors from validation
+-   Unsubscribe from event
+-   Delete event
 
 ## Changelog
 
-### `v0.2.0`
+### `v0.2.0` - 31.08.2024
 
 - `Added` User avatar loading
 - `Added` Profile menu
 - `Added` Message for empty events
+- `Added` Event creation page
+- `Added` Event detailed page
 - `Changed` Rework backend on Nest.js
 
 ### `v0.1.0` - 09.07.2024
