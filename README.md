@@ -72,7 +72,6 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 
 ## Roadmap
 
--   Rework API calls on axios
 -   Make restore password
 -   Make meeting rooms with WebRTC
 -   Readable errors from validation
@@ -80,6 +79,10 @@ Visit `{YOUR API_URL}/api/v1/docs` for view Swagger page
 -   Delete event
 
 ## Changelog
+
+### `v0.3.0` - Unreleased
+
+- `Changed` Rework API calls on axios
 
 ### `v0.2.0` - 31.08.2024
 

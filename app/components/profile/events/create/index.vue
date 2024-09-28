@@ -89,8 +89,8 @@ import { eventsService } from "~/services/events";
 import { createEvent } from "~/validation/schemas";
 import type { Book } from "~/types/books";
 import { mapToInterval } from "~/utils/date";
+import { booksService } from "~/services/books";
 
-const authStore = useAuthStore();
 const { showErrorToast, showSuccessToast } = useUI();
 const suggestedBooks = ref<Book[]>([]);
 const searchingBook = ref("");
@@ -101,7 +101,7 @@ const emit = defineEmits<{
 }>();
 const searchBooks = async ({ query: title }: AutoCompleteCompleteEvent) => {
 	try {
-		suggestedBooks.value = await authStore.fetchAPI("/books", { query: { title } });
+		suggestedBooks.value = await booksService.get({ title });
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);
@@ -127,17 +127,6 @@ const sendToCreateEvent = handleSubmit(async (values) => {
 
 	try {
 		isLoading.value = true;
-
-		// await authStore.fetchAPI("/events", {
-		// 	method: "post",
-		// 	body: {
-		// 		...values,
-		// 		datetime: values.datetime.toISOString(),
-		// 		duration: mapToInterval(values.duration),
-		// 		book_id: values.bookId,
-		// 		description: values.description,
-		// 	},
-		// });
 
 		await eventsService.create({
 			...values,

@@ -53,8 +53,8 @@ export class UsersService {
     return await bcrypt.compare(source, password);
   }
 
-  async verifyEmail(user: User) {
-    await this.usersRepository.update(user, { verified_email: true });
+  async verifyEmail(id: number) {
+    await this.usersRepository.update({ id }, { verified_email: true });
   }
 
   async getEditableSettings(id: number) {

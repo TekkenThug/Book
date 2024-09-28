@@ -88,9 +88,9 @@ import Avatar from "~/components/ui/avatar";
 import PasswordInput from "~/components/ui/password-input";
 import Loader from "~/components/common/loader";
 import Section from "~/components/profile/section";
-import type { Settings } from "~/types/users";
-import type { Message } from "~/types/api";
 import { PASSWORD_REGEXP } from "~/data/regexp";
+import type { Settings } from "~/services/users";
+import { usersService } from "~/services/users";
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -102,9 +102,11 @@ const editableSettings = ref<
   Omit<Settings, "email"> & { password: string; repeat_password: string } | null
 >(null);
 const { showErrorToast, showSuccessToast } = useUI();
+
 onBeforeMount(async () => {
 	try {
-		initialSettings.value = await authStore.fetchAPI<Settings>("/users/settings");
+		initialSettings.value = await usersService.getSettings();
+
 		editableSettings.value = {
 			first_name: initialSettings.value.first_name,
 			last_name: initialSettings.value.last_name,
@@ -117,6 +119,7 @@ onBeforeMount(async () => {
 		showErrorToast((e as Error).message);
 	}
 });
+
 const saveButtonIsDisabled = computed(() => {
 	if (!initialSettings.value || !editableSettings.value) {
 		return true;
@@ -139,16 +142,15 @@ const saveSettings = async () => {
 	try {
 		saveIsLoading.value = true;
 
-		const response = await authStore.fetchAPI<Message>("/users/settings", {
-			method: "patch",
-			body: Object.entries(editableSettings.value).reduce((acc, curr) => {
+		const response = await usersService.updateSettings(
+			Object.entries(editableSettings.value).reduce((acc, curr) => {
 				if (!curr[1]) {
 					return acc;
 				}
 
 				return { ...acc, [curr[0]]: curr[1] };
-			}, {}),
-		});
+			}, {}));
+
 		showSuccessToast(response.message);
 
 		replaceInitialValuesWithActual();
@@ -183,11 +185,10 @@ const handleUploadedAvatar = async (event) => {
 		const formData = new FormData();
 		formData.set("avatar", event.target.files[0]);
 
-		const result = await authStore.fetchAPI<Messsage>("/users/avatar", { method: "patch", body: formData });
-		userStore.user = await authStore.fetchAPI("/users/me");
+		const result = await usersService.uploadAvatar(formData);
+		userStore.user = await usersService.getMe();
 
 		showSuccessToast(result.message);
-		// uploadedAvatar.value = URL.createObjectURL(event.target.files[0]);
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);

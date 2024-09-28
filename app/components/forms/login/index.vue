@@ -45,7 +45,6 @@ const changeMode = () => {
 	emit("change");
 };
 
-const router = useRouter();
 const { showErrorToast } = useUI();
 const { meta, defineField, handleSubmit } = useForm({
 	validationSchema: toTypedSchema(login),
@@ -64,7 +63,7 @@ const auth = handleSubmit(async (values) => {
 		isLoading.value = true;
 
 		await authStore.authenticateUser(values);
-		await router.push({ name: "profile" });
+		location.reload();
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);

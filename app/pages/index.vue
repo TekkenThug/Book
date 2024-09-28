@@ -67,6 +67,8 @@
 <script lang="ts" setup>
 import _debounce from "lodash.debounce";
 import { eventsService, type EventWithChecked } from "~/services/events";
+import { recordsService } from "~/services/records";
+import { usersService } from "~/services/users";
 
 definePageMeta({
 	layout: "full-page",
@@ -100,7 +102,7 @@ const router = useRouter();
 onBeforeMount(async () => {
 	if (route.query.emailToken) {
 		try {
-			await authStore.verifyEmail(route.query.emailToken as string);
+			await usersService.auth.verifyEmail(route.query.emailToken as string);
 		}
 		finally {
 			await router.push({ query: {} });
@@ -120,12 +122,7 @@ const registerToEvent = async (id: number) => {
 	}
 
 	try {
-		await authStore.fetchAPI("/records", {
-			method: "post",
-			body: {
-				event_id: id,
-			},
-		});
+		await recordsService.recordToEvent(id);
 
 		changedEvent.checked = true;
 	}

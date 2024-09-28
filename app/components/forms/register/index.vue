@@ -54,6 +54,7 @@
 import { toTypedSchema } from "@vee-validate/zod";
 import PasswordInput from "~/components/ui/password-input";
 import { register } from "~/validation/schemas";
+import { usersService } from "~/services/users";
 
 const emit = defineEmits<{
 	(e: "change"): void;
@@ -70,7 +71,6 @@ const [password, passwordAttrs] = defineField("password");
 const [repeatPassword, repeatPasswordAttrs] = defineField("repeatPassword");
 
 const isLoading = ref(false);
-const authStore = useAuthStore();
 const registerNewUser = handleSubmit(async (values) => {
 	if (isLoading.value) {
 		return;
@@ -79,7 +79,7 @@ const registerNewUser = handleSubmit(async (values) => {
 	try {
 		isLoading.value = true;
 
-		const response = await authStore.registerUser({
+		const response = await usersService.auth.register({
 			email: values.email,
 			first_name: values.firstName,
 			last_name: values.lastName,

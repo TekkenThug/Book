@@ -92,7 +92,7 @@ export class AuthService {
     }
 
     await this.invalidateToken(dto.token, TokenTypes.VERIFY_EMAIL);
-    await this.usersService.verifyEmail(user);
+    await this.usersService.verifyEmail(user.id);
   }
 
   async refreshTokens(refreshToken: string) {

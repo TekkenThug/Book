@@ -9,6 +9,8 @@
 </template>
 
 <script lang="ts" setup>
+import { usersService } from "~/services/users";
+
 useHead({
 	htmlAttrs: {
 		class: "p-dark",
@@ -17,9 +19,10 @@ useHead({
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
+
 onBeforeMount(async () => {
 	if (authStore.authenticated) {
-		userStore.user = await authStore.fetchAPI("/users/me");
+		userStore.user = await usersService.getMe();
 	}
 });
 </script>

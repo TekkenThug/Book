@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useLocalStorage } from "@vueuse/core";
 
-const config = useRuntimeConfig();
+// const config = useRuntimeConfig();
 const token = useLocalStorage<string | null>("token", null);
 
 const API = axios.create({
-	baseURL: config.public.baseURL,
+	baseURL: "http://localhost:8000/api/v1",
+	withCredentials: true,
 	headers: {
 		Authorization: `Bearer ${token.value}`,
 	},
