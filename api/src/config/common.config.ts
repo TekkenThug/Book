@@ -2,8 +2,14 @@ import { IsNumber, IsString, IsUrl, validateSync } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
 class EnvVariables {
-  @IsUrl()
+  @IsString()
   APP_URL: string;
+
+  @IsString()
+  APP_ENV: string;
+
+  @IsNumber()
+  APP_PORT: number;
 
   @IsUrl()
   APP_CLIENT_URL: string;
@@ -34,12 +40,6 @@ class EnvVariables {
 
   @IsNumber()
   JWT_EMAIL_VERIFY_EXPIRATION_MINUTES: number;
-
-  @IsString()
-  NODE_ENV: string;
-
-  @IsNumber()
-  PORT: number;
 
   @IsString()
   SMTP_HOST: string;

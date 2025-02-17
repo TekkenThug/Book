@@ -17,7 +17,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const configService = app.get(EnvService);
-  const port = configService.get('PORT');
+  const port = configService.get('APP_PORT');
 
   const config = new DocumentBuilder()
     .setTitle('Books API documentation')
@@ -38,7 +38,7 @@ async function bootstrap() {
     origin: (origin, cb) => {
       if (
         (origin && configService.get('APP_CLIENT_URL')) ||
-        (!origin && configService.get('NODE_ENV') === 'dev')
+        (!origin && configService.get('APP_ENV') === 'dev')
       ) {
         cb(null, true);
       } else {
