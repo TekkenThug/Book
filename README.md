@@ -44,6 +44,10 @@ npm install
 
 After starting containers, you must log in MinIO by `S3_HOST`, using `S3_USER` and `S3_PASSWORD`, and create bucket with `S3_BUCKET` name. Then create a pair of access/secret keys, put in `.env` file `S3_ACCESS_KEY` and `S3_SECRET_KEY`.
 
+### API documentation
+
+Visit `{YOUR APP_URL}/api/v1/docs` for view Swagger page
+
 <a name="env-variables"></a>
 
 ## Environment Variables
@@ -77,10 +81,6 @@ To run this project, you will need to add the following environment variables to
 -   `S3_USER`
 -   `S3_PASSWORD`
 
-## API docs
-
-Visit `{YOUR APP_URL}/api/v1/docs` for view Swagger page
-
 ## Roadmap
 
 -   Make restore password
@@ -91,25 +91,8 @@ Visit `{YOUR APP_URL}/api/v1/docs` for view Swagger page
 
 ## Changelog
 
+This is latest version's changelog. For past updates see `CHANGELOG.md`
+
 ### `v0.3.0` - Unreleased
 
 - `Changed` Rework API calls on axios
-
-### `v0.2.0` - 31.08.2024
-
-- `Added` User avatar loading
-- `Added` Profile menu
-- `Added` Message for empty events
-- `Added` Event creation page
-- `Added` Event detailed page
-- `Changed` Rework backend on Nest.js
-
-### `v0.1.0` - 09.07.2024
-
-- `Added` Registration
-- `Added` Email verification
-- `Added` Profile settings
-- `Added` Search events by book title
-- `Added` Registration to event
-- `Added` List of subscribed events for user
-- `Added` Ability to create events
