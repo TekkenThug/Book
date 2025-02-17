@@ -52,6 +52,31 @@ export class VerifyEmailDto {
   token: string;
 }
 
+export class ResetPasswordDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  email: string;
+}
+
+export class ApproveResetPasswordDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  token: string;
+
+  @ApiProperty()
+  @Matches(PASSWORD_REGEXP, {
+    message:
+      'Password must contains at least 1 character in lower case, 1 in upper case, symbol and digit',
+  })
+  @IsNotEmpty()
+  password: string;
+
+  @ApiProperty()
+  @Match('password', { message: "Passwords don't match" })
+  @IsNotEmpty()
+  repeat_password: string;
+}
+
 export class TokenDto {
   @ApiProperty({ example: 'somejwttoken' })
   @IsString()

@@ -39,6 +39,9 @@ class EnvVariables {
   JWT_REFRESH_EXPIRATION_DAYS: number;
 
   @IsNumber()
+  JWT_RESET_PASSWORD_EXPIRATION_MINUTES: number;
+
+  @IsNumber()
   JWT_EMAIL_VERIFY_EXPIRATION_MINUTES: number;
 
   @IsString()
