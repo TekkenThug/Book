@@ -96,3 +96,4 @@ This is latest version's changelog. For past updates see `CHANGELOG.md`
 ### `v0.3.0` - Unreleased
 
 - `Changed` Rework API calls on axios
+- `Added` Reset password (only API route)
