@@ -1,13 +1,15 @@
 <template>
 	<section :class="$style.section">
-    <MainLogo />
+		<MainLogo />
 
 		<RegisterForm
 			v-if="mode === 'register'"
 			@change="changeMode"
 		/>
 
-		<LoginForm v-else @change="changeMode" />
+		<LoginForm v-else-if="mode ==='login'" @change="changeMode" />
+
+		<ResetPasswordForm v-else-if="mode === 'reset'" @change="changeMode" />
 	</section>
 </template>
 
@@ -15,6 +17,7 @@
 import MainLogo from "~/components/common/main-link";
 import RegisterForm from "~/components/forms/register";
 import LoginForm from "~/components/forms/login";
+import ResetPasswordForm from "~/components/forms/reset-password";
 
 definePageMeta({
 	layout: false,
@@ -23,10 +26,10 @@ definePageMeta({
 const router = useRouter();
 const route = useRoute();
 
-const mode = ref<"login" | "register">(route.query.mode as "login" | "register" | null ?? "login");
+const mode = ref<"login" | "register" | "reset">(route.query.mode as "login" | "register" | null ?? "login");
 
-const changeMode = () => {
-	mode.value = mode.value === "register" ? "login" : "register";
+const changeMode = (newMode: typeof mode) => {
+	mode.value = newMode;
 
 	router.push({ query: { mode: mode.value } });
 };

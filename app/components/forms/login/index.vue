@@ -14,10 +14,18 @@
 				type="password"
 				placeholder="Password"
 			/>
+
+			<Message
+				size="small"
+				variant="simple"
+				severity="secondary"
+			>
+				Forget passsword? <span :class="$style.marked" @click="changeMode('reset')">Just reset it!</span>
+			</Message>
 		</div>
 
 		<p :class="$style.registerInvitation">
-			Don't have an account? <span @click="changeMode">Create it!</span>
+			Don't have an account? <span :class="$style.marked" @click="changeMode('register')">Create it!</span>
 		</p>
 
 		<Button
@@ -35,14 +43,14 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { login } from "~/validation/schemas";
 
 const emit = defineEmits<{
-	(e: "change"): void;
+	change: [value: string];
 }>();
-const changeMode = () => {
+const changeMode = (mode: string) => {
 	if (isLoading.value) {
 		return;
 	}
 
-	emit("change");
+	emit("change", mode);
 };
 
 const { showErrorToast } = useUI();
@@ -94,7 +102,7 @@ const auth = handleSubmit(async (values) => {
   margin: 20px 0 30px;
 }
 
-.registerInvitation span {
+.marked {
   color: #5AA9E6;
   cursor: pointer;
 }

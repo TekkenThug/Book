@@ -6,6 +6,24 @@ export const login = z.object({
 	password: z.string(),
 });
 
+export const resetPassword = z.object({
+	email: z.string().min(1).email(),
+});
+
+export const newPassword = z.object({
+	password: z
+		.string()
+		.min(1)
+		.regex(
+			PASSWORD_REGEXP,
+			"Password must contains at least 1 character in lower case, 1 in upper case, symbol and digit",
+		),
+	repeat_password: z.string().min(1),
+})
+	.refine(data => data.password === data.repeat_password, {
+		message: "Passwords don`t match",
+	});
+
 export const register = z.object({
 	email: z.string().min(1).email(),
 	firstName: z.string().min(2),

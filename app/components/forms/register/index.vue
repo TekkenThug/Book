@@ -37,7 +37,7 @@
 		</div>
 
 		<p :class="$style.registerInvitation">
-			Already registered? <span @click="$emit('change')">Log in!</span>
+			Already registered? <span @click="$emit('change', 'login')">Log in!</span>
 		</p>
 
 		<Button
@@ -57,7 +57,7 @@ import { register } from "~/validation/schemas";
 import { usersService } from "~/services/users";
 
 const emit = defineEmits<{
-	(e: "change"): void;
+	change: [value: string];
 }>();
 
 const { showSuccessToast, showErrorToast } = useUI();
@@ -88,7 +88,7 @@ const registerNewUser = handleSubmit(async (values) => {
 		});
 
 		showSuccessToast(response.message);
-		emit("change");
+		emit("change", "login");
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);

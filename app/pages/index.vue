@@ -100,6 +100,11 @@ watch(() => searchingString.value, requestToTheServer);
 const route = useRoute();
 const router = useRouter();
 onBeforeMount(async () => {
+	if (route.query.resetToken) {
+		await router.push({ name: "reset-password", query: { resetToken: route.query.resetToken } });
+		return;
+	}
+
 	if (route.query.emailToken) {
 		try {
 			await usersService.auth.verifyEmail(route.query.emailToken as string);
@@ -134,69 +139,69 @@ const registerToEvent = async (id: number) => {
 
 <style module>
 .section {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100dvh;
-  background: rgba(30, 26, 38, .9);
-  overflow: hidden;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 100dvh;
+	background: rgba(30, 26, 38, .9);
+	overflow: hidden;
 }
 
 .content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
 }
 
 .title {
-  font-size: 48px;
-  font-weight: 600;
-  margin-bottom: 20px;
+	font-size: 48px;
+	font-weight: 600;
+	margin-bottom: 20px;
 }
 
 .subtitle {
-  margin-bottom: 50px;
+	margin-bottom: 50px;
 }
 
 .videoBackground {
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
+	object-fit: cover;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
 }
 
 .searchInput {
-  width: 100%;
+	width: 100%;
 }
 
 .result {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  position: absolute;
-  min-width: 360px;
-  top: calc(100% + 20px);
-  left: calc(50% - 180px);
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	position: absolute;
+	min-width: 360px;
+	top: calc(100% + 20px);
+	left: calc(50% - 180px);
 }
 
 .resultItemRow {
-  font-size: 14px;
-  line-height: 16px;
+	font-size: 14px;
+	line-height: 16px;
 }
 
 .resultItemRow:not(:last-child) {
-  margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 
 .resultItemFooter {
-  padding-top: 10px;
-  display: flex;
-  justify-content: space-between;
+	padding-top: 10px;
+	display: flex;
+	justify-content: space-between;
 }
 </style>

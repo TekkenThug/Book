@@ -83,7 +83,6 @@ To run this project, you will need to add the following environment variables to
 
 ## Roadmap
 
--   Make restore password
 -   Make meeting rooms with WebRTC
 -   Readable errors from validation
 -   Unsubscribe from event
@@ -96,4 +95,4 @@ This is latest version's changelog. For past updates see `CHANGELOG.md`
 ### `v0.3.0` - Unreleased
 
 - `Changed` Rework API calls on axios
-- `Added` Reset password (only API route)
+- `Added` Restore password

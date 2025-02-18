@@ -24,6 +24,12 @@ interface RegisterCredentials {
 	repeat_password: string;
 }
 
+interface NewPasswordCredentials {
+	password: string;
+	repeat_password: string;
+	token: string;
+}
+
 export const usersService = {
 	async getMe() {
 		return (await API.get<UserMetadata>("/users/me")).data;
@@ -63,6 +69,24 @@ export const usersService = {
 		async verifyEmail(token: string) {
 			try {
 				return (await API.post<Message>("/auth/verify-email", { token })).data;
+			}
+			catch (error) {
+				throw (error as APIError).response.data;
+			}
+		},
+
+		async resetPassword(email: string) {
+			try {
+				return (await API.post<Message>("/auth/reset-password", { email })).data;
+			}
+			catch (error) {
+				throw (error as APIError).response.data;
+			}
+		},
+
+		async approveResetPassword(payload: NewPasswordCredentials) {
+			try {
+				return (await API.patch<Message>("/auth/reset-password", payload)).data;
 			}
 			catch (error) {
 				throw (error as APIError).response.data;
