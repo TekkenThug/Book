@@ -1,0 +1,115 @@
+<template>
+	<section>
+		<div class="container">
+			<UiLoader v-if="isLoading" />
+
+			<template v-else-if="event">
+				<Card v-if="mode === 'future'">
+					<template #title>
+						{{ event.title }} will be soon
+					</template>
+					<template #content>
+						<p>
+							This meeting will be on {{ parseDateTime(event.date) }}
+							and its duration is {{ parseInterval(event.duration) }}
+						</p>
+					</template>
+
+					<template #footer>
+						<NuxtLink
+							v-slot="{ navigate }"
+							:to="{ name: 'profile-events' }"
+							custom
+						>
+							<Button :class="$style.goToEventButton" @click="navigate">
+								Go to events
+							</Button>
+						</NuxtLink>
+					</template>
+				</Card>
+
+				<template v-else-if="mode ==='prepare'">
+					Well, go to prepare guys...
+				</template>
+			</template>
+		</div>
+	</section>
+</template>
+
+<script lang="ts" setup>
+import { isWithinInterval, isFuture, add } from "date-fns";
+import { parseInterval } from "~/utils/date";
+import { eventsService } from "~/services/events";
+import { recordsService } from "~/services/records";
+import { isAPIError } from "~/services/instance";
+import type { Event } from "~/services/events";
+import { UiLoader } from "#components";
+
+definePageMeta({
+	layout: "alternative-full",
+});
+
+const route = useRoute();
+const router = useRouter();
+
+const roomId = ref<string>(route.params.id as string);
+const event = ref<Event | null>(null);
+const isLoading = ref(true);
+const mode = ref<"prepare" | "future">("future");
+
+onBeforeMount(async () => {
+	try {
+		const records = await recordsService.get({ event_id: +roomId.value });
+
+		if (!records.length) {
+			throw createError({
+				statusCode: 404,
+				statusMessage: "Not found",
+				fatal: true,
+			});
+		}
+
+		event.value = await eventsService.getById(+roomId.value);
+
+		if (isFuture(event.value.date)) {
+			return;
+		}
+
+		if (
+			isWithinInterval(
+				new Date(),
+				{
+					start: event.value.date,
+					end: add(event.value.date, {
+						hours: event.value.duration.hours, minutes: event.value.duration.minutes,
+					}),
+				})
+		) {
+			console.log("Meeting is going on");
+		}
+		else {
+			router.push({ name: "index" });
+		}
+	}
+	catch (error) {
+		if (isAPIError(error)) {
+			throw createError({
+				statusCode: error.status,
+				fatal: true,
+			});
+		}
+		else {
+			throw error;
+		}
+	}
+	finally {
+		isLoading.value = false;
+	}
+});
+</script>
+
+<style module>
+.goToEventButton {
+	margin-top: 12px;
+}
+</style>

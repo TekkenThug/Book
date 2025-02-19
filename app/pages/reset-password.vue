@@ -1,14 +1,13 @@
 <template>
 	<section :class="$style.section">
-		<MainLogo />
+		<CommonMainLink />
 
-		<NewPasswordForm :token="route.query.resetToken" />
+		<FormsNewPassword :token="preparedToken" />
 	</section>
 </template>
 
 <script lang="ts" setup>
-import MainLogo from "~/components/common/main-link";
-import NewPasswordForm from "~/components/forms/new-password";
+import { FormsNewPassword, CommonMainLink } from "#components";
 
 definePageMeta({
 	layout: false,
@@ -16,6 +15,14 @@ definePageMeta({
 
 const route = useRoute();
 const router = useRouter();
+
+const preparedToken = computed(() => {
+	if (Array.isArray(route.query.resetToken) || !route.query.resetToken) {
+		return "";
+	}
+
+	return route.query.resetToken;
+});
 
 onBeforeMount(() => {
 	if (!route.query.resetToken) {
@@ -26,11 +33,11 @@ onBeforeMount(() => {
 
 <style module>
 .section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100dvh;
-  padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 100dvh;
+	padding: 20px;
 }
 </style>

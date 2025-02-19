@@ -1,5 +1,5 @@
 <template>
-	<Loader v-if="isLoading" />
+	<UiLoader v-if="isLoading" />
 
 	<DataTable v-else :value="events">
 		<template #empty>
@@ -31,9 +31,10 @@
 </template>
 
 <script setup lang="ts">
-import Loader from "~/components/common/loader";
+import { UiLoader } from "#components";
 import type { MappedEvent } from "~/services/events";
 import { eventsService } from "~/services/events";
+import { isAPIError } from "~/services/instance";
 
 const { showErrorToast } = useUI();
 
@@ -47,7 +48,9 @@ const getEvents = async () => {
 		isLoading.value = false;
 	}
 	catch (error) {
-		showErrorToast(error.message);
+		if (isAPIError(error)) {
+			showErrorToast(error.message);
+		}
 	}
 };
 

@@ -40,12 +40,13 @@
 
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
+import type { AuthFormMode } from "~/pages/auth/types";
 import { login } from "~/validation/schemas";
 
 const emit = defineEmits<{
-	change: [value: string];
+	change: [value: AuthFormMode];
 }>();
-const changeMode = (mode: string) => {
+const changeMode = (mode: AuthFormMode) => {
 	if (isLoading.value) {
 		return;
 	}

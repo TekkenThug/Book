@@ -12,7 +12,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:inspect": "npx @eslint/config-inspector",
-    "type:check": "tsc --noemit"
+    "type:check": "vue-tsc --noemit"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.10.1",

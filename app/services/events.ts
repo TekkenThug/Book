@@ -13,6 +13,7 @@ export interface Event {
 		hours?: number;
 		minutes?: number;
 	};
+	description: string;
 }
 
 export interface EventWithChecked extends Event {
@@ -28,10 +29,10 @@ export const eventsService = {
 		title: string;
 		datetime: string;
 		duration: string;
-		bookId: number;
+		book_id: number;
 		description: string;
 	}) {
-		await API.post("/events", { ...payload, book_id: payload.bookId });
+		await API.post("/events", { ...payload, book_id: payload.book_id });
 	},
 
 	async get(options: {

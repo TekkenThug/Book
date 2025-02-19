@@ -53,7 +53,7 @@ export const usersService = {
 				return (await API.post<Token>("/auth/login", payload)).data;
 			}
 			catch (error) {
-				throw (error as APIError).response.data;
+				throw (error as APIError).response?.data;
 			}
 		},
 
@@ -62,7 +62,7 @@ export const usersService = {
 				return (await API.post<Message>("/auth/register", payload)).data;
 			}
 			catch (error) {
-				throw (error as APIError).response.data;
+				throw (error as APIError).response?.data;
 			}
 		},
 
@@ -71,7 +71,7 @@ export const usersService = {
 				return (await API.post<Message>("/auth/verify-email", { token })).data;
 			}
 			catch (error) {
-				throw (error as APIError).response.data;
+				throw (error as APIError).response?.data;
 			}
 		},
 
@@ -80,7 +80,7 @@ export const usersService = {
 				return (await API.post<Message>("/auth/reset-password", { email })).data;
 			}
 			catch (error) {
-				throw (error as APIError).response.data;
+				throw (error as APIError).response?.data;
 			}
 		},
 
@@ -89,7 +89,7 @@ export const usersService = {
 				return (await API.patch<Message>("/auth/reset-password", payload)).data;
 			}
 			catch (error) {
-				throw (error as APIError).response.data;
+				throw (error as APIError).response?.data;
 			}
 		},
 

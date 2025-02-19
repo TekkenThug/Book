@@ -1,6 +1,6 @@
 <template>
 	<form :class="$style.content">
-		<PasswordInput
+		<UiPasswordInput
 			v-model="password"
 			v-bind="passwordAttrs"
 			placeholder="Password"
@@ -26,7 +26,7 @@
 <script lang="ts" setup>
 import { newPassword } from "~/validation/schemas";
 import { usersService } from "~/services/users";
-import PasswordInput from "~/components/ui/password-input";
+import { UiPasswordInput } from "#components";
 
 const router = useRouter();
 const { showErrorToast, showSuccessToast } = useUI();

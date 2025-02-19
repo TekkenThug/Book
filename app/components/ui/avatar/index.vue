@@ -11,5 +11,5 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{ image?: string }>();
+defineProps<{ image?: string | null }>();
 </script>

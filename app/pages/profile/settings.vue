@@ -1,10 +1,10 @@
 <template>
-	<Section title="Settings">
-		<Loader v-if="isLoading" />
+	<ProfileSection title="Settings">
+		<UiLoader v-if="isLoading" />
 
 		<template v-else>
 			<div v-if="userStore.user" :class="$style.avatarField">
-				<Avatar
+				<UiAvatar
 					:class="$style.avatar"
 					:image="uploadedAvatar || userStore.user.avatar"
 					shape="circle"
@@ -53,7 +53,7 @@
 					<div :class="$style.fieldContainer">
 						<label for="username">New password</label>
 
-						<PasswordInput v-model="editableSettings.password" />
+						<UiPasswordInput v-model="editableSettings.password" />
 					</div>
 
 					<div :class="$style.fieldContainer">
@@ -80,14 +80,11 @@
 				@click="logout"
 			/>
 		</template>
-	</Section>
+	</ProfileSection>
 </template>
 
 <script setup lang="ts">
-import Avatar from "~/components/ui/avatar";
-import PasswordInput from "~/components/ui/password-input";
-import Loader from "~/components/common/loader";
-import Section from "~/components/profile/section";
+import { ProfileSection, UiLoader, UiAvatar, UiPasswordInput } from "#components";
 import { PASSWORD_REGEXP } from "~/data/regexp";
 import type { Settings } from "~/services/users";
 import { usersService } from "~/services/users";
@@ -180,10 +177,15 @@ const handleClickOnUploader = () => {
 		avatarUploader.value.click();
 	}
 };
-const handleUploadedAvatar = async (event) => {
+const handleUploadedAvatar = async (event: Event) => {
 	try {
+		const target = event.target as HTMLInputElement;
+		if (!target.files || !target.files.length) {
+			return;
+		}
+
 		const formData = new FormData();
-		formData.set("avatar", event.target.files[0]);
+		formData.set("avatar", target.files[0]);
 
 		const result = await usersService.uploadAvatar(formData);
 		userStore.user = await usersService.getMe();

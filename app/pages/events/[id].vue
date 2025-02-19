@@ -42,7 +42,7 @@
 							Description:
 						</h3>
 
-						<EditorShowcase :text="event.description" />
+						<UiEditorShowcase :text="event.description ?? ''" />
 					</li>
 				</ul>
 
@@ -63,20 +63,20 @@
 <script lang="ts" setup>
 import { type Event, eventsService } from "~/services/events";
 import { parseInterval } from "~/utils/date";
-import EditorShowcase from "~/components/ui/editor-showcase";
+import { UiEditorShowcase } from "#components";
 
 const route = useRoute();
 const router = useRouter();
 
 const event = ref<Event | null>(null);
 
-const disabledTooltipText = computed<boolean>(() => "Meeting time didn't come");
+const disabledTooltipText = computed(() => "Meeting time didn't come");
 
 onBeforeMount(async () => {
 	try {
-		event.value = await eventsService.getById(route.params.id);
+		event.value = await eventsService.getById(+(route.params.id as string));
 	}
-	catch (error) {
+	catch {
 		await router.push({ name: "index" });
 	}
 });

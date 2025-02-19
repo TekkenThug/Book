@@ -22,7 +22,7 @@
 				placeholder="Email"
 			/>
 
-			<PasswordInput
+			<UiPasswordInput
 				v-model="password"
 				v-bind="passwordAttrs"
 				placeholder="Password"
@@ -52,12 +52,13 @@
 
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import PasswordInput from "~/components/ui/password-input";
+import { UiPasswordInput } from "#components";
 import { register } from "~/validation/schemas";
 import { usersService } from "~/services/users";
+import type { AuthFormMode } from "~/pages/auth/types";
 
 const emit = defineEmits<{
-	change: [value: string];
+	change: [value: AuthFormMode];
 }>();
 
 const { showSuccessToast, showErrorToast } = useUI();

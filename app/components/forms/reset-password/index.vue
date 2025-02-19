@@ -25,6 +25,7 @@
 import { defineEmits } from "vue";
 import { resetPassword } from "~/validation/schemas";
 import { usersService } from "~/services/users";
+import type { AuthFormMode } from "~/pages/auth/types";
 
 const { showErrorToast, showSuccessToast } = useUI();
 const { meta, defineField, handleSubmit } = useForm({
@@ -32,7 +33,7 @@ const { meta, defineField, handleSubmit } = useForm({
 });
 
 const emit = defineEmits<{
-	change: [value: string];
+	change: [value: AuthFormMode];
 }>();
 
 const [email, emailAttrs] = defineField("email");

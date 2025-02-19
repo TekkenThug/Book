@@ -67,6 +67,7 @@
 <script lang="ts" setup>
 import _debounce from "lodash.debounce";
 import { eventsService, type EventWithChecked } from "~/services/events";
+import { isAPIError } from "~/services/instance";
 import { recordsService } from "~/services/records";
 import { usersService } from "~/services/users";
 
@@ -91,7 +92,9 @@ const requestToTheServer = _debounce((book: string) => {
 		}
 	}
 	catch (error) {
-		showErrorToast(error.message);
+		if (isAPIError(error)) {
+			showErrorToast(error.message);
+		}
 	}
 }, 250);
 

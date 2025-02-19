@@ -1,5 +1,5 @@
 <template>
-	<Section title="Events">
+	<ProfileSection title="Events">
 		<Button
 			icon="pi pi-calendar-plus"
 			label="Create event"
@@ -7,13 +7,12 @@
 			@click="goToCreate"
 		/>
 
-		<EventList />
-	</Section>
+		<ProfileEventsList />
+	</ProfileSection>
 </template>
 
 <script lang="ts" setup>
-import Section from "~/components/profile/section";
-import EventList from "~/components/profile/events/list";
+import { ProfileSection, ProfileEventsList } from "#components";
 
 const router = useRouter();
 const goToCreate = async () => {

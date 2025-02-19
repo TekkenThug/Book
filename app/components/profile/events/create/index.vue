@@ -63,7 +63,7 @@
 				/>
 			</div>
 
-			<Editor
+			<UiEditor
 				v-model="description"
 				placeholder="Describe event"
 				:class="$style.editor"
@@ -84,7 +84,7 @@
 import { add } from "date-fns";
 import { toTypedSchema } from "@vee-validate/zod";
 import type { AutoCompleteCompleteEvent, AutoCompleteOptionSelectEvent } from "primevue/autocomplete";
-import Editor from "~/components/ui/editor";
+import { UiEditor } from "#components";
 import { eventsService } from "~/services/events";
 import { createEvent } from "~/validation/schemas";
 import type { Book } from "~/types/books";
@@ -97,7 +97,7 @@ const searchingBook = ref("");
 const isLoading = ref(false);
 const tomorrowDate = add(new Date(), { days: 1 });
 const emit = defineEmits<{
-	(e: "submit");
+	submit: [];
 }>();
 const searchBooks = async ({ query: title }: AutoCompleteCompleteEvent) => {
 	try {
@@ -132,8 +132,8 @@ const sendToCreateEvent = handleSubmit(async (values) => {
 			...values,
 			datetime: values.datetime.toISOString(),
 			duration: mapToInterval(values.duration),
-			book_id: values.bookId,
-			description: values.description,
+			book_id: +values.bookId,
+			description: values.description ?? "",
 		});
 
 		searchingBook.value = "";
@@ -154,28 +154,28 @@ const sendToCreateEvent = handleSubmit(async (values) => {
 
 <style module>
 .title {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .rules {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-bottom: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	margin-bottom: 20px;
 }
 
 .fields {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-bottom: 20px;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 20px;
+	margin-bottom: 20px;
 }
 
 .editor {
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .searchPanel {
-  width: 420px;
+	width: 420px;
 }
 </style>
