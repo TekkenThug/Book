@@ -19,7 +19,7 @@
 
 					<UiAvatar
 						v-if="authStore.authenticated && userStore.user"
-						:image="userStore.user.avatar"
+						:image="userStore.user.avatar ?? undefined"
 						shape="circle"
 						:class="$style.avatar"
 						@click="goToProfile"

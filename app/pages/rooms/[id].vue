@@ -4,29 +4,7 @@
 			<UiLoader v-if="isLoading" />
 
 			<template v-else-if="event">
-				<Card v-if="mode === 'future'">
-					<template #title>
-						{{ event.title }} will be soon
-					</template>
-					<template #content>
-						<p>
-							This meeting will be on {{ parseDateTime(event.date) }}
-							and its duration is {{ parseInterval(event.duration) }}
-						</p>
-					</template>
-
-					<template #footer>
-						<NuxtLink
-							v-slot="{ navigate }"
-							:to="{ name: 'profile-events' }"
-							custom
-						>
-							<Button :class="$style.goToEventButton" @click="navigate">
-								Go to events
-							</Button>
-						</NuxtLink>
-					</template>
-				</Card>
+				<RoomFuture v-if="mode === 'future'" :event />
 
 				<template v-else-if="mode ==='prepare'">
 					Well, go to prepare guys...
@@ -38,12 +16,11 @@
 
 <script lang="ts" setup>
 import { isWithinInterval, isFuture, add } from "date-fns";
-import { parseInterval } from "~/utils/date";
 import { eventsService } from "~/services/events";
 import { recordsService } from "~/services/records";
 import { isAPIError } from "~/services/instance";
 import type { Event } from "~/services/events";
-import { UiLoader } from "#components";
+import { UiLoader, RoomFuture } from "#components";
 
 definePageMeta({
 	layout: "alternative-full",
@@ -107,9 +84,3 @@ onBeforeMount(async () => {
 	}
 });
 </script>
-
-<style module>
-.goToEventButton {
-	margin-top: 12px;
-}
-</style>

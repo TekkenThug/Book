@@ -73,7 +73,7 @@ To run this project, you will need to add the following environment variables to
 -   `SMTP_USER` - SMTP user
 -   `SMTP_PASSWORD` - SMTP password
 -   `S3_HOST`
--   `S3_EXTERNAL_URL`
+-   `S3_EXTERNAL_URL` - S3 URL, starts with `http://` or `https://`
 -   `S3_PORT`
 -   `S3_BUCKET`
 -   `S3_ACCESS_KEY`

@@ -7,6 +7,7 @@
 				<UiAvatar
 					:class="$style.avatar"
 					:image="uploadedAvatar || userStore.user.avatar"
+					size="xlarge"
 					shape="circle"
 				/>
 
@@ -228,11 +229,6 @@ const logout = async () => {
   display: flex;
   align-items: center;
   margin-bottom: 40px;
-}
-
-.avatar {
-  width: 120px;
-  height: 120px;
 }
 
 .editAvatarButton {
