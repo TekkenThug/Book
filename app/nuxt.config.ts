@@ -1,7 +1,4 @@
 export default defineNuxtConfig({
-	devtools: { enabled: true },
-
-	ssr: false,
 
 	modules: [
 		"@primevue/nuxt-module",
@@ -9,6 +6,9 @@ export default defineNuxtConfig({
 		"@nuxt/eslint",
 		"@vee-validate/nuxt",
 	],
+
+	ssr: false,
+	devtools: { enabled: true },
 
 	app: {
 		head: {
@@ -25,6 +25,13 @@ export default defineNuxtConfig({
 		},
 	},
 
+	css: [
+		"normalize.css",
+		"reset-css",
+		"primeicons/primeicons.css",
+		"~/assets/styles/global.css",
+	],
+
 	runtimeConfig: {
 		public: {
 			baseURL: process.env.NODE_ENV === "production"
@@ -33,22 +40,8 @@ export default defineNuxtConfig({
 		},
 	},
 
-	css: [
-		"normalize.css",
-		"reset-css",
-		"primeicons/primeicons.css",
-		"~/assets/styles/global.css",
-	],
-
-	primevue: {
-		importTheme: {
-			from: "@/themes/theme.ts",
-		},
-		options: {
-			unstyled: false,
-			ripple: true,
-			inputVariant: "filled",
-		},
+	typescript: {
+		typeCheck: true,
 	},
 
 	eslint: {
@@ -61,7 +54,14 @@ export default defineNuxtConfig({
 		},
 	},
 
-	typescript: {
-		typeCheck: true,
+	primevue: {
+		importTheme: {
+			from: "@/themes/theme.ts",
+		},
+		options: {
+			unstyled: false,
+			ripple: true,
+			inputVariant: "filled",
+		},
 	},
 });

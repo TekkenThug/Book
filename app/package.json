@@ -15,18 +15,17 @@
     "type:check": "tsc --noemit"
   },
   "dependencies": {
-    "@nuxt/eslint": "^0.3.13",
-    "@pinia/nuxt": "^0.5.1",
+    "@pinia/nuxt": "^0.10.1",
     "@primevue/themes": "^4.0.0-beta.5",
     "@vee-validate/nuxt": "^4.13.1",
     "@vee-validate/zod": "^4.13.1",
-    "@vueuse/core": "^10.9.0",
+    "@vueuse/core": "^12.7.0",
     "axios": "^1.7.6",
-    "date-fns": "^3.6.0",
+    "date-fns": "^4.1.0",
     "lodash.debounce": "^4.0.8",
     "normalize.css": "^8.0.1",
     "nuxt": "^3.11.2",
-    "pinia": "^2.1.7",
+    "pinia": "^3.0.1",
     "primeicons": "^7.0.0",
     "primevue": "^4.0.0-rc.2",
     "quill": "^2.0.2",
@@ -36,10 +35,12 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@eslint/config-inspector": "^0.5.1",
+    "@eslint/config-inspector": "^1.0.0",
+    "@nuxt/eslint": "^1.1.0",
     "@primevue/nuxt-module": "^4.2.5",
     "@types/lodash.debounce": "^4.0.9",
+    "eslint": "^9.20.1",
     "typescript": "^5.5.4",
-    "vue-tsc": "^2.1.2"
+    "vue-tsc": "^2.2.2"
   }
 }
