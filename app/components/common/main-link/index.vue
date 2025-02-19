@@ -1,5 +1,5 @@
 <template>
-	<NuxtLink :to="{ name: 'index' }" class="h1">
+	<NuxtLink :to="{ name: 'index' }" :class="['h1', $style.link]">
 		<img
 			src="~/assets/images/orange-book.png"
 			alt="book"
@@ -11,6 +11,10 @@
 </template>
 
 <style module>
+.link {
+	width: max-content;
+}
+
 .logo {
   width: 40px;
 }

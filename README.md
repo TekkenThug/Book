@@ -87,6 +87,7 @@ To run this project, you will need to add the following environment variables to
 -   Readable errors from validation
 -   Unsubscribe from event
 -   Delete event
+-   Tailwind integration
 
 ## Changelog
 
@@ -94,5 +95,6 @@ This is latest version's changelog. For past updates see `CHANGELOG.md`
 
 ### `v0.3.0` - Unreleased
 
-- `Changed` Rework API calls on axios
 - `Added` Restore password
+- `Added` Template for client-side error
+- `Changed` Rework API calls on axios

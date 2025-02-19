@@ -1,7 +1,7 @@
 import type { AxiosError } from "axios";
 
-export interface Message {
+export type Message = {
 	message: string;
-}
+};
 
-export interface APIError extends AxiosError {}
+export type APIError = AxiosError;

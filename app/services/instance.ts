@@ -13,3 +13,5 @@ const API = axios.create({
 });
 
 export default API;
+
+export const isAPIError = (error: unknown) => axios.isAxiosError(error);
