@@ -29,7 +29,7 @@ export const eventsService = {
 		title: string;
 		datetime: string;
 		duration: string;
-		book_id: number;
+		book_id: string;
 		description: string;
 	}) {
 		await API.post("/events", { ...payload, book_id: payload.book_id });

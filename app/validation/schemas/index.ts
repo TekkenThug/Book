@@ -44,7 +44,7 @@ export const register = z.object({
 export const createEvent = z.object({
 	title: z.string().min(5),
 	datetime: z.date(),
-	bookId: z.string(),
+	book_id: z.string(),
 	duration: z.date(),
 	description: z.string().optional(),
 });
