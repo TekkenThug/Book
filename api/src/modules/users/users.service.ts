@@ -90,6 +90,6 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    return pick(user, 'avatar');
+    return pick(user, ['avatar', 'id', 'first_name', 'last_name']);
   }
 }
