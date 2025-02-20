@@ -108,13 +108,13 @@ const searchBooks = async ({ query: title }: AutoCompleteCompleteEvent) => {
 	}
 };
 const selectBook = ({ value }: AutoCompleteOptionSelectEvent) => {
-	bookId.value = value.id;
+	book_id.value = value.id;
 };
 
 const { meta, defineField, handleSubmit, resetForm } = useForm({
 	validationSchema: toTypedSchema(createEvent),
 });
-const [bookId] = defineField("bookId");
+const [book_id] = defineField("book_id");
 const [title, titleAttrs] = defineField("title");
 const [datetime, datetimeAttrs] = defineField("datetime");
 const [duration] = defineField("duration");
@@ -132,7 +132,7 @@ const sendToCreateEvent = handleSubmit(async (values) => {
 			...values,
 			datetime: values.datetime.toISOString(),
 			duration: mapToInterval(values.duration),
-			book_id: +values.bookId,
+			book_id: values.book_id,
 			description: values.description ?? "",
 		});
 
