@@ -2,9 +2,9 @@ import cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { EnvService } from './env/env.service';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import morganConfig from '@/config/morgan.config';
+import docsConfig from '@/config/docs.config';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
@@ -19,23 +19,13 @@ async function bootstrap() {
   const configService = app.get(EnvService);
   const port = configService.get('APP_PORT');
 
-  const config = new DocumentBuilder()
-    .setTitle('Books API documentation')
-    .setVersion('0.2.0')
-    .addTag('Auth', 'Authentication system')
-    .addTag('Books', 'Work with books')
-    .addTag('Events', 'Work with book events')
-    .addTag('Records', 'Work with records to events')
-    .addTag('User', 'Work with users')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/v1/docs', app, document);
+  docsConfig(app);
 
   app.use(helmet());
   app.use(cookieParser());
   app.enableCors({
     credentials: true,
-    origin: (origin, cb) => {
+    origin: (origin: string, cb: (a: null | Error, b?: boolean) => void) => {
       if (
         (origin && configService.get('APP_CLIENT_URL')) ||
         (!origin && configService.get('APP_ENV') === 'dev')
