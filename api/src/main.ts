@@ -5,6 +5,7 @@ import { EnvService } from './env/env.service';
 import helmet from 'helmet';
 import morganConfig from '@/config/morgan.config';
 import docsConfig from '@/config/docs.config';
+import corsConfig from '@/config/cors.config';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
@@ -19,23 +20,16 @@ async function bootstrap() {
   const configService = app.get(EnvService);
   const port = configService.get('APP_PORT');
 
-  docsConfig(app);
+  docsConfig(app, '0.2.0');
 
   app.use(helmet());
   app.use(cookieParser());
-  app.enableCors({
-    credentials: true,
-    origin: (origin: string, cb: (a: null | Error, b?: boolean) => void) => {
-      if (
-        (origin && configService.get('APP_CLIENT_URL')) ||
-        (!origin && configService.get('APP_ENV') === 'dev')
-      ) {
-        cb(null, true);
-      } else {
-        cb(new Error('Not allowed by CORS'));
-      }
-    },
-  });
+  app.enableCors(
+    corsConfig(
+      configService.get('APP_CLIENT_URL'),
+      configService.get('APP_ENV') === 'dev',
+    ),
+  );
 
   await app.listen(port);
 }

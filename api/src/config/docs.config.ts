@@ -1,9 +1,10 @@
-import { INestApplication } from "@nestjs/common";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { INestApplication } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-const config = new DocumentBuilder()
+export default (app: INestApplication, version: string) => {
+  const config = new DocumentBuilder()
     .setTitle('Books API documentation')
-    .setVersion('0.2.0')
+    .setVersion(version)
     .addTag('Auth', 'Authentication system')
     .addTag('Books', 'Work with books')
     .addTag('Events', 'Work with book events')
@@ -12,6 +13,9 @@ const config = new DocumentBuilder()
     .addTag('Rooms', 'Work with meeting rooms')
     .build();
 
-export default (app: INestApplication) => {
-    return SwaggerModule.setup('api/v1/docs', app, SwaggerModule.createDocument(app, config));
-}
+  return SwaggerModule.setup(
+    'api/v1/docs',
+    app,
+    SwaggerModule.createDocument(app, config),
+  );
+};
