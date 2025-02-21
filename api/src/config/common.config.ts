@@ -73,6 +73,9 @@ class EnvVariables {
 
   @IsString()
   S3_SECRET_KEY: string;
+
+  @IsNumber()
+  WS_PORT: number;
 }
 
 export const validate = (env: Record<string, unknown>) => {

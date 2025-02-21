@@ -17,6 +17,7 @@ services:
     container_name: api
     ports:
       - ${APP_PORT:-8000}:${APP_PORT:-8000}
+      - ${WS_PORT:-8030}:${WS_PORT:-8030}
     env_file:
       - ./.env
     volumes:
