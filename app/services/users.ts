@@ -1,7 +1,10 @@
 import API from "~/services/instance";
 import type { APIError, Message } from "~/types/api";
 
-interface UserMetadata {
+export interface UserMetadata {
+	id: number;
+	first_name: string;
+	last_name: string;
 	avatar: string | null;
 }
 

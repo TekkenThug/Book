@@ -11,6 +11,7 @@ import { AuthModule } from '@/modules/auth/auth.module';
 import { EnvModule } from '@/env/env.module';
 import { MailModule } from '@/modules/mail/mail.module';
 import { StorageModule } from './modules/storage/storage.module';
+import { RoomsModule } from './modules/rooms/rooms.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { StorageModule } from './modules/storage/storage.module';
       imports: [EnvModule],
       useClass: DatabaseConfigService,
     }),
+    RoomsModule,
     BooksModule,
     EventsModule,
     UsersModule,

@@ -1,8 +1,6 @@
 <template>
 	<main :class="$style.main">
-		<div class="container">
-			<slot />
-		</div>
+		<slot />
 	</main>
 
 	<CommonMainLink :class="$style.logo" />
@@ -14,6 +12,7 @@ import { CommonMainLink } from "#components";
 
 <style module>
 .main {
+	padding: 20px;
     height: 100dvh;
     display: flex;
     justify-content: center;

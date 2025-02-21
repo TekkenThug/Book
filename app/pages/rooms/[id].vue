@@ -1,17 +1,13 @@
 <template>
-	<section>
-		<div class="container">
-			<UiLoader v-if="isLoading" />
+	<UiLoader v-if="isLoading" />
 
-			<template v-else-if="event">
-				<RoomFuture v-if="mode === 'future'" :event />
+	<template v-else-if="event">
+		<RoomFuture v-if="mode === 'future'" :event />
 
-				<template v-else-if="mode ==='prepare'">
-					Well, go to prepare guys...
-				</template>
-			</template>
-		</div>
-	</section>
+		<template v-else-if="mode ==='prepare' && roomId">
+			<RoomMeeting :room-id="roomId" />
+		</template>
+	</template>
 </template>
 
 <script lang="ts" setup>
@@ -20,7 +16,7 @@ import { eventsService } from "~/services/events";
 import { recordsService } from "~/services/records";
 import { isAPIError } from "~/services/instance";
 import type { Event } from "~/services/events";
-import { UiLoader, RoomFuture } from "#components";
+import { UiLoader, RoomFuture, RoomMeeting } from "#components";
 
 definePageMeta({
 	layout: "alternative-full",
@@ -29,7 +25,7 @@ definePageMeta({
 const route = useRoute();
 const router = useRouter();
 
-const roomId = ref<string>(route.params.id as string);
+const roomId = ref<number>(+(route.params.id as string));
 const event = ref<Event | null>(null);
 const isLoading = ref(true);
 const mode = ref<"prepare" | "future">("future");
@@ -62,7 +58,8 @@ onBeforeMount(async () => {
 					}),
 				})
 		) {
-			console.log("Meeting is going on");
+			setPageLayout(false);
+			mode.value = "prepare";
 		}
 		else {
 			router.push({ name: "index" });
