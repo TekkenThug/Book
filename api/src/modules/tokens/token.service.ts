@@ -7,6 +7,7 @@ import { User } from '@/modules/users/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { EnvService } from '@/env/env.service';
 import { addDays, addMinutes, getTime } from 'date-fns';
+import { JWTToken } from './token.types';
 
 @Injectable()
 export class TokenService {
@@ -117,7 +118,7 @@ export class TokenService {
     });
   }
 
-  public async verifyToken(token: string) {
+  public async verifyToken(token: string): Promise<JWTToken> {
     return await this.jwtService.verifyAsync(token);
   }
 }
