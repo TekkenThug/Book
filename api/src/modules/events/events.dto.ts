@@ -1,5 +1,12 @@
 import { INTERVAL_REGEXP } from '@/data/regexp';
-import { IsDateString, IsNotEmpty, IsOptional, IsString, Length, Matches } from "class-validator";
+import {
+  IsDateString,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+  Matches,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateEventDto {

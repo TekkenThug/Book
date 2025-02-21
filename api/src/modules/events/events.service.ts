@@ -13,6 +13,7 @@ import { CreateEventDto } from './events.dto';
 import { BooksService } from '@/modules/books/books.service';
 import { UsersService } from '@/modules/users/users.service';
 import { RecordsService } from '@/modules/records/records.service';
+import { RoomsService } from '@/modules/rooms/rooms.service';
 
 export interface FilterOptions {
   book?: string | null;
@@ -36,6 +37,7 @@ export class EventsService {
     private eventsRepository: Repository<Event>,
     private booksService: BooksService,
     private usersService: UsersService,
+    private roomsService: RoomsService,
     @Inject(forwardRef(() => RecordsService))
     private recordsService: RecordsService,
   ) {}
@@ -147,6 +149,8 @@ export class EventsService {
     await this.recordsService.createRecordToEvent(user.id, event.id);
 
     const savedEvent = await this.eventsRepository.findOneBy({ id: event.id });
+
+    this.roomsService.create(event);
 
     if (savedEvent) {
       return omit(savedEvent, 'author', 'book');
