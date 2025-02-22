@@ -1,5 +1,14 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { Event } from '@/modules/events/event.entity';
+import { User } from '@/modules/users/user.entity';
 
 export type ChatMessage = {
   id: string;
@@ -15,6 +24,10 @@ export class Room {
 
   @Column({ type: 'json', default: () => "'[]'" })
   chat_log: ChatMessage[];
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  participants: User[];
 
   @OneToOne(() => Event)
   @JoinColumn({ name: 'event_id' })

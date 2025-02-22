@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 import pick from 'lodash.pick';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { SignUpDto } from '@/modules/auth/auth.dto';
 import {
   UpdateAvatarDto,
@@ -43,6 +43,10 @@ export class UsersService {
 
   async getById(id: number) {
     return await this.usersRepository.findOneBy({ id });
+  }
+
+  async getMany(ids: number[]) {
+    return await this.usersRepository.find({ where: { id: In(ids) } });
   }
 
   async getByEmail(email: string) {

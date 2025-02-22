@@ -24,4 +24,13 @@ export class RoomsController {
   async getById(@Param('id') id: number, @Req() request: Request) {
     return await this.roomsService.getById(id, request.user!.sub);
   }
+
+  @ApiOperation({ summary: 'Get participants' })
+  @ApiOkResponse(createSuccessDoc(200, RoomDto))
+  @ApiNotFoundResponse(createErrorDoc(404))
+  @ApiParam({ name: 'id', description: 'Event`s id' })
+  @Get(':id/participants')
+  async getParticipants(@Param('id') id: number, @Req() request: Request) {
+    return await this.roomsService.getParticipants(id, request.user!.sub);
+  }
 }
