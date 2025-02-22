@@ -46,17 +46,23 @@ export class RoomsGateway
         return;
       }
 
-      next();
+      this.service
+        .getById(+roomId, token.sub, false)
+        .then((res) => {
+          if (res) {
+            next();
+          } else {
+            next(new WsException('Room not found'));
+          }
+        })
+        .catch(() => {
+          next(new WsException('Room not found'));
+        });
     });
   }
 
   async handleConnection(socket: Socket) {
     const { roomId, token } = this.extractHandshakePayload(socket);
-
-    if (!(await this.service.getById(+roomId!, token!.sub, false))) {
-      socket.disconnect();
-      return;
-    }
 
     await socket.join(roomId!);
 
@@ -67,12 +73,8 @@ export class RoomsGateway
   handleDisconnect(socket: Socket) {
     const { roomId, token } = this.extractHandshakePayload(socket);
 
-    if (!roomId || !token) {
-      return;
-    }
-
-    void this.service.deleteParticipantFromRoom(+roomId, token.sub);
-    this.server.to(roomId).emit(EVENTS.LEAVE_FROM_ROOM, token.sub);
+    void this.service.deleteParticipantFromRoom(+roomId!, token!.sub);
+    this.server.to(roomId!).emit(EVENTS.LEAVE_FROM_ROOM, token!.sub);
   }
 
   @SubscribeMessage(EVENTS.SEND_CHAT_MESSAGE)
