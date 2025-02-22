@@ -66,8 +66,11 @@ export class RoomsGateway
 
     await socket.join(roomId!);
 
-    void this.service.addParticipantToRoom(+roomId!, token!.sub);
-    this.server.to(roomId!).emit(EVENTS.ENTER_IN_ROOM, token!.sub);
+    const newUser = await this.service.addParticipantToRoom(
+      +roomId!,
+      token!.sub,
+    );
+    this.server.to(roomId!).emit(EVENTS.ENTER_IN_ROOM, newUser);
   }
 
   handleDisconnect(socket: Socket) {

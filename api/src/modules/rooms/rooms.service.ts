@@ -59,6 +59,8 @@ export class RoomsService {
     room.participants = [...room.participants, user];
 
     void this.repository.save(room);
+
+    return this.serializeParticipant(user);
   }
 
   async deleteParticipantFromRoom(id: number, user_id: number) {
@@ -115,8 +117,10 @@ export class RoomsService {
       throw new NotFoundException();
     }
 
-    return room.participants.map((item) =>
-      pick(item, ['avatar', 'first_name', 'last_name']),
-    );
+    return room.participants.map((user) => this.serializeParticipant(user));
+  }
+
+  private serializeParticipant(user: Room['participants'][0]) {
+    return pick(user, ['avatar', 'first_name', 'last_name', 'id']);
   }
 }
