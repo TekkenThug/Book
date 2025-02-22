@@ -121,4 +121,8 @@ export class TokenService {
   public async verifyToken(token: string): Promise<JWTToken> {
     return await this.jwtService.verifyAsync(token);
   }
+
+  public verifyTokenSync(token: string): JWTToken {
+    return this.jwtService.verify(token);
+  }
 }

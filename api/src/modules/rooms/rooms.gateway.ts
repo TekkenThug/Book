@@ -4,6 +4,8 @@ import {
   OnGatewayConnection,
   WebSocketServer,
   OnGatewayDisconnect,
+  OnGatewayInit,
+  WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { RoomsService } from './rooms.service';
@@ -19,7 +21,9 @@ import { EVENTS } from './rooms.data';
     origin: '*',
   },
 })
-export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class RoomsGateway
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
+{
   constructor(
     private service: RoomsService,
     private tokenService: TokenService,
@@ -28,9 +32,52 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
+  afterInit(server: Server) {
+    server.use((socket, next) => {
+      const { roomId, token } = this.extractHandshakePayload(socket);
+
+      if (!roomId) {
+        next(new WsException('Room not exist'));
+        return;
+      }
+
+      if (!token) {
+        next(new WsException('Token not exist'));
+        return;
+      }
+
+      next();
+    });
+  }
+
+  async handleConnection(socket: Socket) {
+    const { roomId, token } = this.extractHandshakePayload(socket);
+
+    if (!(await this.service.getById(+roomId!, token!.sub, false))) {
+      socket.disconnect();
+      return;
+    }
+
+    await socket.join(roomId!);
+
+    void this.service.addParticipantToRoom(+roomId!, token!.sub);
+    this.server.to(roomId!).emit(EVENTS.ENTER_IN_ROOM, token!.sub);
+  }
+
+  handleDisconnect(socket: Socket) {
+    const { roomId, token } = this.extractHandshakePayload(socket);
+
+    if (!roomId || !token) {
+      return;
+    }
+
+    void this.service.deleteParticipantFromRoom(+roomId, token.sub);
+    this.server.to(roomId).emit(EVENTS.LEAVE_FROM_ROOM, token.sub);
+  }
+
   @SubscribeMessage(EVENTS.SEND_CHAT_MESSAGE)
   async handleEvent(socket: Socket, message: string) {
-    const { roomId, token } = await this.extractHandshakePayload(socket);
+    const { roomId, token } = this.extractHandshakePayload(socket);
 
     if (!roomId || !token) {
       return;
@@ -43,55 +90,12 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     void this.service.addMessageToChat(+roomId, token.sub, answer);
   }
 
-  handleConnection(socket: Socket) {
-    void this.connectToRoom(socket);
-  }
-
-  handleDisconnect(socket: Socket) {
-    void this.leaveFromRoom(socket);
-  }
-
-  private async connectToRoom(socket: Socket) {
-    const { roomId, token } = await this.extractHandshakePayload(socket);
-
-    if (!roomId) {
-      socket.disconnect();
-      return;
-    }
-
-    if (!token) {
-      socket.disconnect();
-      return;
-    }
-
-    if (!(await this.service.getById(+roomId, token.sub, false))) {
-      socket.disconnect();
-      return;
-    }
-
-    await socket.join(roomId);
-
-    void this.service.addParticipantToRoom(+roomId, token.sub);
-    this.server.to(roomId).emit(EVENTS.ENTER_IN_ROOM, token.sub);
-  }
-
-  private async leaveFromRoom(socket: Socket) {
-    const { roomId, token } = await this.extractHandshakePayload(socket);
-
-    if (!roomId || !token) {
-      return;
-    }
-
-    void this.service.deleteParticipantFromRoom(+roomId, token.sub);
-    this.server.to(roomId).emit(EVENTS.LEAVE_FROM_ROOM, token.sub);
-  }
-
-  private async extractHandshakePayload(socket: Socket) {
+  private extractHandshakePayload(socket: Socket) {
     const token =
       !socket.handshake.query?.token ||
       Array.isArray(socket.handshake.query?.token)
         ? null
-        : await this.tokenService.verifyToken(socket.handshake.query.token);
+        : this.tokenService.verifyTokenSync(socket.handshake.query.token);
     const roomId = socket.handshake.query?.room_id ?? null;
 
     return {

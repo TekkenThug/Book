@@ -28,17 +28,6 @@ export class RoomsService {
     user_id: number,
     with_participants: boolean = true,
   ) {
-    const t = await this.repository.findOne({
-      where: {
-        event_id: id,
-        event: { records: { user_id } },
-      },
-      relations: {
-        participants: with_participants,
-      },
-    });
-
-    console.log(t);
     return await this.repository.findOne({
       where: {
         event_id: id,
