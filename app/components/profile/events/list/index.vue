@@ -32,8 +32,8 @@
 
 <script setup lang="ts">
 import { UiLoader } from "#components";
-import type { MappedEvent } from "~/services/events";
-import { eventsService } from "~/services/events";
+import type { MappedEvent } from "~/services/event";
+import { eventService } from "~/services";
 import { isAPIError } from "~/services/instance";
 
 const { showErrorToast } = useUI();
@@ -43,7 +43,7 @@ const events = ref<MappedEvent[]>([]);
 
 const getEvents = async () => {
 	try {
-		events.value = await eventsService.getUsersEvent();
+		events.value = await eventService.getUsersEvent();
 
 		isLoading.value = false;
 	}

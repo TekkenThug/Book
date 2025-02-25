@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import { defineEmits } from "vue";
 import { resetPassword } from "~/validation/schemas";
-import { usersService } from "~/services/users";
+import { userService } from "~/services";
 import type { AuthFormMode } from "~/pages/auth/types";
 
 const { showErrorToast, showSuccessToast } = useUI();
@@ -42,7 +42,7 @@ const isLoading = ref(false);
 const reset = handleSubmit(async (values) => {
 	try {
 		isLoading.value = true;
-		const data = await usersService.auth.resetPassword(values.email);
+		const data = await userService.auth.resetPassword(values.email);
 		showSuccessToast(data.message);
 	}
 	catch (error) {

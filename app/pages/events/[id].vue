@@ -61,7 +61,8 @@
 </template>
 
 <script lang="ts" setup>
-import { type Event, eventsService } from "~/services/events";
+import type { Event } from "~/services/event";
+import { eventService } from "~/services";
 import { parseInterval } from "~/utils/date";
 import { UiEditorShowcase } from "#components";
 
@@ -74,7 +75,7 @@ const disabledTooltipText = computed(() => "Meeting time didn't come");
 
 onBeforeMount(async () => {
 	try {
-		event.value = await eventsService.getById(+(route.params.id as string));
+		event.value = await eventService.getById(+(route.params.id as string));
 	}
 	catch {
 		await router.push({ name: "index" });

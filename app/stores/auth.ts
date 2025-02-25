@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
 import { parseJWT } from "~/utils";
-import { usersService } from "~/services/users";
+import { userService } from "~/services";
 
 interface UserPayloadInterface {
 	email: string;
@@ -29,7 +29,7 @@ export const useAuthStore = defineStore("auth", () => {
 	};
 
 	const authenticateUser = async ({ email, password }: UserPayloadInterface) => {
-		const data = await usersService.auth.login({ email, password });
+		const data = await userService.auth.login({ email, password });
 
 		token.value = data.token;
 		tokenExpires.value = data.expires;
@@ -38,14 +38,14 @@ export const useAuthStore = defineStore("auth", () => {
 	};
 
 	const refreshTokens = async () => {
-		const data = await usersService.auth.refreshTokens();
+		const data = await userService.auth.refreshTokens();
 
 		token.value = data.token;
 		tokenExpires.value = data.expires;
 	};
 
 	const logout = async () => {
-		await usersService.auth.logout();
+		await userService.auth.logout();
 
 		token.value = null;
 		tokenExpires.value = null;

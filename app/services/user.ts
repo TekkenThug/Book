@@ -1,39 +1,39 @@
 import API from "~/services/instance";
 import type { APIError, Message } from "~/types/api";
 
-export interface UserMetadata {
+export type UserMetadata = {
 	id: number;
 	first_name: string;
 	last_name: string;
 	avatar: string | null;
-}
+};
 
-export interface Settings {
+export type Settings = {
 	first_name: string;
 	last_name: string;
 	email: string;
-}
+};
 
-interface Token {
+type Token = {
 	token: string;
 	expires: number;
-}
+};
 
-interface RegisterCredentials {
+type RegisterCredentials = {
 	first_name: string;
 	last_name: string;
 	email: string;
 	password: string;
 	repeat_password: string;
-}
+};
 
-interface NewPasswordCredentials {
+type NewPasswordCredentials = {
 	password: string;
 	repeat_password: string;
 	token: string;
-}
+};
 
-export const usersService = {
+export default {
 	async getMe() {
 		return (await API.get<UserMetadata>("/users/me")).data;
 	},

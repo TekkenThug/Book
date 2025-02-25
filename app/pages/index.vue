@@ -66,10 +66,9 @@
 
 <script lang="ts" setup>
 import _debounce from "lodash.debounce";
-import { eventsService, type EventWithChecked } from "~/services/events";
+import type { EventWithChecked } from "~/services/event";
 import { isAPIError } from "~/services/instance";
-import { recordsService } from "~/services/records";
-import { usersService } from "~/services/users";
+import { recordService, userService, eventService } from "~/services";
 
 definePageMeta({
 	layout: "full-page",
@@ -87,7 +86,7 @@ const requestToTheServer = _debounce((book: string) => {
 	try {
 		if (book) {
 			setTimeout(async () => {
-				events.value = await eventsService.get({ future: true, book, withChecked: authStore.authenticated });
+				events.value = await eventService.get({ future: true, book, withChecked: authStore.authenticated });
 			}, 300);
 		}
 	}
@@ -110,7 +109,7 @@ onBeforeMount(async () => {
 
 	if (route.query.emailToken) {
 		try {
-			await usersService.auth.verifyEmail(route.query.emailToken as string);
+			await userService.auth.verifyEmail(route.query.emailToken as string);
 		}
 		finally {
 			await router.push({ query: {} });
@@ -130,7 +129,7 @@ const registerToEvent = async (id: number) => {
 	}
 
 	try {
-		await recordsService.recordToEvent(id);
+		await recordService.recordToEvent(id);
 
 		changedEvent.checked = true;
 	}

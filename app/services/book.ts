@@ -1,6 +1,6 @@
 import API from "~/services/instance";
 
-export const booksService = {
+export default {
 	async get(params: { title?: string } = {}) {
 		return (await API.get("/books", { params })).data;
 	},

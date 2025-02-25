@@ -3,7 +3,7 @@ import API from "~/services/instance";
 import type { Book } from "~/types/books";
 import { parseDateTime, parseInterval } from "~/utils/date";
 
-export interface Event {
+export type Event = {
 	id: number;
 	members_count: number;
 	title: string;
@@ -14,17 +14,17 @@ export interface Event {
 		minutes?: number;
 	};
 	description: string;
-}
+};
 
-export interface EventWithChecked extends Event {
+export type EventWithChecked = Event & {
 	checked?: boolean;
-}
+};
 
-export interface MappedEvent extends Omit<Event, "duration"> {
+export type MappedEvent = Omit<Event, "duration"> & {
 	duration: string;
-}
+};
 
-export const eventsService = {
+export default {
 	async create(payload: {
 		title: string;
 		datetime: string;

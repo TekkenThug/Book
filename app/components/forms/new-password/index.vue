@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
 import { newPassword } from "~/validation/schemas";
-import { usersService } from "~/services/users";
+import { userService } from "~/services";
 import { UiPasswordInput } from "#components";
 
 const router = useRouter();
@@ -43,7 +43,7 @@ const isLoading = ref(false);
 const reset = handleSubmit(async (values) => {
 	try {
 		isLoading.value = true;
-		const data = await usersService.auth.approveResetPassword({ token: props.token, ...values });
+		const data = await userService.auth.approveResetPassword({ token: props.token, ...values });
 		showSuccessToast(data.message);
 		router.push({ name: "auth" });
 	}

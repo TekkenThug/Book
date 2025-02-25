@@ -87,8 +87,8 @@
 <script setup lang="ts">
 import { ProfileSection, UiLoader, UiAvatar, UiPasswordInput } from "#components";
 import { PASSWORD_REGEXP } from "~/data/regexp";
-import type { Settings } from "~/services/users";
-import { usersService } from "~/services/users";
+import type { Settings } from "~/services/user";
+import { userService } from "~/services";
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -103,7 +103,7 @@ const { showErrorToast, showSuccessToast } = useUI();
 
 onBeforeMount(async () => {
 	try {
-		initialSettings.value = await usersService.getSettings();
+		initialSettings.value = await userService.getSettings();
 
 		editableSettings.value = {
 			first_name: initialSettings.value.first_name,
@@ -140,7 +140,7 @@ const saveSettings = async () => {
 	try {
 		saveIsLoading.value = true;
 
-		const response = await usersService.updateSettings(
+		const response = await userService.updateSettings(
 			Object.entries(editableSettings.value).reduce((acc, curr) => {
 				if (!curr[1]) {
 					return acc;
@@ -188,8 +188,8 @@ const handleUploadedAvatar = async (event: Event) => {
 		const formData = new FormData();
 		formData.set("avatar", target.files[0]);
 
-		const result = await usersService.uploadAvatar(formData);
-		userStore.user = await usersService.getMe();
+		const result = await userService.uploadAvatar(formData);
+		userStore.user = await userService.getMe();
 
 		showSuccessToast(result.message);
 	}

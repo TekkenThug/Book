@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import { usersService } from "~/services/users";
+import { userService } from "~/services";
 
 useHead({
 	htmlAttrs: {
@@ -22,7 +22,7 @@ const userStore = useUserStore();
 
 onBeforeMount(async () => {
 	if (authStore.authenticated) {
-		userStore.user = await usersService.getMe();
+		userStore.user = await userService.getMe();
 	}
 });
 </script>

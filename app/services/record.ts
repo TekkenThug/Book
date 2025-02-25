@@ -5,7 +5,7 @@ type Record = {
 	event_id: number;
 };
 
-export const recordsService = {
+export default {
 	async recordToEvent(eventId: number) {
 		return (await API.post("/records", { event_id: eventId })).data;
 	},

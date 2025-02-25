@@ -1,4 +1,4 @@
-import type { UserMetadata } from "~/services/users";
+import type { UserMetadata } from "~/services/user";
 
 export const useUserStore = defineStore("user", () => {
 	const user = ref<UserMetadata | null>(null);

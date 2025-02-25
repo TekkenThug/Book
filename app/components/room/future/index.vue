@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Event } from "~/services/events";
+import type { Event } from "~/services/event";
 import { parseInterval } from "~/utils/date";
 
 defineProps<{ event: Event }>();
