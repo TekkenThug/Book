@@ -121,6 +121,7 @@ export const usePeer = () => {
 
 	onBeforeUnmount(() => {
 		peer?.disconnect();
+		localFrame.value.stream.getTracks().forEach(track => track.stop());
 	});
 
 	return {
