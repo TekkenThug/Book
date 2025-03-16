@@ -95,6 +95,31 @@ export class RoomsGateway
     void this.service.addMessageToChat(+roomId, token.sub, answer);
   }
 
+  @SubscribeMessage(EVENTS.PEER_NEW_USER)
+  handlePeerNewUser(socket: Socket, id: string) {
+    const { roomId, token } = this.extractHandshakePayload(socket);
+
+    if (!roomId || !token) {
+      return;
+    }
+
+    socket.broadcast.to(roomId).emit(EVENTS.PEER_NEW_USER, id);
+  }
+
+  @SubscribeMessage(EVENTS.PEER_TOGGLE_DEVICE)
+  handlePeerDeviceToggle(
+    socket: Socket,
+    options: { id: number; device: 'audio' | 'video'; state: boolean },
+  ) {
+    const { roomId, token } = this.extractHandshakePayload(socket);
+
+    if (!roomId || !token) {
+      return;
+    }
+
+    socket.broadcast.to(roomId).emit(EVENTS.PEER_TOGGLE_DEVICE, options);
+  }
+
   private extractHandshakePayload(socket: Socket) {
     const token =
       !socket.handshake.query?.token ||

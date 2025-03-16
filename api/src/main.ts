@@ -7,6 +7,10 @@ import morganConfig from '@/config/morgan.config';
 import docsConfig from '@/config/docs.config';
 import corsConfig from '@/config/cors.config';
 import { ValidationPipe } from '@nestjs/common';
+import { PeerServer } from 'peer';
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let peerServer: ReturnType<typeof PeerServer>;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +23,11 @@ async function bootstrap() {
 
   const configService = app.get(EnvService);
   const port = configService.get('APP_PORT');
+
+  peerServer = PeerServer({
+    port: configService.get('PEER_PORT'),
+    path: '/peer',
+  });
 
   docsConfig(app, '0.2.0');
 

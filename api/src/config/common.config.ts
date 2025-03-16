@@ -76,6 +76,9 @@ class EnvVariables {
 
   @IsNumber()
   WS_PORT: number;
+
+  @IsNumber()
+  PEER_PORT: number;
 }
 
 export const validate = (env: Record<string, unknown>) => {
