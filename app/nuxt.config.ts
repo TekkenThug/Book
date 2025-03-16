@@ -37,6 +37,12 @@ export default defineNuxtConfig({
 			baseURL: process.env.NODE_ENV === "production"
 				? "https://localhost:8000/api/v1"
 				: "http://localhost:8000/api/v1",
+			socketURL: "http://localhost:8030/",
+			peer: {
+				host: "localhost",
+				port: 8031,
+				path: "/peer",
+			},
 		},
 	},
 

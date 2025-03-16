@@ -58,6 +58,13 @@ const Noir = definePreset(Aura, {
 				width: "8rem",
 			},
 		},
+		button: {
+			icon: {
+				only: {
+					width: "3rem",
+				},
+			},
+		},
 	},
 });
 

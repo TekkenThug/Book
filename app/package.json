@@ -25,6 +25,7 @@
     "lodash.debounce": "^4.0.8",
     "normalize.css": "^8.0.1",
     "nuxt": "^3.11.2",
+    "peerjs": "^1.5.4",
     "pinia": "^3.0.1",
     "primeicons": "^7.0.0",
     "primevue": "^4.0.0-rc.2",
