@@ -1,9 +1,8 @@
 <template>
-	<div :class="$style.meeting">
+	<div v-if="room.peer.localFrame.value" :class="$style.meeting">
 		<RoomMeetingParticipants :participants="room.participants.value" />
 
 		<RoomMeetingVideo
-			v-if="room.peer.localFrame.value"
 			:participants="room.participants.value"
 			:frames="room.peer.videoFrames.value"
 			:activity="room.peer.localFrame.value.activity"

@@ -48,11 +48,12 @@
 
 				<div :class="$style.actions">
 					<Button
-						v-tooltip.bottom="disabledTooltipText"
+						v-tooltip.bottom="tooltipText"
 						icon="pi pi-angle-right"
 						icon-pos="right"
 						label="Go to the room"
-						disabled
+						:disabled="buttonIsDisabled"
+						@click="goToRoom"
 					/>
 				</div>
 			</div>
@@ -61,6 +62,7 @@
 </template>
 
 <script lang="ts" setup>
+import { add, isWithinInterval } from "date-fns";
 import type { Event } from "~/services/event";
 import { eventService } from "~/services";
 import { parseInterval } from "~/utils/date";
@@ -71,7 +73,26 @@ const router = useRouter();
 
 const event = ref<Event | null>(null);
 
-const disabledTooltipText = computed(() => "Meeting time didn't come");
+const buttonIsDisabled = computed(() => {
+	if (!event.value) {
+		return true;
+	}
+
+	return !isWithinInterval(
+		new Date(),
+		{
+			start: event.value.date,
+			end: add(event.value.date, {
+				hours: event.value.duration.hours, minutes: event.value.duration.minutes,
+			}),
+		});
+});
+
+const tooltipText = computed(() => buttonIsDisabled.value ? "Meeting time didn't come" : null);
+
+const goToRoom = () => {
+	router.push({ name: "rooms-id", params: { id: event.value?.id } });
+};
 
 onBeforeMount(async () => {
 	try {
