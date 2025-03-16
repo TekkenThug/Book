@@ -33,7 +33,7 @@
 				@click="emit('toggleDevice', 'audio')"
 			/>
 
-			<NuxtLink :to="{ name: 'profile' }">
+			<NuxtLink :to="{ name: 'profile-events' }">
 				<Button
 					icon="pi pi-sign-out"
 					rounded
