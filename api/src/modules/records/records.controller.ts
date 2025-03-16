@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Query,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { RecordsService } from './records.service';
 import { Request } from 'express';
 import { CreateRecordDto, RecordDto } from './records.dto';
@@ -12,8 +21,11 @@ import {
   ApiQuery,
   ApiExtraModels,
   getSchemaPath,
+  ApiParam,
+  ApiForbiddenResponse,
 } from '@nestjs/swagger';
 import { ApiErrorDto, ApiMessageDto } from '@/data/dto';
+import { createErrorDoc, createMessageCod } from '@/utils/api';
 
 @ApiTags('Records')
 @Controller('records')
@@ -72,5 +84,21 @@ export class RecordsController {
     return await this.recordsService.getRecords(request.user!.sub, {
       event_id: query.event_id,
     });
+  }
+
+  @ApiOperation({ summary: 'Delete record' })
+  @ApiOkResponse(createMessageCod(200, 'Record successfully deleted'))
+  @ApiNotFoundResponse(createErrorDoc(404))
+  @ApiForbiddenResponse(
+    createErrorDoc(403, 'You can`t delete the record, because you are owner'),
+  )
+  @ApiParam({ name: 'id', description: 'Event`s id' })
+  @Delete(':id')
+  async delete(@Param('id') id: number, @Req() request: Request) {
+    await this.recordsService.deleteRecord(id, request.user!.sub);
+
+    return {
+      message: 'Record successfully deleted',
+    };
   }
 }

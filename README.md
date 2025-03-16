@@ -83,11 +83,13 @@ To run this project, you will need to add the following environment variables to
 
 ## Roadmap
 
--   Make meeting rooms with WebRTC
 -   Readable errors from validation
--   Unsubscribe from event
 -   Delete event
 -   Tailwind integration
+-   Update Swagger doc utility
+-   Test auth for refreshing
+-   Rework services on frontend
+-   E2E testing
 
 ## Changelog
 
@@ -97,4 +99,6 @@ This is latest version's changelog. For past updates see `CHANGELOG.md`
 
 - `Added` Restore password
 - `Added` Template for client-side error
+- `Added` WebRTC calling rooms
+- `Added` Unsubscribe from event
 - `Changed` Rework API calls on axios

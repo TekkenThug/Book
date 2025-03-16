@@ -37,7 +37,7 @@ export const createErrorDoc = (
     example: {
       message: message ?? getReasonPhrase(statusCode),
       statusCode,
-      errorMessage: getReasonPhrase(statusCode),
+      error: getReasonPhrase(statusCode),
     },
   };
 };

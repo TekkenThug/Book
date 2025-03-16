@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -49,5 +50,30 @@ export class RecordsService {
       user_id,
       event_id: params?.event_id,
     });
+  }
+
+  public async deleteRecord(id: number, user_id: number) {
+    const event = await this.eventsService.getById(id);
+
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
+
+    const record = await this.recordsRepository.findOneBy({
+      user_id,
+      event_id: id,
+    });
+
+    if (event.author === record?.user) {
+      throw new ForbiddenException(
+        'You can`t delete the record, because you are owner',
+      );
+    }
+
+    if (!record) {
+      throw new NotFoundException('Record not found');
+    }
+
+    return await this.recordsRepository.remove(record);
   }
 }

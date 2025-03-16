@@ -55,6 +55,15 @@
 						:disabled="buttonIsDisabled"
 						@click="goToRoom"
 					/>
+
+					<Button
+						label="Unsubscribe from event"
+						icon="pi pi-user-minus"
+						icon-pos="right"
+						severity="danger"
+						:disabled="unsubscribeButtonIsDisabled"
+						@click="unsubscribe"
+					/>
 				</div>
 			</div>
 		</div>
@@ -64,12 +73,13 @@
 <script lang="ts" setup>
 import { add, isWithinInterval } from "date-fns";
 import type { Event } from "~/services/event";
-import { eventService } from "~/services";
+import { eventService, recordService } from "~/services";
 import { parseInterval } from "~/utils/date";
-import { UiEditorShowcase } from "#components";
+import { isAPIError } from "~/services/instance";
 
 const route = useRoute();
 const router = useRouter();
+const { showErrorToast, showSuccessToast } = useUI();
 
 const event = ref<Event | null>(null);
 
@@ -88,10 +98,43 @@ const buttonIsDisabled = computed(() => {
 		});
 });
 
+const unsubscribeButtonIsDisabled = computed(() => {
+	if (!event.value) {
+		return true;
+	}
+
+	return isWithinInterval(
+		new Date(),
+		{
+			start: event.value.date,
+			end: add(event.value.date, {
+				hours: event.value.duration.hours, minutes: event.value.duration.minutes,
+			}),
+		});
+});
+
 const tooltipText = computed(() => buttonIsDisabled.value ? "Meeting time didn't come" : null);
 
 const goToRoom = () => {
 	router.push({ name: "rooms-id", params: { id: event.value?.id } });
+};
+
+const unsubscribe = async () => {
+	try {
+		if (!event.value) {
+			return;
+		}
+
+		const data = await recordService.unsubscribe(event.value?.id);
+
+		showSuccessToast(data.message);
+		router.push({ name: "profile-events" });
+	}
+	catch (error) {
+		if (isAPIError(error)) {
+			showErrorToast(error.response?.data.message);
+		}
+	}
 };
 
 onBeforeMount(async () => {
@@ -125,5 +168,7 @@ onBeforeMount(async () => {
 
 .actions {
   margin-top: 40px;
+  display: flex;
+  gap: 12px;
 }
 </style>
