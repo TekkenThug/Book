@@ -66,8 +66,7 @@
 
 <script lang="ts" setup>
 import _debounce from "lodash.debounce";
-import { isAPIError } from "~/services/instance";
-import { recordService, eventService, authService } from "~/services/api";
+import { recordService, eventService, authService, isAPIError } from "~/services/api";
 import type { CheckedMeetingEvent, MeetingEventWithBook } from "~/services/api/event";
 
 definePageMeta({

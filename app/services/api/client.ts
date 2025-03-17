@@ -16,7 +16,7 @@ const authMiddleware: Middleware = {
 	},
 };
 
-const client = createClient<paths>({ baseUrl: "http://localhost:8000/" });
+const client = createClient<paths>({ baseUrl: "http://localhost:8000/", credentials: "include" });
 client.use(authMiddleware);
 
 export default client;

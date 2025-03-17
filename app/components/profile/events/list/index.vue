@@ -40,9 +40,8 @@
 
 <script setup lang="ts">
 import { UiLoader } from "#components";
-import { eventService } from "~/services/api";
+import { eventService, isAPIError } from "~/services/api";
 import type { UserMeetingEvent } from "~/services/api/event";
-import { isAPIError } from "~/services/instance";
 
 const { showErrorToast } = useUI();
 

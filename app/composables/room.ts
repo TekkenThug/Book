@@ -1,8 +1,7 @@
 import type { Socket } from "socket.io-client";
 import { io } from "socket.io-client";
 import type { ChatLog, Participant } from "~/services/api/room";
-import { roomService } from "~/services/api";
-import { isAPIError } from "~/services/instance";
+import { roomService, isAPIError } from "~/services/api";
 
 export const useRoom = (id: number, roomId: number, token: string | null) => {
 	const config = useRuntimeConfig();

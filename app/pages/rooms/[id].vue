@@ -12,8 +12,7 @@
 
 <script lang="ts" setup>
 import { isWithinInterval, isFuture, add } from "date-fns";
-import { recordService, eventService } from "~/services/api";
-import { isAPIError } from "~/services/instance";
+import { recordService, eventService, isAPIError } from "~/services/api";
 import type { MeetingEvent } from "~/services/api/event";
 
 definePageMeta({
@@ -72,7 +71,7 @@ onBeforeMount(async () => {
 	catch (error) {
 		if (isAPIError(error)) {
 			throw createError({
-				statusCode: error.status,
+				statusCode: error.statusCode,
 				fatal: true,
 			});
 		}

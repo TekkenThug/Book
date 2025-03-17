@@ -72,9 +72,8 @@
 
 <script lang="ts" setup>
 import { add, isWithinInterval } from "date-fns";
-import { recordService, eventService } from "~/services/api";
+import { recordService, eventService, isAPIError } from "~/services/api";
 import { parseInterval } from "~/utils/date";
-import { isAPIError } from "~/services/instance";
 import type { MeetingEvent } from "~/services/api/event";
 
 const route = useRoute();
@@ -132,7 +131,7 @@ const unsubscribe = async () => {
 	}
 	catch (error) {
 		if (isAPIError(error)) {
-			showErrorToast(error.response?.data.message);
+			showErrorToast(error.message);
 		}
 	}
 };
