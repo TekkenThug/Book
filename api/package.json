@@ -1,6 +1,6 @@
 {
   "name": "books-api",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Backed API for Book meetings club",
   "author": "Vadim Ignatov",
   "private": true,

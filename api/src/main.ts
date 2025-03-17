@@ -29,7 +29,7 @@ async function bootstrap() {
     path: '/peer',
   });
 
-  docsConfig(app, '0.2.0');
+  docsConfig(app, '0.3.0');
 
   app.use(helmet());
   app.use(cookieParser());

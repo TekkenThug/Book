@@ -96,7 +96,7 @@ To run this project, you will need to add the following environment variables to
 
 This is latest version's changelog. For past updates see `CHANGELOG.md`
 
-### `v0.3.0` - Unreleased
+### `v0.3.0` - 17.03.2025
 
 - `Added` Restore password
 - `Added` Template for client-side error
