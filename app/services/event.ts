@@ -1,6 +1,6 @@
 import API from "~/services/instance";
 
-import type { Book } from "~/types/books";
+import type { Book } from "~/services/api/book";
 import { parseDateTime, parseInterval } from "~/utils/date";
 
 export type Event = {

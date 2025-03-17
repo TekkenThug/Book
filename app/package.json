@@ -25,6 +25,7 @@
     "lodash.debounce": "^4.0.8",
     "normalize.css": "^8.0.1",
     "nuxt": "^3.11.2",
+    "openapi-fetch": "^0.13.5",
     "peerjs": "^1.5.4",
     "pinia": "^3.0.1",
     "primeicons": "^7.0.0",
@@ -42,6 +43,7 @@
     "@primevue/nuxt-module": "^4.2.5",
     "@types/lodash.debounce": "^4.0.9",
     "eslint": "^9.20.1",
+    "openapi-typescript": "^7.6.1",
     "typescript": "^5.5.4",
     "vue-tsc": "^2.2.2"
   }

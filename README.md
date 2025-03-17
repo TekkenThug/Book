@@ -11,6 +11,7 @@ Books - the platform for book clubs meetings
 -   `Nuxt 3`
 -   `TypeScript`
 -   `PrimeVue`
+-   `OpenAPI TypeScript`
 
 **Backend:**
 

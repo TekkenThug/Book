@@ -85,10 +85,11 @@ import { add } from "date-fns";
 import { toTypedSchema } from "@vee-validate/zod";
 import type { AutoCompleteCompleteEvent, AutoCompleteOptionSelectEvent } from "primevue/autocomplete";
 import { UiEditor } from "#components";
-import { eventService, bookService } from "~/services";
+import { eventService } from "~/services";
+import { bookService } from "~/services/api";
 import { createEvent } from "~/validation/schemas";
-import type { Book } from "~/types/books";
 import { mapToInterval } from "~/utils/date";
+import type { Book } from "~/services/api/book";
 
 const { showErrorToast, showSuccessToast } = useUI();
 const suggestedBooks = ref<Book[]>([]);
@@ -100,7 +101,11 @@ const emit = defineEmits<{
 }>();
 const searchBooks = async ({ query: title }: AutoCompleteCompleteEvent) => {
 	try {
-		suggestedBooks.value = await bookService.get({ title });
+		const { data } = await bookService.get({ title });
+		if (!data) {
+			return;
+		}
+		suggestedBooks.value = data;
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);
