@@ -73,7 +73,8 @@
 <script lang="ts" setup>
 import { add, isWithinInterval } from "date-fns";
 import type { Event } from "~/services/event";
-import { eventService, recordService } from "~/services";
+import { eventService } from "~/services";
+import { recordService } from "~/services/api";
 import { parseInterval } from "~/utils/date";
 import { isAPIError } from "~/services/instance";
 
@@ -125,9 +126,9 @@ const unsubscribe = async () => {
 			return;
 		}
 
-		const data = await recordService.unsubscribe(event.value?.id);
+		const { data } = await recordService.unsubscribe(event.value?.id);
 
-		showSuccessToast(data.message);
+		showSuccessToast(data?.message ?? "Success");
 		router.push({ name: "profile-events" });
 	}
 	catch (error) {

@@ -68,7 +68,8 @@
 import _debounce from "lodash.debounce";
 import type { EventWithChecked } from "~/services/event";
 import { isAPIError } from "~/services/instance";
-import { recordService, userService, eventService } from "~/services";
+import { userService, eventService } from "~/services";
+import { recordService } from "~/services/api";
 
 definePageMeta({
 	layout: "full-page",

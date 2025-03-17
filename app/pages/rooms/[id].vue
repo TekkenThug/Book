@@ -12,7 +12,8 @@
 
 <script lang="ts" setup>
 import { isWithinInterval, isFuture, add } from "date-fns";
-import { eventService, recordService } from "~/services";
+import { eventService } from "~/services";
+import { recordService } from "~/services/api";
 import { isAPIError } from "~/services/instance";
 import type { Event } from "~/services/event";
 import { UiLoader, RoomFuture, RoomMeeting } from "#components";
@@ -31,9 +32,9 @@ const mode = ref<"prepare" | "future">("future");
 
 onBeforeMount(async () => {
 	try {
-		const records = await recordService.get({ event_id: +roomId.value });
+		const { data: records } = await recordService.get({ event_id: +roomId.value });
 
-		if (!records.length) {
+		if (!records?.length) {
 			throw createError({
 				statusCode: 404,
 				statusMessage: "Not found",
