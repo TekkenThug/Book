@@ -1,7 +1,4 @@
-import type { Paths } from "./client";
 import client from "./client";
-
-// export type Book = Paths["/api/v1/books"]["get"]["responses"]["200"]["content"]["application/json"][0];
 
 export default {
 	async recordToEvent(event_id: number) {
