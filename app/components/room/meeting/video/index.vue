@@ -46,10 +46,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { roomService } from "~/services";
+import type { Participant } from "~/services/api/room";
 
 const props = defineProps<{
-	participants: Awaited<ReturnType<typeof roomService.getParticipants>>;
+	participants: Participant[];
 	frames: Frame[];
 	activity: Frame["activity"];
 }>();

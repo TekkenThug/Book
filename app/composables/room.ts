@@ -1,6 +1,7 @@
 import type { Socket } from "socket.io-client";
 import { io } from "socket.io-client";
-import { roomService } from "~/services";
+import type { ChatLog, Participant } from "~/services/api/room";
+import { roomService } from "~/services/api";
 import { isAPIError } from "~/services/instance";
 
 export const useRoom = (id: number, roomId: number, token: string | null) => {
@@ -8,8 +9,8 @@ export const useRoom = (id: number, roomId: number, token: string | null) => {
 	const userId = id.toString();
 	const peer = usePeer();
 	const { showErrorToast } = useUI();
-	const messageHistory = ref<Awaited<ReturnType<typeof roomService.getInfo>>["chat_log"]>([]);
-	const participants = ref<Awaited<ReturnType<typeof roomService.getParticipants>>>([]);
+	const messageHistory = ref<ChatLog>([]);
+	const participants = ref<Participant[]>([]);
 	const socket = ref<Socket | null>(null);
 
 	const sendMessage = (message: string) => {
@@ -71,12 +72,12 @@ export const useRoom = (id: number, roomId: number, token: string | null) => {
 	const getRoomInfo = async () => {
 		try {
 			const [roomInfo, roomParticipants] = await Promise.all([
-				roomService.getInfo(roomId),
+				roomService.get(roomId),
 				roomService.getParticipants(roomId),
 			]);
 
-			messageHistory.value = roomInfo.chat_log;
-			participants.value = roomParticipants;
+			messageHistory.value = roomInfo.data?.chat_log ?? [];
+			participants.value = roomParticipants.data ?? [];
 		}
 		catch (error) {
 			if (isAPIError(error)) {

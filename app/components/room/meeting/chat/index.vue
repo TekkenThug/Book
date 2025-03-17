@@ -37,9 +37,9 @@
 </template>
 
 <script setup lang="ts">
-import type { roomService } from "~/services";
+import type { ChatLog } from "~/services/api/room";
 
-defineProps<{ history: Awaited<ReturnType<typeof roomService.getInfo>>["chat_log"] }>();
+defineProps<{ history: ChatLog }>();
 const emit = defineEmits<{ sendMessage: [message: string] }>();
 
 const message = ref("");

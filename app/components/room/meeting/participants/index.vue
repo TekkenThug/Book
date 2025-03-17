@@ -19,10 +19,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { roomService } from "~/services";
+import type { Participant } from "~/services/api/room";
 
 defineProps<{
-	participants: Awaited<ReturnType<typeof roomService.getParticipants>>;
+	participants: Participant[];
 }>();
 </script>
 
