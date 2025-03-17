@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import type { ChatLog, Participant } from "~/services/api/room";
 import { roomService, isAPIError } from "~/services/api";
 
-export const useRoom = (id: number, roomId: number, token: string | null) => {
+export default (id: number, roomId: number, token: string | null) => {
 	const config = useRuntimeConfig();
 	const userId = id.toString();
 	const peer = usePeer();

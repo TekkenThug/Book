@@ -1,5 +1,4 @@
 import { Peer } from "peerjs";
-import { ref } from "vue";
 
 export type Frame = {
 	id: string;
@@ -16,7 +15,7 @@ export type RemoteUserOptions = {
 	state: boolean;
 };
 
-export const usePeer = () => {
+export default () => {
 	const config = useRuntimeConfig();
 	let peer: Peer | null = null;
 	const videoFrames = ref<Frame[]>([]);
