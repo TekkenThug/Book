@@ -1,13 +1,13 @@
 <template>
 	<section class="page">
 		<div class="container">
-			<CreateEvent @submit="redirectToEvents" />
+			<ProfileEventsCreate @submit="redirectToEvents" />
 		</div>
 	</section>
 </template>
 
 <script lang="ts" setup>
-import CreateEvent from "~/components/profile/events/create";
+import { ProfileEventsCreate } from "#components";
 
 const router = useRouter();
 const redirectToEvents = async () => {

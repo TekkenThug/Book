@@ -2,7 +2,7 @@
 	<header :class="[$style.header, { [$style.fixed]: fixed }]">
 		<div class="container">
 			<div :class="$style.wrapper">
-				<MainLogo />
+				<CommonMainLink />
 
 				<nav>
 					<ul :class="$style.navList">
@@ -17,9 +17,9 @@
 						</li>
 					</ul>
 
-					<Avatar
+					<UiAvatar
 						v-if="authStore.authenticated && userStore.user"
-						:image="userStore.user.avatar"
+						:image="userStore.user.avatar ?? undefined"
 						shape="circle"
 						:class="$style.avatar"
 						@click="goToProfile"
@@ -31,8 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import MainLogo from "~/components/common/main-link";
-import Avatar from "~/components/ui/avatar";
+import { CommonMainLink, UiAvatar } from "#components";
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -44,6 +43,7 @@ const navigation = computed(() => [
 	{
 		name: "auth",
 		title: "Login",
+		auth: false,
 	},
 ].filter(item => authStore.authenticated ? item.auth : !item.auth));
 

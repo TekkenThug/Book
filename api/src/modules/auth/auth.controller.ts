@@ -3,6 +3,7 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
   Req,
   Res,
@@ -10,11 +11,19 @@ import {
 import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 import { getUnixTime } from 'date-fns';
-import { SignInDto, SignUpDto, VerifyEmailDto, TokenDto } from './auth.dto';
+import {
+  SignInDto,
+  SignUpDto,
+  VerifyEmailDto,
+  TokenDto,
+  ResetPasswordDto,
+  ApproveResetPasswordDto,
+} from './auth.dto';
 import { Public } from '@/decorators/public/public.decorator';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -151,5 +160,56 @@ export class AuthController {
   async verifyEmail(@Body() verifyEmailDto: VerifyEmailDto) {
     await this.authService.verifyEmail(verifyEmailDto);
     return { message: 'Email is verified successfully' };
+  }
+
+  @ApiOperation({ summary: 'Send mail with token for reset password' })
+  @ApiOkResponse({
+    description: 'OK',
+    type: ApiMessageDto,
+    example: { message: 'Check email for reset password' },
+  })
+  @ApiNotFoundResponse({
+    description: 'Not found',
+    type: ApiErrorDto,
+    example: {
+      message: 'User with this email not found',
+      statusCode: 404,
+      error: 'Not found',
+    },
+  })
+  @Public()
+  @Post('reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    await this.authService.resetPassword(resetPasswordDto.email);
+
+    return { message: 'Check email for reset password' };
+  }
+
+  @ApiOperation({ summary: 'Reset password by token' })
+  @ApiOkResponse({
+    description: 'OK',
+    type: ApiMessageDto,
+    example: { message: 'Password changed sucessfully' },
+  })
+  @ApiUnauthorizedResponse({
+    type: ApiErrorDto,
+    example: {
+      message: 'Incorrect user or password',
+      statusCode: 401,
+      error: 'Unauthorized',
+    },
+  })
+  @ApiNotFoundResponse({
+    type: ApiErrorDto,
+  })
+  @ApiBadRequestResponse({
+    type: ApiErrorDto,
+  })
+  @Public()
+  @Patch('reset-password')
+  async approveResetPassword(@Body() dto: ApproveResetPasswordDto) {
+    await this.authService.approveResetPassword(dto);
+
+    return { message: 'Password changed sucessfully' };
   }
 }

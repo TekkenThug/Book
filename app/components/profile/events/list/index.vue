@@ -1,5 +1,5 @@
 <template>
-	<Loader v-if="isLoading" />
+	<UiLoader v-if="isLoading" />
 
 	<DataTable v-else :value="events">
 		<template #empty>
@@ -15,8 +15,16 @@
 		</Column>
 
 		<Column field="book.title" header="Book" />
-		<Column field="date" header="Date" />
-		<Column field="duration" header="Duration" />
+		<Column field="date" header="Date">
+			<template #body="slotProps">
+				{{ parseDateTime(slotProps.data.date) }}
+			</template>
+		</Column>
+		<Column field="duration" header="Duration">
+			<template #body="slotProps">
+				{{ parseInterval(slotProps.data.duration) }}
+			</template>
+		</Column>
 		<Column field="members_count" header="Members" />
 
 		<Column header="Role">
@@ -31,23 +39,29 @@
 </template>
 
 <script setup lang="ts">
-import Loader from "~/components/common/loader";
-import type { MappedEvent } from "~/services/events";
-import { eventsService } from "~/services/events";
+import { UiLoader } from "#components";
+import { eventService, isAPIError } from "~/services/api";
+import type { UserMeetingEvent } from "~/services/api/event";
 
 const { showErrorToast } = useUI();
 
 const isLoading = ref(true);
-const events = ref<MappedEvent[]>([]);
+const events = ref<UserMeetingEvent[]>([]);
 
 const getEvents = async () => {
 	try {
-		events.value = await eventsService.getUsersEvent();
+		const { data } = await eventService.getUsersEvent();
+
+		if (data) {
+			events.value = data;
+		}
 
 		isLoading.value = false;
 	}
 	catch (error) {
-		showErrorToast(error.message);
+		if (isAPIError(error)) {
+			showErrorToast(error.message);
+		}
 	}
 };
 

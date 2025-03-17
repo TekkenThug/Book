@@ -42,17 +42,27 @@
 							Description:
 						</h3>
 
-						<EditorShowcase :text="event.description" />
+						<UiEditorShowcase :text="event.description ?? ''" />
 					</li>
 				</ul>
 
 				<div :class="$style.actions">
 					<Button
-						v-tooltip.bottom="disabledTooltipText"
+						v-tooltip.bottom="tooltipText"
 						icon="pi pi-angle-right"
 						icon-pos="right"
 						label="Go to the room"
-						disabled
+						:disabled="buttonIsDisabled"
+						@click="goToRoom"
+					/>
+
+					<Button
+						label="Unsubscribe from event"
+						icon="pi pi-user-minus"
+						icon-pos="right"
+						severity="danger"
+						:disabled="unsubscribeButtonIsDisabled"
+						@click="unsubscribe"
 					/>
 				</div>
 			</div>
@@ -61,22 +71,80 @@
 </template>
 
 <script lang="ts" setup>
-import { type Event, eventsService } from "~/services/events";
+import { add, isWithinInterval } from "date-fns";
+import { recordService, eventService, isAPIError } from "~/services/api";
 import { parseInterval } from "~/utils/date";
-import EditorShowcase from "~/components/ui/editor-showcase";
+import type { MeetingEvent } from "~/services/api/event";
 
 const route = useRoute();
 const router = useRouter();
+const { showErrorToast, showSuccessToast } = useUI();
 
-const event = ref<Event | null>(null);
+const event = ref<MeetingEvent | null>(null);
 
-const disabledTooltipText = computed<boolean>(() => "Meeting time didn't come");
+const buttonIsDisabled = computed(() => {
+	if (!event.value) {
+		return true;
+	}
+
+	return !isWithinInterval(
+		new Date(),
+		{
+			start: event.value.date,
+			end: add(event.value.date, {
+				hours: event.value.duration.hours, minutes: event.value.duration.minutes,
+			}),
+		});
+});
+
+const unsubscribeButtonIsDisabled = computed(() => {
+	if (!event.value) {
+		return true;
+	}
+
+	return isWithinInterval(
+		new Date(),
+		{
+			start: event.value.date,
+			end: add(event.value.date, {
+				hours: event.value.duration.hours, minutes: event.value.duration.minutes,
+			}),
+		});
+});
+
+const tooltipText = computed(() => buttonIsDisabled.value ? "Meeting time didn't come" : null);
+
+const goToRoom = () => {
+	router.push({ name: "rooms-id", params: { id: event.value?.id } });
+};
+
+const unsubscribe = async () => {
+	try {
+		if (!event.value) {
+			return;
+		}
+
+		const { data } = await recordService.unsubscribe(event.value?.id);
+
+		showSuccessToast(data?.message ?? "Success");
+		router.push({ name: "profile-events" });
+	}
+	catch (error) {
+		if (isAPIError(error)) {
+			showErrorToast(error.message);
+		}
+	}
+};
 
 onBeforeMount(async () => {
 	try {
-		event.value = await eventsService.getById(route.params.id);
+		const { data } = await eventService.getById(+(route.params.id as string));
+
+		if (data) {
+			event.value = data;
+		}
 	}
-	catch (error) {
+	catch {
 		await router.push({ name: "index" });
 	}
 });
@@ -103,5 +171,7 @@ onBeforeMount(async () => {
 
 .actions {
   margin-top: 40px;
+  display: flex;
+  gap: 12px;
 }
 </style>

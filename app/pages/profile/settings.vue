@@ -1,12 +1,13 @@
 <template>
-	<Section title="Settings">
-		<Loader v-if="isLoading" />
+	<ProfileSection title="Settings">
+		<UiLoader v-if="isLoading" />
 
 		<template v-else>
 			<div v-if="userStore.user" :class="$style.avatarField">
-				<Avatar
+				<UiAvatar
 					:class="$style.avatar"
 					:image="uploadedAvatar || userStore.user.avatar"
+					size="xlarge"
 					shape="circle"
 				/>
 
@@ -53,7 +54,7 @@
 					<div :class="$style.fieldContainer">
 						<label for="username">New password</label>
 
-						<PasswordInput v-model="editableSettings.password" />
+						<UiPasswordInput v-model="editableSettings.password" />
 					</div>
 
 					<div :class="$style.fieldContainer">
@@ -80,17 +81,14 @@
 				@click="logout"
 			/>
 		</template>
-	</Section>
+	</ProfileSection>
 </template>
 
 <script setup lang="ts">
-import Avatar from "~/components/ui/avatar";
-import PasswordInput from "~/components/ui/password-input";
-import Loader from "~/components/common/loader";
-import Section from "~/components/profile/section";
-import type { Settings } from "~/types/users";
-import type { Message } from "~/types/api";
+import { ProfileSection, UiLoader, UiAvatar, UiPasswordInput } from "#components";
 import { PASSWORD_REGEXP } from "~/data/regexp";
+import { userService } from "~/services/api";
+import type { Settings } from "~/services/api/user";
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -102,9 +100,17 @@ const editableSettings = ref<
   Omit<Settings, "email"> & { password: string; repeat_password: string } | null
 >(null);
 const { showErrorToast, showSuccessToast } = useUI();
+
 onBeforeMount(async () => {
 	try {
-		initialSettings.value = await authStore.fetchAPI<Settings>("/users/settings");
+		const { data } = await userService.getSettings();
+
+		if (!data) {
+			return;
+		}
+
+		initialSettings.value = data;
+
 		editableSettings.value = {
 			first_name: initialSettings.value.first_name,
 			last_name: initialSettings.value.last_name,
@@ -117,6 +123,7 @@ onBeforeMount(async () => {
 		showErrorToast((e as Error).message);
 	}
 });
+
 const saveButtonIsDisabled = computed(() => {
 	if (!initialSettings.value || !editableSettings.value) {
 		return true;
@@ -126,7 +133,7 @@ const saveButtonIsDisabled = computed(() => {
 		&& initialSettings.value.last_name === editableSettings.value.last_name
 	)
 	&& ((editableSettings.value.password
-	&& editableSettings.value.password !== editableSettings.value.repeat_password)
+		&& editableSettings.value.password !== editableSettings.value.repeat_password)
 	|| !PASSWORD_REGEXP.test(editableSettings.value.password));
 });
 
@@ -139,17 +146,16 @@ const saveSettings = async () => {
 	try {
 		saveIsLoading.value = true;
 
-		const response = await authStore.fetchAPI<Message>("/users/settings", {
-			method: "patch",
-			body: Object.entries(editableSettings.value).reduce((acc, curr) => {
+		const { data } = await userService.updateSettings(
+			Object.entries(editableSettings.value).reduce((acc, curr) => {
 				if (!curr[1]) {
 					return acc;
 				}
 
 				return { ...acc, [curr[0]]: curr[1] };
-			}, {}),
-		});
-		showSuccessToast(response.message);
+			}, {}));
+
+		showSuccessToast(data?.message ?? "Settings updated");
 
 		replaceInitialValuesWithActual();
 	}
@@ -178,16 +184,24 @@ const handleClickOnUploader = () => {
 		avatarUploader.value.click();
 	}
 };
-const handleUploadedAvatar = async (event) => {
+const handleUploadedAvatar = async (event: Event) => {
 	try {
+		const target = event.target as HTMLInputElement;
+		if (!target.files || !target.files[0]) {
+			return;
+		}
+
 		const formData = new FormData();
-		formData.set("avatar", event.target.files[0]);
+		formData.set("avatar", target.files[0]);
 
-		const result = await authStore.fetchAPI<Messsage>("/users/avatar", { method: "patch", body: formData });
-		userStore.user = await authStore.fetchAPI("/users/me");
+		const { data: result } = await userService.uploadAvatar(formData);
+		const { data } = await userService.getMe();
 
-		showSuccessToast(result.message);
-		// uploadedAvatar.value = URL.createObjectURL(event.target.files[0]);
+		if (data) {
+			userStore.user = data;
+		}
+
+		showSuccessToast(result?.message ?? "Avatar uploaded");
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);
@@ -225,11 +239,6 @@ const logout = async () => {
   display: flex;
   align-items: center;
   margin-bottom: 40px;
-}
-
-.avatar {
-  width: 120px;
-  height: 120px;
 }
 
 .editAvatarButton {

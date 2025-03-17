@@ -1,5 +1,5 @@
 <template>
-	<Header />
+	<CommonHeader />
 
 	<main class="main">
 		<slot />
@@ -7,5 +7,5 @@
 </template>
 
 <script setup lang="ts">
-import Header from "~/components/common/header";
+import { CommonHeader } from "#components";
 </script>

@@ -2,8 +2,14 @@ import { IsNumber, IsString, IsUrl, validateSync } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
 class EnvVariables {
-  @IsUrl()
+  @IsString()
   APP_URL: string;
+
+  @IsString()
+  APP_ENV: string;
+
+  @IsNumber()
+  APP_PORT: number;
 
   @IsUrl()
   APP_CLIENT_URL: string;
@@ -33,13 +39,10 @@ class EnvVariables {
   JWT_REFRESH_EXPIRATION_DAYS: number;
 
   @IsNumber()
-  JWT_EMAIL_VERIFY_EXPIRATION_MINUTES: number;
-
-  @IsString()
-  NODE_ENV: string;
+  JWT_RESET_PASSWORD_EXPIRATION_MINUTES: number;
 
   @IsNumber()
-  PORT: number;
+  JWT_EMAIL_VERIFY_EXPIRATION_MINUTES: number;
 
   @IsString()
   SMTP_HOST: string;
@@ -70,6 +73,12 @@ class EnvVariables {
 
   @IsString()
   S3_SECRET_KEY: string;
+
+  @IsNumber()
+  WS_PORT: number;
+
+  @IsNumber()
+  PEER_PORT: number;
 }
 
 export const validate = (env: Record<string, unknown>) => {

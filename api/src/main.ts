@@ -2,10 +2,15 @@ import cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { EnvService } from './env/env.service';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import morganConfig from '@/config/morgan.config';
+import docsConfig from '@/config/docs.config';
+import corsConfig from '@/config/cors.config';
 import { ValidationPipe } from '@nestjs/common';
+import { PeerServer } from 'peer';
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let peerServer: ReturnType<typeof PeerServer>;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,35 +22,23 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const configService = app.get(EnvService);
-  const port = configService.get('PORT');
+  const port = configService.get('APP_PORT');
 
-  const config = new DocumentBuilder()
-    .setTitle('Books API documentation')
-    .setVersion('0.2.0')
-    .addTag('Auth', 'Authentication system')
-    .addTag('Books', 'Work with books')
-    .addTag('Events', 'Work with book events')
-    .addTag('Records', 'Work with records to events')
-    .addTag('User', 'Work with users')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/v1/docs', app, document);
+  peerServer = PeerServer({
+    port: configService.get('PEER_PORT'),
+    path: '/peer',
+  });
+
+  docsConfig(app, '0.3.0');
 
   app.use(helmet());
   app.use(cookieParser());
-  app.enableCors({
-    credentials: true,
-    origin: (origin, cb) => {
-      if (
-        (origin && configService.get('APP_CLIENT_URL')) ||
-        (!origin && configService.get('NODE_ENV') === 'dev')
-      ) {
-        cb(null, true);
-      } else {
-        cb(new Error('Not allowed by CORS'));
-      }
-    },
-  });
+  app.enableCors(
+    corsConfig(
+      configService.get('APP_CLIENT_URL'),
+      configService.get('APP_ENV') === 'dev',
+    ),
+  );
 
   await app.listen(port);
 }

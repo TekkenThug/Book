@@ -49,6 +49,23 @@ const Noir = definePreset(Aura, {
 			},
 		},
 	},
+	root: {
+		borderRadius: "4px",
+	},
+	components: {
+		avatar: {
+			xl: {
+				width: "8rem",
+			},
+		},
+		button: {
+			icon: {
+				only: {
+					width: "3rem",
+				},
+			},
+		},
+	},
 });
 
 export default {

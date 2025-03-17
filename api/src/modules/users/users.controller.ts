@@ -18,6 +18,7 @@ import {
 import {
   ApiBadRequestResponse,
   ApiBody,
+  ApiConsumes,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -58,6 +59,7 @@ export class UsersController {
     summary: 'Update avatar',
   })
   @ApiBody({ type: UpdateAvatarDto })
+  @ApiConsumes('multipart/form-data')
   @ApiOkResponse(createMessageCod(200, 'Avatar successfully uploaded'))
   @ApiBadRequestResponse(createErrorDoc(400))
   @UseInterceptors(FileInterceptor('avatar'))

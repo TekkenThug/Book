@@ -3,9 +3,9 @@ export declare global {
     interface Request {
       user?: {
         sub: number;
-        iat: number,
-        type: 'access',
-        exp: number
+        iat: number;
+        type: 'access';
+        exp: number;
       };
     }
   }

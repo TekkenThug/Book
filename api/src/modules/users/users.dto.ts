@@ -1,6 +1,6 @@
 import { PASSWORD_REGEXP } from '@/data/regexp';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, Matches, ValidateIf } from 'class-validator';
+import { IsNumber, IsOptional, Matches, ValidateIf } from 'class-validator';
 import { Match } from '@/decorators/validation/match.decorator';
 
 export class UpdateSettingsDto {
@@ -27,7 +27,7 @@ export class UpdateSettingsDto {
 }
 
 export class UpdateAvatarDto {
-  @ApiProperty({ format: 'binary', type: 'string' })
+  @ApiProperty({ format: 'file', type: 'string' })
   avatar: Express.Multer.File;
 }
 
@@ -43,6 +43,16 @@ export class SettingsDataDto {
 }
 
 export class UserMetadataDto {
-  @ApiProperty({ example: 'https://some.bucket.com/images/avatar.png' })
+  @ApiProperty({ example: 'John' })
+  first_name: string;
+
+  @ApiProperty({ example: 'Daw' })
+  last_name: string;
+
+  @ApiProperty({ example: 1 })
+  @IsNumber()
+  id: number;
+
+  @ApiProperty({ example: 'https://some.s3.com/some_bucket/images/avatar.png' })
   avatar: string;
 }

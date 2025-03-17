@@ -40,8 +40,8 @@
 									</div>
 
 									<Button
-										:label="event.checked ? 'Registered' : 'Register'"
-										:disabled="event.checked"
+										:label="'checked' in event && event.checked ? 'Registered' : 'Register'"
+										:disabled="'checked' in event ? event.checked : false"
 										@click="registerToEvent(event.id)"
 									/>
 								</div>
@@ -66,7 +66,8 @@
 
 <script lang="ts" setup>
 import _debounce from "lodash.debounce";
-import { eventsService, type EventWithChecked } from "~/services/events";
+import { recordService, eventService, authService, isAPIError } from "~/services/api";
+import type { CheckedMeetingEvent, MeetingEventWithBook } from "~/services/api/event";
 
 definePageMeta({
 	layout: "full-page",
@@ -76,7 +77,7 @@ const authStore = useAuthStore();
 const { showErrorToast } = useUI();
 
 const searchingString = ref("");
-const events = ref<EventWithChecked[]>([]);
+const events = ref<(CheckedMeetingEvent | MeetingEventWithBook)[]>([]);
 
 const requestToTheServer = _debounce((book: string) => {
 	events.value = [];
@@ -84,12 +85,21 @@ const requestToTheServer = _debounce((book: string) => {
 	try {
 		if (book) {
 			setTimeout(async () => {
-				events.value = await eventsService.get({ future: true, book, withChecked: authStore.authenticated });
+				const { data } = await eventService[authStore.authenticated ? "getWithChecked" : "get"]({
+					future: true,
+					book,
+				});
+
+				if (data) {
+					events.value = data;
+				}
 			}, 300);
 		}
 	}
 	catch (error) {
-		showErrorToast(error.message);
+		if (isAPIError(error)) {
+			showErrorToast(error.message);
+		}
 	}
 }, 250);
 
@@ -98,9 +108,14 @@ watch(() => searchingString.value, requestToTheServer);
 const route = useRoute();
 const router = useRouter();
 onBeforeMount(async () => {
+	if (route.query.resetToken) {
+		await router.push({ name: "reset-password", query: { resetToken: route.query.resetToken } });
+		return;
+	}
+
 	if (route.query.emailToken) {
 		try {
-			await authStore.verifyEmail(route.query.emailToken as string);
+			await authService.verifyEmail(route.query.emailToken as string);
 		}
 		finally {
 			await router.push({ query: {} });
@@ -120,14 +135,11 @@ const registerToEvent = async (id: number) => {
 	}
 
 	try {
-		await authStore.fetchAPI("/records", {
-			method: "post",
-			body: {
-				event_id: id,
-			},
-		});
+		await recordService.recordToEvent(id);
 
-		changedEvent.checked = true;
+		if ("checked" in changedEvent) {
+			changedEvent.checked = true;
+		}
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);
@@ -137,69 +149,69 @@ const registerToEvent = async (id: number) => {
 
 <style module>
 .section {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100dvh;
-  background: rgba(30, 26, 38, .9);
-  overflow: hidden;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 100dvh;
+	background: rgba(30, 26, 38, .9);
+	overflow: hidden;
 }
 
 .content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
 }
 
 .title {
-  font-size: 48px;
-  font-weight: 600;
-  margin-bottom: 20px;
+	font-size: 48px;
+	font-weight: 600;
+	margin-bottom: 20px;
 }
 
 .subtitle {
-  margin-bottom: 50px;
+	margin-bottom: 50px;
 }
 
 .videoBackground {
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
+	object-fit: cover;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
 }
 
 .searchInput {
-  width: 100%;
+	width: 100%;
 }
 
 .result {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  position: absolute;
-  min-width: 360px;
-  top: calc(100% + 20px);
-  left: calc(50% - 180px);
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	position: absolute;
+	min-width: 360px;
+	top: calc(100% + 20px);
+	left: calc(50% - 180px);
 }
 
 .resultItemRow {
-  font-size: 14px;
-  line-height: 16px;
+	font-size: 14px;
+	line-height: 16px;
 }
 
 .resultItemRow:not(:last-child) {
-  margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 
 .resultItemFooter {
-  padding-top: 10px;
-  display: flex;
-  justify-content: space-between;
+	padding-top: 10px;
+	display: flex;
+	justify-content: space-between;
 }
 </style>

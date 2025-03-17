@@ -1,3 +1,5 @@
+const PUBLIC_ROUTES = ["auth", "register", "reset-password"];
+
 export default defineNuxtRouteMiddleware(async (to) => {
 	const authStore = useAuthStore();
 
@@ -13,11 +15,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
 		return;
 	}
 
-	if (authStore.token && ["auth", "register"].includes(to.name as string)) {
+	if (authStore.token && PUBLIC_ROUTES.includes(to.name as string)) {
 		return navigateTo("/");
 	}
 
-	if (!authStore.token && !["auth", "register"].includes(to.name as string)) {
+	if (!authStore.token && !PUBLIC_ROUTES.includes(to.name as string)) {
 		abortNavigation();
 		return navigateTo("/auth");
 	}

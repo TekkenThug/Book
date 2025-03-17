@@ -3,26 +3,21 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '@/modules/users/users.service';
-import { addDays, addMinutes, getTime } from 'date-fns';
+import { addMinutes, getTime } from 'date-fns';
 import { EnvService } from '@/env/env.service';
-import { Token } from './token.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { TokenTypes } from '@/data/enums';
-import { SignUpDto, VerifyEmailDto } from './auth.dto';
+import { ApproveResetPasswordDto, SignUpDto, VerifyEmailDto } from './auth.dto';
 import { MailService } from '@/modules/mail/mail.service';
+import { TokenService } from '@/modules/tokens/token.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(Token)
-    private tokensRepository: Repository<Token>,
     private mailService: MailService,
     private usersService: UsersService,
-    private jwtService: JwtService,
     private envService: EnvService,
+    private tokenService: TokenService,
   ) {}
 
   async signIn(email: string, password: string) {
@@ -39,26 +34,21 @@ export class AuthService {
       throw new UnauthorizedException('Email is not verified');
     }
 
-    if (
-      await this.tokensRepository.findOneBy({
-        user,
-        type: TokenTypes.REFRESH,
-      })
-    ) {
+    if (await this.tokenService.hasToken({ user, type: TokenTypes.REFRESH })) {
       throw new UnauthorizedException('Already login');
     }
 
-    return await this.generatePairOfTokens(user.id);
+    return await this.tokenService.generatePairOfTokens(user);
   }
 
   async signOut(token: string) {
-    await this.invalidateToken(token, TokenTypes.REFRESH);
+    await this.tokenService.invalidateToken(token, TokenTypes.REFRESH);
   }
 
   async signUp(dto: SignUpDto) {
     const createdUser = await this.usersService.createUser(dto);
 
-    const token = await this.generateToken(
+    const { token, expires } = await this.tokenService.generateToken(
       createdUser.id,
       getTime(
         addMinutes(
@@ -69,132 +59,91 @@ export class AuthService {
       TokenTypes.VERIFY_EMAIL,
     );
 
-    await this.saveToken(
-      token.token,
-      createdUser.id,
-      token.expires,
+    await this.tokenService.saveToken(
+      token,
+      createdUser,
+      expires,
       TokenTypes.VERIFY_EMAIL,
     );
 
     this.mailService.sendWelcomeMail(
       createdUser.email,
       createdUser.first_name,
-      token.token,
+      token,
     );
   }
 
+  async resetPassword(email: string) {
+    const user = await this.usersService.getByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException('User with this email not found');
+    }
+
+    const { token, expires } = await this.tokenService.generateToken(
+      user.id,
+      getTime(
+        addMinutes(
+          new Date(),
+          +this.envService.get('JWT_RESET_PASSWORD_EXPIRATION_MINUTES'),
+        ),
+      ),
+      TokenTypes.RESET_PASSWORD,
+    );
+
+    await this.tokenService.saveToken(
+      token,
+      user,
+      expires,
+      TokenTypes.RESET_PASSWORD,
+    );
+
+    this.mailService.sendResetPasswordEmail(user.email, user.first_name, token);
+  }
+
+  async approveResetPassword(dto: ApproveResetPasswordDto) {
+    const token = await this.tokenService.verifyToken(dto.token);
+    const user = await this.usersService.getById(token.sub);
+
+    if (!user) {
+      throw new NotFoundException('Incorrect user');
+    }
+
+    await this.tokenService.invalidateToken(
+      dto.token,
+      TokenTypes.RESET_PASSWORD,
+    );
+    await this.usersService.updateUser(user.id, { password: dto.password });
+  }
+
   async verifyEmail(dto: VerifyEmailDto) {
-    const token = await this.jwtService.verifyAsync(dto.token);
+    const token = await this.tokenService.verifyToken(dto.token);
     const user = await this.usersService.getById(token.sub);
 
     if (!user) {
       throw new UnauthorizedException('Email verification failed');
     }
 
-    await this.invalidateToken(dto.token, TokenTypes.VERIFY_EMAIL);
-    await this.usersService.verifyEmail(user);
+    await this.tokenService.invalidateToken(dto.token, TokenTypes.VERIFY_EMAIL);
+    await this.usersService.verifyEmail(user.id);
   }
 
-  async refreshTokens(refreshToken: string) {
-    const token = await this.tokensRepository.findOneBy({
-      token: refreshToken,
-      type: TokenTypes.REFRESH,
-    });
-
-    if (!token) {
+  public async refreshTokens(token: string) {
+    if (
+      !(await this.tokenService.hasToken({ token, type: TokenTypes.REFRESH }))
+    ) {
       throw new UnauthorizedException();
     }
 
-    const payload = await this.jwtService.verifyAsync(refreshToken);
-
+    const payload = await this.tokenService.verifyToken(token);
     const user = await this.usersService.getById(payload.sub);
 
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    await this.invalidateToken(refreshToken, TokenTypes.REFRESH);
+    await this.tokenService.invalidateToken(token, TokenTypes.REFRESH);
 
-    return await this.generatePairOfTokens(user.id);
-  }
-
-  private async generatePairOfTokens(userId: number) {
-    const accessToken = await this.generateToken(
-      userId,
-      getTime(
-        addMinutes(
-          new Date(),
-          +this.envService.get('JWT_ACCESS_EXPIRATION_MINUTES'),
-        ),
-      ),
-      TokenTypes.ACCESS,
-    );
-    const refreshToken = await this.generateToken(
-      userId,
-      getTime(
-        addDays(
-          new Date(),
-          +this.envService.get('JWT_REFRESH_EXPIRATION_DAYS'),
-        ),
-      ),
-      TokenTypes.REFRESH,
-    );
-
-    await this.saveToken(
-      refreshToken.token,
-      userId,
-      refreshToken.expires,
-      TokenTypes.REFRESH,
-    );
-
-    return {
-      access: accessToken,
-      refresh: refreshToken,
-    };
-  }
-
-  private async generateToken(userId: number, expires: number, type: string) {
-    const payload = {
-      sub: userId,
-      iat: getTime(new Date()),
-      type,
-    };
-
-    return {
-      token: await this.jwtService.signAsync(payload),
-      expires,
-    };
-  }
-
-  private async saveToken(
-    token: string,
-    userId: number,
-    expires: number,
-    type: TokenTypes,
-  ) {
-    const user = await this.usersService.getById(userId);
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    const newToken = new Token();
-
-    newToken.token = token;
-    newToken.user = user;
-    newToken.type = type;
-    newToken.expires = expires;
-
-    return await this.tokensRepository.save(newToken);
-  }
-
-  private async invalidateToken(token: string, type: TokenTypes) {
-    const foundedToken = await this.tokensRepository.findOneBy({ token, type });
-
-    if (!foundedToken) {
-      throw new NotFoundException('Not found');
-    }
-
-    await this.tokensRepository.remove(foundedToken);
+    return await this.tokenService.generatePairOfTokens(user);
   }
 }

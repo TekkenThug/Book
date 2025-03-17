@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 import pick from 'lodash.pick';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { SignUpDto } from '@/modules/auth/auth.dto';
 import {
   UpdateAvatarDto,
@@ -45,6 +45,10 @@ export class UsersService {
     return await this.usersRepository.findOneBy({ id });
   }
 
+  async getMany(ids: number[]) {
+    return await this.usersRepository.find({ where: { id: In(ids) } });
+  }
+
   async getByEmail(email: string) {
     return await this.usersRepository.findOneBy({ email });
   }
@@ -53,8 +57,8 @@ export class UsersService {
     return await bcrypt.compare(source, password);
   }
 
-  async verifyEmail(user: User) {
-    await this.usersRepository.update(user, { verified_email: true });
+  async verifyEmail(id: number) {
+    await this.usersRepository.update({ id }, { verified_email: true });
   }
 
   async getEditableSettings(id: number) {
@@ -90,6 +94,6 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    return pick(user, 'avatar');
+    return pick(user, ['avatar', 'id', 'first_name', 'last_name']);
   }
 }

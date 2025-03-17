@@ -1,20 +1,21 @@
 <template>
 	<section :class="$style.section">
-    <MainLogo />
+		<CommonMainLink />
 
-		<RegisterForm
+		<FormsRegister
 			v-if="mode === 'register'"
 			@change="changeMode"
 		/>
 
-		<LoginForm v-else @change="changeMode" />
+		<FormsLogin v-else-if="mode ==='login'" @change="changeMode" />
+
+		<FormsResetPassword v-else-if="mode === 'reset'" @change="changeMode" />
 	</section>
 </template>
 
 <script lang="ts" setup>
-import MainLogo from "~/components/common/main-link";
-import RegisterForm from "~/components/forms/register";
-import LoginForm from "~/components/forms/login";
+import type { AuthFormMode } from "./types";
+import { CommonMainLink, FormsRegister, FormsLogin, FormsResetPassword } from "#components";
 
 definePageMeta({
 	layout: false,
@@ -23,10 +24,10 @@ definePageMeta({
 const router = useRouter();
 const route = useRoute();
 
-const mode = ref<"login" | "register">(route.query.mode as "login" | "register" | null ?? "login");
+const mode = ref<AuthFormMode>(route.query.mode as "login" | "register" | null ?? "login");
 
-const changeMode = () => {
-	mode.value = mode.value === "register" ? "login" : "register";
+const changeMode = (newMode: typeof mode.value) => {
+	mode.value = newMode;
 
 	router.push({ query: { mode: mode.value } });
 };

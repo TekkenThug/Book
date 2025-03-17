@@ -63,7 +63,7 @@
 				/>
 			</div>
 
-			<Editor
+			<UiEditor
 				v-model="description"
 				placeholder="Describe event"
 				:class="$style.editor"
@@ -84,37 +84,39 @@
 import { add } from "date-fns";
 import { toTypedSchema } from "@vee-validate/zod";
 import type { AutoCompleteCompleteEvent, AutoCompleteOptionSelectEvent } from "primevue/autocomplete";
-import Editor from "~/components/ui/editor";
-import { eventsService } from "~/services/events";
+import { bookService, eventService } from "~/services/api";
 import { createEvent } from "~/validation/schemas";
-import type { Book } from "~/types/books";
 import { mapToInterval } from "~/utils/date";
+import type { Book } from "~/services/api/book";
 
-const authStore = useAuthStore();
 const { showErrorToast, showSuccessToast } = useUI();
 const suggestedBooks = ref<Book[]>([]);
 const searchingBook = ref("");
 const isLoading = ref(false);
 const tomorrowDate = add(new Date(), { days: 1 });
 const emit = defineEmits<{
-	(e: "submit");
+	submit: [];
 }>();
 const searchBooks = async ({ query: title }: AutoCompleteCompleteEvent) => {
 	try {
-		suggestedBooks.value = await authStore.fetchAPI("/books", { query: { title } });
+		const { data } = await bookService.get({ title });
+		if (!data) {
+			return;
+		}
+		suggestedBooks.value = data;
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);
 	}
 };
 const selectBook = ({ value }: AutoCompleteOptionSelectEvent) => {
-	bookId.value = value.id;
+	book_id.value = value.id;
 };
 
 const { meta, defineField, handleSubmit, resetForm } = useForm({
 	validationSchema: toTypedSchema(createEvent),
 });
-const [bookId] = defineField("bookId");
+const [book_id] = defineField("book_id");
 const [title, titleAttrs] = defineField("title");
 const [datetime, datetimeAttrs] = defineField("datetime");
 const [duration] = defineField("duration");
@@ -128,23 +130,12 @@ const sendToCreateEvent = handleSubmit(async (values) => {
 	try {
 		isLoading.value = true;
 
-		// await authStore.fetchAPI("/events", {
-		// 	method: "post",
-		// 	body: {
-		// 		...values,
-		// 		datetime: values.datetime.toISOString(),
-		// 		duration: mapToInterval(values.duration),
-		// 		book_id: values.bookId,
-		// 		description: values.description,
-		// 	},
-		// });
-
-		await eventsService.create({
+		await eventService.create({
 			...values,
 			datetime: values.datetime.toISOString(),
 			duration: mapToInterval(values.duration),
-			book_id: values.bookId,
-			description: values.description,
+			book_id: values.book_id,
+			description: values.description ?? "",
 		});
 
 		searchingBook.value = "";
@@ -165,28 +156,28 @@ const sendToCreateEvent = handleSubmit(async (values) => {
 
 <style module>
 .title {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .rules {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-bottom: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	margin-bottom: 20px;
 }
 
 .fields {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-bottom: 20px;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 20px;
+	margin-bottom: 20px;
 }
 
 .editor {
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .searchPanel {
-  width: 420px;
+	width: 420px;
 }
 </style>

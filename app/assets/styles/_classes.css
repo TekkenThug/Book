@@ -16,6 +16,11 @@
   font-weight: 500;
 }
 
+.p1 {
+  font-size: 18px;
+  line-height: 21px;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;

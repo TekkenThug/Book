@@ -14,10 +14,18 @@
 				type="password"
 				placeholder="Password"
 			/>
+
+			<Message
+				size="small"
+				variant="simple"
+				severity="secondary"
+			>
+				Forget passsword? <span :class="$style.marked" @click="changeMode('reset')">Just reset it!</span>
+			</Message>
 		</div>
 
 		<p :class="$style.registerInvitation">
-			Don't have an account? <span @click="changeMode">Create it!</span>
+			Don't have an account? <span :class="$style.marked" @click="changeMode('register')">Create it!</span>
 		</p>
 
 		<Button
@@ -32,20 +40,20 @@
 
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
+import type { AuthFormMode } from "~/pages/auth/types";
 import { login } from "~/validation/schemas";
 
 const emit = defineEmits<{
-	(e: "change"): void;
+	change: [value: AuthFormMode];
 }>();
-const changeMode = () => {
+const changeMode = (mode: AuthFormMode) => {
 	if (isLoading.value) {
 		return;
 	}
 
-	emit("change");
+	emit("change", mode);
 };
 
-const router = useRouter();
 const { showErrorToast } = useUI();
 const { meta, defineField, handleSubmit } = useForm({
 	validationSchema: toTypedSchema(login),
@@ -64,7 +72,7 @@ const auth = handleSubmit(async (values) => {
 		isLoading.value = true;
 
 		await authStore.authenticateUser(values);
-		await router.push({ name: "profile" });
+		location.reload();
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);
@@ -95,7 +103,7 @@ const auth = handleSubmit(async (values) => {
   margin: 20px 0 30px;
 }
 
-.registerInvitation span {
+.marked {
   color: #5AA9E6;
   cursor: pointer;
 }

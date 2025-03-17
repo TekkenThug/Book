@@ -22,7 +22,7 @@
 				placeholder="Email"
 			/>
 
-			<PasswordInput
+			<UiPasswordInput
 				v-model="password"
 				v-bind="passwordAttrs"
 				placeholder="Password"
@@ -37,7 +37,7 @@
 		</div>
 
 		<p :class="$style.registerInvitation">
-			Already registered? <span @click="$emit('change')">Log in!</span>
+			Already registered? <span @click="$emit('change', 'login')">Log in!</span>
 		</p>
 
 		<Button
@@ -52,11 +52,13 @@
 
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import PasswordInput from "~/components/ui/password-input";
+import { UiPasswordInput } from "#components";
 import { register } from "~/validation/schemas";
+import { authService } from "~/services/api";
+import type { AuthFormMode } from "~/pages/auth/types";
 
 const emit = defineEmits<{
-	(e: "change"): void;
+	change: [value: AuthFormMode];
 }>();
 
 const { showSuccessToast, showErrorToast } = useUI();
@@ -70,7 +72,6 @@ const [password, passwordAttrs] = defineField("password");
 const [repeatPassword, repeatPasswordAttrs] = defineField("repeatPassword");
 
 const isLoading = ref(false);
-const authStore = useAuthStore();
 const registerNewUser = handleSubmit(async (values) => {
 	if (isLoading.value) {
 		return;
@@ -79,7 +80,7 @@ const registerNewUser = handleSubmit(async (values) => {
 	try {
 		isLoading.value = true;
 
-		const response = await authStore.registerUser({
+		const { data } = await authService.register({
 			email: values.email,
 			first_name: values.firstName,
 			last_name: values.lastName,
@@ -87,8 +88,8 @@ const registerNewUser = handleSubmit(async (values) => {
 			repeat_password: values.repeatPassword,
 		});
 
-		showSuccessToast(response.message);
-		emit("change");
+		showSuccessToast(data?.message ?? "Successfully registered");
+		emit("change", "login");
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);
