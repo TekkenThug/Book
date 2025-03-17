@@ -56,8 +56,8 @@ export const usePeer = () => {
 						id: call.peer,
 						stream: remoteStream,
 						activity: {
-							video: remoteStream.getVideoTracks()[0]?.enabled,
-							audio: remoteStream.getAudioTracks()[0]?.enabled,
+							video: remoteStream.getVideoTracks()[0]?.enabled ?? false,
+							audio: remoteStream.getAudioTracks()[0]?.enabled ?? false,
 						},
 					});
 				}
@@ -78,8 +78,8 @@ export const usePeer = () => {
 						id: userId,
 						stream: remoteStream,
 						activity: {
-							video: remoteStream.getVideoTracks()[0]?.enabled,
-							audio: remoteStream.getAudioTracks()[0]?.enabled,
+							video: remoteStream.getVideoTracks()[0]?.enabled ?? false,
+							audio: remoteStream.getAudioTracks()[0]?.enabled ?? false,
 						},
 					});
 				}
@@ -92,6 +92,10 @@ export const usePeer = () => {
 	};
 
 	const toggleVideo = () => {
+		if (!localFrame.value) {
+			return;
+		}
+
 		const track = localFrame.value.stream?.getVideoTracks()[0];
 		if (!track) {
 			return;
@@ -101,6 +105,10 @@ export const usePeer = () => {
 	};
 
 	const toggleAudio = () => {
+		if (!localFrame.value) {
+			return;
+		}
+
 		const track = localFrame.value.stream.getAudioTracks()[0];
 		if (!track) {
 			return;
@@ -119,9 +127,17 @@ export const usePeer = () => {
 		frame.activity[device] = state;
 	};
 
+	const stopDeviceUsing = () => {
+		if (!localFrame.value) {
+			return;
+		}
+
+		localFrame.value.stream.getTracks().forEach(track => track.stop());
+	};
+
 	onBeforeUnmount(() => {
 		peer?.disconnect();
-		localFrame.value.stream.getTracks().forEach(track => track.stop());
+		stopDeviceUsing();
 	});
 
 	return {

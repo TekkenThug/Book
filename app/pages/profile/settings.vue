@@ -181,7 +181,7 @@ const handleClickOnUploader = () => {
 const handleUploadedAvatar = async (event: Event) => {
 	try {
 		const target = event.target as HTMLInputElement;
-		if (!target.files || !target.files.length) {
+		if (!target.files || !target.files[0]) {
 			return;
 		}
 

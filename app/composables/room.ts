@@ -46,6 +46,10 @@ export const useRoom = (id: number, roomId: number, token: string | null) => {
 	};
 
 	const toggleDevice = (device: RemoteUserOptions["device"]) => {
+		if (!peer.localFrame.value) {
+			return;
+		}
+
 		if (device === "video") {
 			peer.toggleVideo();
 			socket.value?.emit("peer-toggle-device", {
