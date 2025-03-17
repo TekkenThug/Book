@@ -15,8 +15,16 @@
 		</Column>
 
 		<Column field="book.title" header="Book" />
-		<Column field="date" header="Date" />
-		<Column field="duration" header="Duration" />
+		<Column field="date" header="Date">
+			<template #body="slotProps">
+				{{ parseDateTime(slotProps.data.date) }}
+			</template>
+		</Column>
+		<Column field="duration" header="Duration">
+			<template #body="slotProps">
+				{{ parseInterval(slotProps.data.duration) }}
+			</template>
+		</Column>
 		<Column field="members_count" header="Members" />
 
 		<Column header="Role">
@@ -32,18 +40,22 @@
 
 <script setup lang="ts">
 import { UiLoader } from "#components";
-import type { MappedEvent } from "~/services/event";
-import { eventService } from "~/services";
+import { eventService } from "~/services/api";
+import type { UserMeetingEvent } from "~/services/api/event";
 import { isAPIError } from "~/services/instance";
 
 const { showErrorToast } = useUI();
 
 const isLoading = ref(true);
-const events = ref<MappedEvent[]>([]);
+const events = ref<UserMeetingEvent[]>([]);
 
 const getEvents = async () => {
 	try {
-		events.value = await eventService.getUsersEvent();
+		const { data } = await eventService.getUsersEvent();
+
+		if (data) {
+			events.value = data;
+		}
 
 		isLoading.value = false;
 	}

@@ -84,9 +84,7 @@
 import { add } from "date-fns";
 import { toTypedSchema } from "@vee-validate/zod";
 import type { AutoCompleteCompleteEvent, AutoCompleteOptionSelectEvent } from "primevue/autocomplete";
-import { UiEditor } from "#components";
-import { eventService } from "~/services";
-import { bookService } from "~/services/api";
+import { bookService, eventService } from "~/services/api";
 import { createEvent } from "~/validation/schemas";
 import { mapToInterval } from "~/utils/date";
 import type { Book } from "~/services/api/book";

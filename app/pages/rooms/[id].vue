@@ -12,11 +12,9 @@
 
 <script lang="ts" setup>
 import { isWithinInterval, isFuture, add } from "date-fns";
-import { eventService } from "~/services";
-import { recordService } from "~/services/api";
+import { recordService, eventService } from "~/services/api";
 import { isAPIError } from "~/services/instance";
-import type { Event } from "~/services/event";
-import { UiLoader, RoomFuture, RoomMeeting } from "#components";
+import type { MeetingEvent } from "~/services/api/event";
 
 definePageMeta({
 	layout: "alternative-full",
@@ -26,7 +24,7 @@ const route = useRoute();
 const router = useRouter();
 
 const roomId = ref<number>(+(route.params.id as string));
-const event = ref<Event | null>(null);
+const event = ref<MeetingEvent | null>(null);
 const isLoading = ref(true);
 const mode = ref<"prepare" | "future">("future");
 
@@ -42,7 +40,13 @@ onBeforeMount(async () => {
 			});
 		}
 
-		event.value = await eventService.getById(+roomId.value);
+		const { data } = await eventService.getById(+roomId.value);
+
+		if (!data) {
+			return;
+		}
+
+		event.value = data;
 
 		if (isFuture(event.value.date)) {
 			return;

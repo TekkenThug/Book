@@ -26,10 +26,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { Event } from "~/services/event";
+import type { MeetingEvent } from "~/services/api/event";
 import { parseInterval } from "~/utils/date";
 
-defineProps<{ event: Event }>();
+defineProps<{ event: MeetingEvent }>();
 </script>
 
 <style module>

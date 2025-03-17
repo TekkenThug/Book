@@ -399,39 +399,67 @@ export interface components {
             /** @example Atomic Habits */
             title: string;
         };
-        EventDto: {
+        Interval: {
+            hours?: number;
+            minutes?: number;
+        };
+        EventWithBookDto: {
             /** @example 1 */
             id: number;
             /** @example Is Martin Eden mad person? */
             title: string;
-            /** @example 5 */
-            book_id: number;
-            /** @example 2 */
-            author_id: number;
             /** @example 2020-02-12T07:20:50.52Z */
             date: string;
-            /** @example 1 hours 30 minutes */
-            duration: string;
+            /** @example {
+             *       "hours": 1,
+             *       "minutes": 30
+             *     } */
+            duration: components["schemas"]["Interval"];
             /** @example 15 */
             members_count: number;
+            /** @example <p>Hello</p> */
+            description: string;
+            book: components["schemas"]["BookDto"];
         };
         EventDtoChecked: {
             /** @example 1 */
             id: number;
             /** @example Is Martin Eden mad person? */
             title: string;
-            /** @example 5 */
-            book_id: number;
-            /** @example 2 */
-            author_id: number;
             /** @example 2020-02-12T07:20:50.52Z */
             date: string;
-            /** @example 1 hours 30 minutes */
-            duration: string;
+            /** @example {
+             *       "hours": 1,
+             *       "minutes": 30
+             *     } */
+            duration: components["schemas"]["Interval"];
             /** @example 15 */
             members_count: number;
+            /** @example <p>Hello</p> */
+            description: string;
+            book: components["schemas"]["BookDto"];
             /** @example true */
-            with_checked: boolean;
+            checked: boolean;
+        };
+        UserEventDto: {
+            /** @example 1 */
+            id: number;
+            /** @example Is Martin Eden mad person? */
+            title: string;
+            /** @example 2020-02-12T07:20:50.52Z */
+            date: string;
+            /** @example {
+             *       "hours": 1,
+             *       "minutes": 30
+             *     } */
+            duration: components["schemas"]["Interval"];
+            /** @example 15 */
+            members_count: number;
+            /** @example <p>Hello</p> */
+            description: string;
+            book: components["schemas"]["BookDto"];
+            /** @example owner */
+            role: string;
         };
         CreateEventDto: {
             title: string;
@@ -439,6 +467,23 @@ export interface components {
             datetime: string;
             duration: string;
             description?: string;
+        };
+        EventDto: {
+            /** @example 1 */
+            id: number;
+            /** @example Is Martin Eden mad person? */
+            title: string;
+            /** @example 2020-02-12T07:20:50.52Z */
+            date: string;
+            /** @example {
+             *       "hours": 1,
+             *       "minutes": 30
+             *     } */
+            duration: components["schemas"]["Interval"];
+            /** @example 15 */
+            members_count: number;
+            /** @example <p>Hello</p> */
+            description: string;
         };
         CreateRecordDto: {
             /** @example 1 */
@@ -694,9 +739,9 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Only future events */
-                future?: unknown;
+                future?: boolean;
                 /** @description Find by book title */
-                book?: unknown;
+                book?: string;
             };
             header?: never;
             path?: never;
@@ -710,7 +755,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EventDto"][];
+                    "application/json": components["schemas"]["EventWithBookDto"][];
                 };
             };
         };
@@ -750,7 +795,12 @@ export interface operations {
     };
     EventsController_findChecked: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Only future events */
+                future?: boolean;
+                /** @description Find by book title */
+                book?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -783,7 +833,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EventDto"][];
+                    "application/json": components["schemas"]["UserEventDto"][];
                 };
             };
         };

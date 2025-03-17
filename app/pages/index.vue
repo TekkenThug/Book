@@ -40,8 +40,8 @@
 									</div>
 
 									<Button
-										:label="event.checked ? 'Registered' : 'Register'"
-										:disabled="event.checked"
+										:label="'checked' in event && event.checked ? 'Registered' : 'Register'"
+										:disabled="'checked' in event ? event.checked : false"
 										@click="registerToEvent(event.id)"
 									/>
 								</div>
@@ -66,10 +66,10 @@
 
 <script lang="ts" setup>
 import _debounce from "lodash.debounce";
-import type { EventWithChecked } from "~/services/event";
 import { isAPIError } from "~/services/instance";
-import { userService, eventService } from "~/services";
-import { recordService } from "~/services/api";
+import { userService } from "~/services";
+import { recordService, eventService } from "~/services/api";
+import type { CheckedMeetingEvent, MeetingEventWithBook } from "~/services/api/event";
 
 definePageMeta({
 	layout: "full-page",
@@ -79,7 +79,7 @@ const authStore = useAuthStore();
 const { showErrorToast } = useUI();
 
 const searchingString = ref("");
-const events = ref<EventWithChecked[]>([]);
+const events = ref<(CheckedMeetingEvent | MeetingEventWithBook)[]>([]);
 
 const requestToTheServer = _debounce((book: string) => {
 	events.value = [];
@@ -87,7 +87,14 @@ const requestToTheServer = _debounce((book: string) => {
 	try {
 		if (book) {
 			setTimeout(async () => {
-				events.value = await eventService.get({ future: true, book, withChecked: authStore.authenticated });
+				const { data } = await eventService[authStore.authenticated ? "getWithChecked" : "get"]({
+					future: true,
+					book,
+				});
+
+				if (data) {
+					events.value = data;
+				}
 			}, 300);
 		}
 	}
@@ -132,7 +139,9 @@ const registerToEvent = async (id: number) => {
 	try {
 		await recordService.recordToEvent(id);
 
-		changedEvent.checked = true;
+		if ("checked" in changedEvent) {
+			changedEvent.checked = true;
+		}
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);

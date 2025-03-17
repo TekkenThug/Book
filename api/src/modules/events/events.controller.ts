@@ -2,7 +2,13 @@ import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
 import { Public } from '@/decorators/public/public.decorator';
 import { EventsService } from './events.service';
 import { Request } from 'express';
-import { CreateEventDto, EventDto, EventDtoChecked } from './events.dto';
+import {
+  CreateEventDto,
+  EventDto,
+  EventDtoChecked,
+  EventWithBookDto,
+  UserEventDto,
+} from './events.dto';
 import {
   ApiCreatedResponse,
   ApiExtraModels,
@@ -27,18 +33,20 @@ export class EventsController {
     name: 'book',
     required: false,
     description: 'Find by book title',
+    type: String,
   })
   @ApiQuery({
     name: 'future',
     required: false,
     description: 'Only future events',
+    type: Boolean,
   })
-  @ApiExtraModels(EventDto)
+  @ApiExtraModels(EventWithBookDto)
   @ApiOkResponse({
     description: 'OK',
     schema: {
       type: 'array',
-      items: { $ref: getSchemaPath(EventDto) },
+      items: { $ref: getSchemaPath(EventWithBookDto) },
     },
   })
   @Get()
@@ -58,6 +66,18 @@ export class EventsController {
       items: { $ref: getSchemaPath(EventDtoChecked) },
     },
   })
+  @ApiQuery({
+    name: 'book',
+    required: false,
+    description: 'Find by book title',
+    type: String,
+  })
+  @ApiQuery({
+    name: 'future',
+    required: false,
+    description: 'Only future events',
+    type: Boolean,
+  })
   @Get('with-checked')
   async findChecked(@Query() query: { book: string }, @Req() request: Request) {
     return await this.eventsService.get({
@@ -69,12 +89,12 @@ export class EventsController {
   }
 
   @ApiOperation({ summary: 'Get user`s events' })
-  @ApiExtraModels(EventDto)
+  @ApiExtraModels(UserEventDto)
   @ApiOkResponse({
     description: 'OK',
     schema: {
       type: 'array',
-      items: { $ref: getSchemaPath(EventDto) },
+      items: { $ref: getSchemaPath(UserEventDto) },
     },
   })
   @Get('my')

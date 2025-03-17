@@ -72,17 +72,16 @@
 
 <script lang="ts" setup>
 import { add, isWithinInterval } from "date-fns";
-import type { Event } from "~/services/event";
-import { eventService } from "~/services";
-import { recordService } from "~/services/api";
+import { recordService, eventService } from "~/services/api";
 import { parseInterval } from "~/utils/date";
 import { isAPIError } from "~/services/instance";
+import type { MeetingEvent } from "~/services/api/event";
 
 const route = useRoute();
 const router = useRouter();
 const { showErrorToast, showSuccessToast } = useUI();
 
-const event = ref<Event | null>(null);
+const event = ref<MeetingEvent | null>(null);
 
 const buttonIsDisabled = computed(() => {
 	if (!event.value) {
@@ -140,7 +139,11 @@ const unsubscribe = async () => {
 
 onBeforeMount(async () => {
 	try {
-		event.value = await eventService.getById(+(route.params.id as string));
+		const { data } = await eventService.getById(+(route.params.id as string));
+
+		if (data) {
+			event.value = data;
+		}
 	}
 	catch {
 		await router.push({ name: "index" });
