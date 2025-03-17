@@ -29,7 +29,7 @@ export default {
 	},
 
 	async get(query: QueryParams) {
-		return await client.GET("/api/v1/events", { params: { query }});
+		return await client.GET("/api/v1/events", { params: { query } });
 	},
 
 	async getWithChecked(query: QueryParams) {
