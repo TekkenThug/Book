@@ -1,19 +1,6 @@
 import type { Paths } from "./client";
 import client from "./client";
 
-// type Room = {
-// 	event_id: number;
-// 	chat_log: { id: number; text: string; datetime: string; fullname: string }[];
-// 	participants: number[];
-// };
-
-// type Participant = {
-// 	id: number;
-// 	first_name: string;
-// 	last_name: string;
-// 	avatar: string;
-// };
-
 export type ChatLog =
 Paths["/api/v1/rooms/{id}"]["get"]["responses"]["200"]["content"]["application/json"]["chat_log"];
 
