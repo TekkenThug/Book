@@ -84,7 +84,7 @@ To run this project, you will need to add the following environment variables to
 
 ## Roadmap
 
--   Readable errors from validation
+-   Readable errors from validation / rework errors from api
 -   Delete event
 -   Tailwind integration
 -   Update Swagger doc utility

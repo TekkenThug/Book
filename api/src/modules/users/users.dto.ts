@@ -27,7 +27,7 @@ export class UpdateSettingsDto {
 }
 
 export class UpdateAvatarDto {
-  @ApiProperty({ format: 'binary', type: 'string' })
+  @ApiProperty({ format: 'file', type: 'string' })
   avatar: Express.Multer.File;
 }
 

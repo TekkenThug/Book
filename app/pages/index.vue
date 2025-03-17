@@ -67,8 +67,7 @@
 <script lang="ts" setup>
 import _debounce from "lodash.debounce";
 import { isAPIError } from "~/services/instance";
-import { userService } from "~/services";
-import { recordService, eventService } from "~/services/api";
+import { recordService, eventService, authService } from "~/services/api";
 import type { CheckedMeetingEvent, MeetingEventWithBook } from "~/services/api/event";
 
 definePageMeta({
@@ -117,7 +116,7 @@ onBeforeMount(async () => {
 
 	if (route.query.emailToken) {
 		try {
-			await userService.auth.verifyEmail(route.query.emailToken as string);
+			await authService.verifyEmail(route.query.emailToken as string);
 		}
 		finally {
 			await router.push({ query: {} });

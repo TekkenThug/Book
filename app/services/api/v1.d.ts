@@ -376,7 +376,7 @@ export interface components {
 			message: string;
 		};
 		UpdateAvatarDto: {
-			/** Format: binary */
+			/** Format: file */
 			avatar: string;
 		};
 		UserMetadataDto: {
@@ -660,7 +660,7 @@ export interface operations {
 		};
 		requestBody: {
 			content: {
-				"application/json": components["schemas"]["UpdateAvatarDto"];
+				"multipart/form-data": components["schemas"]["UpdateAvatarDto"];
 			};
 		};
 		responses: {

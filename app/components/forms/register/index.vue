@@ -54,7 +54,7 @@
 import { toTypedSchema } from "@vee-validate/zod";
 import { UiPasswordInput } from "#components";
 import { register } from "~/validation/schemas";
-import { userService } from "~/services";
+import { authService } from "~/services/api";
 import type { AuthFormMode } from "~/pages/auth/types";
 
 const emit = defineEmits<{
@@ -80,7 +80,7 @@ const registerNewUser = handleSubmit(async (values) => {
 	try {
 		isLoading.value = true;
 
-		const response = await userService.auth.register({
+		const { data } = await authService.register({
 			email: values.email,
 			first_name: values.firstName,
 			last_name: values.lastName,
@@ -88,7 +88,7 @@ const registerNewUser = handleSubmit(async (values) => {
 			repeat_password: values.repeatPassword,
 		});
 
-		showSuccessToast(response.message);
+		showSuccessToast(data?.message ?? "Successfully registered");
 		emit("change", "login");
 	}
 	catch (e) {

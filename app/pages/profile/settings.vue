@@ -87,8 +87,8 @@
 <script setup lang="ts">
 import { ProfileSection, UiLoader, UiAvatar, UiPasswordInput } from "#components";
 import { PASSWORD_REGEXP } from "~/data/regexp";
-import type { Settings } from "~/services/user";
-import { userService } from "~/services";
+import { userService } from "~/services/api";
+import type { Settings } from "~/services/api/user";
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -103,7 +103,13 @@ const { showErrorToast, showSuccessToast } = useUI();
 
 onBeforeMount(async () => {
 	try {
-		initialSettings.value = await userService.getSettings();
+		const { data } = await userService.getSettings();
+
+		if (!data) {
+			return;
+		}
+
+		initialSettings.value = data;
 
 		editableSettings.value = {
 			first_name: initialSettings.value.first_name,
@@ -140,7 +146,7 @@ const saveSettings = async () => {
 	try {
 		saveIsLoading.value = true;
 
-		const response = await userService.updateSettings(
+		const { data } = await userService.updateSettings(
 			Object.entries(editableSettings.value).reduce((acc, curr) => {
 				if (!curr[1]) {
 					return acc;
@@ -149,7 +155,7 @@ const saveSettings = async () => {
 				return { ...acc, [curr[0]]: curr[1] };
 			}, {}));
 
-		showSuccessToast(response.message);
+		showSuccessToast(data?.message ?? "Settings updated");
 
 		replaceInitialValuesWithActual();
 	}
@@ -188,10 +194,14 @@ const handleUploadedAvatar = async (event: Event) => {
 		const formData = new FormData();
 		formData.set("avatar", target.files[0]);
 
-		const result = await userService.uploadAvatar(formData);
-		userStore.user = await userService.getMe();
+		const { data: result } = await userService.uploadAvatar(formData);
+		const { data } = await userService.getMe();
 
-		showSuccessToast(result.message);
+		if (data) {
+			userStore.user = data;
+		}
+
+		showSuccessToast(result?.message ?? "Avatar uploaded");
 	}
 	catch (e) {
 		showErrorToast((e as Error).message);
