@@ -1,10 +1,10 @@
 <template>
 	<div>
-		<h3 :class="['h3', $style.title]">
+		<h3 class="h3 mb-2.5">
 			Rules of creation
 		</h3>
 
-		<ul :class="$style.rules">
+		<ul class="flex flex-col gap-1.5 mb-5">
 			<li>
 				- You can create ONLY 1 event at ONE date
 			</li>
@@ -18,14 +18,14 @@
 			</li>
 		</ul>
 
-		<form :class="$style.form">
-			<div :class="$style.fields">
+		<form>
+			<div class="grid gap-5 mb-5 grid-cols-4">
 				<AutoComplete
 					v-model="searchingBook"
 					option-label="title"
 					placeholder="Enter book title"
 					:suggestions="suggestedBooks"
-					:panel-class="$style.searchPanel"
+					panel-class="w-[420px]"
 					@complete="searchBooks"
 					@option-select="selectBook"
 				>
@@ -66,7 +66,7 @@
 			<UiEditor
 				v-model="description"
 				placeholder="Describe event"
-				:class="$style.editor"
+				class="mb-5"
 			/>
 
 			<Button
@@ -84,7 +84,7 @@
 import { add } from "date-fns";
 import { toTypedSchema } from "@vee-validate/zod";
 import type { AutoCompleteCompleteEvent, AutoCompleteOptionSelectEvent } from "primevue/autocomplete";
-import { bookService, eventService } from "~/services/api";
+import { bookService, eventService, isAPIError } from "~/services/api";
 import { createEvent } from "~/validation/schemas";
 import { mapToInterval } from "~/utils/date";
 import type { Book } from "~/services/api/book";
@@ -145,39 +145,13 @@ const sendToCreateEvent = handleSubmit(async (values) => {
 
 		emit("submit");
 	}
-	catch (e) {
-		showErrorToast((e as Error).message);
+	catch (error) {
+    if (isAPIError(error)) {
+      showErrorToast(error.message);
+    }
 	}
 	finally {
 		isLoading.value = false;
 	}
 });
 </script>
-
-<style module>
-.title {
-	margin-bottom: 10px;
-}
-
-.rules {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-	margin-bottom: 20px;
-}
-
-.fields {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 20px;
-	margin-bottom: 20px;
-}
-
-.editor {
-	margin-bottom: 20px;
-}
-
-.searchPanel {
-	width: 420px;
-}
-</style>

@@ -39,7 +39,6 @@
 </template>
 
 <script setup lang="ts">
-import { UiLoader } from "#components";
 import { eventService, isAPIError } from "~/services/api";
 import type { UserMeetingEvent } from "~/services/api/event";
 
@@ -69,7 +68,7 @@ const getTagCaptionState = (role: string) => {
 	return role === "owner" ? ["warn", "Owner"] : ["info", "Member"];
 };
 
-onBeforeMount(async () => {
-	await getEvents();
+onBeforeMount( () => {
+	getEvents();
 });
 </script>

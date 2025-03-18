@@ -1,7 +1,7 @@
 <template>
-	<section :class="$style.section">
+	<section class="flex-grow">
 		<div class="container">
-			<h2 :class="['h2', $style.title]">
+			<h2 class="h2 mb-10">
 				{{ title }}
 			</h2>
 
@@ -14,13 +14,3 @@
 defineProps<{ title: string }>();
 </script>
 
-<style module>
-.section {
-  padding: 0;
-  flex-grow: 1;
-}
-
-.title {
-  margin-bottom: 40px;
-}
-</style>
