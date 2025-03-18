@@ -22,7 +22,6 @@
 </template>
 
 <script lang="ts" setup>
-import { defineEmits } from "vue";
 import { resetPassword } from "~/validation/schemas";
 import { authService } from "~/services/api";
 import type { AuthFormMode } from "~/pages/auth/types";

@@ -1,11 +1,11 @@
 <template>
-	<section :class="$style.section">
-		<section :class="$style.content">
-			<h1 :class="$style.title">
+	<section class="flex items-center justify-center flex-col relative overflow-hidden min-h-dvh bg-black/75">
+		<div class="flex flex-col items-center relative">
+			<h1 class="text-5xl font-semibold mb-4">
 				Find own book community
 			</h1>
 
-			<p :class="$style.subtitle">
+			<p class="mb-10">
 				Discuss about books, characters and subjects. Just register on book meeting.
 			</p>
 
@@ -17,24 +17,29 @@
 					type="text"
 					variant="filled"
 					placeholder="Enter a name of book"
-					:class="$style.searchInput"
+					class="w-full"
+					@update:model-value="requestToTheServer"
 				/>
 			</IconField>
 
 			<transition name="slide-up">
-				<ul v-if="events.length" :class="$style.result">
+				<ul
+					v-if="events.length"
+					class="flex flex-col gap-5 absolute"
+					:class="$style.result"
+				>
 					<li v-for="event in events" :key="event.id">
 						<Card>
 							<template #title>
 								{{ event.title }}
 							</template>
 							<template #content>
-								<div :class="$style.resultItemFooter">
-									<div>
-										<p :class="$style.resultItemRow">
+								<div class="flex justify-between pt-2.5">
+									<div class="flex gap-1.5 flex-col mr-2.5">
+										<p class="text-sm">
 											Book: {{ event.book.title }}
 										</p>
-										<p :class="$style.resultItemRow">
+										<p class="text-sm">
 											When: {{ parseDateTime(event.date) }}
 										</p>
 									</div>
@@ -50,14 +55,14 @@
 					</li>
 				</ul>
 			</transition>
-		</section>
+		</div>
 
 		<video
 			playsinline
 			autoplay
 			muted
 			loop
-			:class="$style.videoBackground"
+			class="absolute top-0 left-0 w-full h-full -z-1 object-cover"
 		>
 			<source src="~/assets/videos/books.mp4" type="video/mp4">
 		</video>
@@ -74,26 +79,26 @@ definePageMeta({
 });
 
 const authStore = useAuthStore();
+const route = useRoute();
+const router = useRouter();
 const { showErrorToast } = useUI();
 
 const searchingString = ref("");
 const events = ref<(CheckedMeetingEvent | MeetingEventWithBook)[]>([]);
 
-const requestToTheServer = _debounce((book: string) => {
+const requestToTheServer = _debounce(async () => {
 	events.value = [];
 
 	try {
-		if (book) {
-			setTimeout(async () => {
-				const { data } = await eventService[authStore.authenticated ? "getWithChecked" : "get"]({
-					future: true,
-					book,
-				});
+		if (searchingString.value) {
+			const { data } = await eventService[authStore.authenticated ? "getWithChecked" : "get"]({
+				future: true,
+				book: searchingString.value,
+			});
 
-				if (data) {
-					events.value = data;
-				}
-			}, 300);
+			if (data) {
+				events.value = data;
+			}
 		}
 	}
 	catch (error) {
@@ -101,27 +106,7 @@ const requestToTheServer = _debounce((book: string) => {
 			showErrorToast(error.message);
 		}
 	}
-}, 250);
-
-watch(() => searchingString.value, requestToTheServer);
-
-const route = useRoute();
-const router = useRouter();
-onBeforeMount(async () => {
-	if (route.query.resetToken) {
-		await router.push({ name: "reset-password", query: { resetToken: route.query.resetToken } });
-		return;
-	}
-
-	if (route.query.emailToken) {
-		try {
-			await authService.verifyEmail(route.query.emailToken as string);
-		}
-		finally {
-			await router.push({ query: {} });
-		}
-	}
-});
+}, 300);
 
 const registerToEvent = async (id: number) => {
 	if (!authStore.authenticated) {
@@ -145,73 +130,28 @@ const registerToEvent = async (id: number) => {
 		showErrorToast((e as Error).message);
 	}
 };
+
+onBeforeMount(async () => {
+	if (route.query.resetToken) {
+		void router.push({ name: "reset-password", query: { resetToken: route.query.resetToken } });
+		return;
+	}
+
+	if (typeof route.query.emailToken === "string") {
+		try {
+			await authService.verifyEmail(route.query.emailToken);
+		}
+		finally {
+			await router.push({ query: {} });
+		}
+	}
+});
 </script>
 
 <style module>
-.section {
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	min-height: 100dvh;
-	background: rgba(30, 26, 38, .9);
-	overflow: hidden;
-}
-
-.content {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	position: relative;
-}
-
-.title {
-	font-size: 48px;
-	font-weight: 600;
-	margin-bottom: 20px;
-}
-
-.subtitle {
-	margin-bottom: 50px;
-}
-
-.videoBackground {
-	object-fit: cover;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: -1;
-}
-
-.searchInput {
-	width: 100%;
-}
-
 .result {
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-	position: absolute;
-	min-width: 360px;
-	top: calc(100% + 20px);
-	left: calc(50% - 180px);
-}
-
-.resultItemRow {
-	font-size: 14px;
-	line-height: 16px;
-}
-
-.resultItemRow:not(:last-child) {
-	margin-bottom: 5px;
-}
-
-.resultItemFooter {
-	padding-top: 10px;
-	display: flex;
-	justify-content: space-between;
+  top: calc(100% + 20px);
+  left: calc(50% - 180px);
+  width: 360px;
 }
 </style>

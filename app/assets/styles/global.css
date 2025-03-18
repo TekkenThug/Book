@@ -10,6 +10,8 @@
   --link-color: var(--blue-500);
 
   --blue-500: #5C7AFF;
+
+  --z-header: 1000;
 }
 
 * {

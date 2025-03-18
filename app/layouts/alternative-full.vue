@@ -6,10 +6,6 @@
 	<CommonMainLink :class="$style.logo" />
 </template>
 
-<script lang="ts" setup>
-import { CommonMainLink } from "#components";
-</script>
-
 <style module>
 .main {
 	padding: 20px;

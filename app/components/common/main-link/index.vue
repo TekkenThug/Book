@@ -1,21 +1,11 @@
 <template>
-	<NuxtLink :to="{ name: 'index' }" :class="['h1', $style.link]">
+	<NuxtLink :to="{ name: 'index' }" class="h1 w-max flex justify-center items-center gap-1.5">
 		<img
 			src="~/assets/images/orange-book.png"
 			alt="book"
-			:class="$style.logo"
+			class="w-10 shrink-0"
 		>
 
 		Book
 	</NuxtLink>
 </template>
-
-<style module>
-.link {
-	width: max-content;
-}
-
-.logo {
-  width: 40px;
-}
-</style>
