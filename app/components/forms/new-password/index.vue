@@ -1,5 +1,5 @@
 <template>
-	<form :class="$style.content">
+	<form class="flex flex-col mt-10 min-w-[300px] gap-4">
 		<UiPasswordInput
 			v-model="password"
 			v-bind="passwordAttrs"
@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
 import { newPassword } from "~/validation/schemas";
-import { authService } from "~/services/api";
+import { authService, isAPIError } from "~/services/api";
 
 const router = useRouter();
 const { showErrorToast, showSuccessToast } = useUI();
@@ -44,23 +44,15 @@ const reset = handleSubmit(async (values) => {
 		isLoading.value = true;
 		const { data } = await authService.approveResetPassword({ token: props.token, ...values });
 		showSuccessToast(data?.message ?? "Success");
-		router.push({ name: "auth" });
+		void router.push({ name: "auth" });
 	}
 	catch (error) {
-		showErrorToast((error as Error).message);
+		if (isAPIError(error)) {
+			showErrorToast(error.message);
+		}
 	}
 	finally {
 		isLoading.value = false;
 	}
 });
 </script>
-
-<style module>
-.content {
-  display: flex;
-  flex-direction: column;
-  margin-top: 40px;
-  min-width: 300px;
-  gap: 15px;
-}
-</style>

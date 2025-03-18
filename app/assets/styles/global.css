@@ -3,6 +3,10 @@
 @import "./_transitions.css";
 @import "./_classes.css";
 
+@theme {
+  --color-carrot-500: #ED9200
+}
+
 :root {
   --app-header-height: 96px;
   --app-bg-color: #141414;

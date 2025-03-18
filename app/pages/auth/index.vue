@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { AuthFormMode } from "./types";
+import type { AuthFormMode } from "~/types";
 import { CommonMainLink, FormsRegister, FormsLogin, FormsResetPassword } from "#components";
 
 definePageMeta({

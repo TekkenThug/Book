@@ -1,6 +1,6 @@
 <template>
-	<form :class="$style.content">
-		<div :class="$style.fields">
+	<form class="flex flex-col mt-10 min-w-[300px]">
+		<div class="flex flex-col gap-4 mb-10">
 			<InputText
 				v-model="email"
 				v-bind="emailAttrs"
@@ -20,12 +20,14 @@
 				variant="simple"
 				severity="secondary"
 			>
-				Forget passsword? <span :class="$style.marked" @click="changeMode('reset')">Just reset it!</span>
+				Forget password?
+				<span class="text-carrot-500 cursor-pointer" @click="changeMode('reset')">Just reset it!</span>
 			</Message>
 		</div>
 
-		<p :class="$style.registerInvitation">
-			Don't have an account? <span :class="$style.marked" @click="changeMode('register')">Create it!</span>
+		<p class="text-center mb-3">
+			Don't have an account?
+			<span class="text-carrot-500 cursor-pointer" @click="changeMode('register')">Create it!</span>
 		</p>
 
 		<Button
@@ -40,8 +42,9 @@
 
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import type { AuthFormMode } from "~/pages/auth/types";
+import type { AuthFormMode } from "~/types";
 import { login } from "~/validation/schemas";
+import { isAPIError } from "~/services/api";
 
 const emit = defineEmits<{
 	change: [value: AuthFormMode];
@@ -74,37 +77,13 @@ const auth = handleSubmit(async (values) => {
 		await authStore.authenticateUser(values);
 		location.reload();
 	}
-	catch (e) {
-		showErrorToast((e as Error).message);
+	catch (error) {
+		if (isAPIError(error)) {
+			showErrorToast(error.message);
+		}
 	}
 	finally {
 		isLoading.value = false;
 	}
 });
 </script>
-
-<style module>
-.content {
-  display: flex;
-  flex-direction: column;
-  margin-top: 40px;
-  min-width: 300px
-}
-
-.fields {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.registerInvitation {
-  text-align: center;
-  margin: 20px 0 30px;
-}
-
-.marked {
-  color: #5AA9E6;
-  cursor: pointer;
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-	<form :class="$style.content">
+	<form class="flex flex-col mt-10 min-w-[300px] gap-4">
 		<InputText
 			v-model="email"
 			v-bind="emailAttrs"
@@ -15,7 +15,7 @@
 			Reset password
 		</Button>
 
-		<Button @click="emit('change', 'login')">
+		<Button severity="secondary" @click="emit('change', 'login')">
 			Go back
 		</Button>
 	</form>
@@ -23,8 +23,8 @@
 
 <script lang="ts" setup>
 import { resetPassword } from "~/validation/schemas";
-import { authService } from "~/services/api";
-import type { AuthFormMode } from "~/pages/auth/types";
+import { authService, isAPIError } from "~/services/api";
+import type { AuthFormMode } from "~/types";
 
 const { showErrorToast, showSuccessToast } = useUI();
 const { meta, defineField, handleSubmit } = useForm({
@@ -42,23 +42,15 @@ const reset = handleSubmit(async (values) => {
 	try {
 		isLoading.value = true;
 		const { data } = await authService.resetPassword(values.email);
-		showSuccessToast(data?.message ?? "Password reseted");
+		showSuccessToast(data?.message ?? "Password reset success");
 	}
 	catch (error) {
-		showErrorToast((error as Error).message);
+		if (isAPIError(error)) {
+			showErrorToast(error.message);
+		}
 	}
 	finally {
 		isLoading.value = false;
 	}
 });
 </script>
-
-<style module>
-.content {
-  display: flex;
-  flex-direction: column;
-  margin-top: 40px;
-  min-width: 300px;
-  gap: 15px;
-}
-</style>

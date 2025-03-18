@@ -7,8 +7,6 @@
 </template>
 
 <script lang="ts" setup>
-import { FormsNewPassword, CommonMainLink } from "#components";
-
 definePageMeta({
 	layout: false,
 });

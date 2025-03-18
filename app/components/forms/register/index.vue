@@ -1,6 +1,6 @@
 <template>
-	<form :class="$style.content">
-		<div :class="$style.fields">
+	<form class="flex flex-col mt-10 min-w-[300px]">
+		<div class="flex flex-col gap-4 mb-10">
 			<InputText
 				v-model="firstName"
 				v-bind="firstNameAttrs"
@@ -36,8 +36,8 @@
 			/>
 		</div>
 
-		<p :class="$style.registerInvitation">
-			Already registered? <span @click="$emit('change', 'login')">Log in!</span>
+		<p class="text-center mb-3">
+			Already registered? <span class="text-carrot-500 cursor-pointer" @click="$emit('change', 'login')">Log in!</span>
 		</p>
 
 		<Button
@@ -52,10 +52,9 @@
 
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import { UiPasswordInput } from "#components";
 import { register } from "~/validation/schemas";
-import { authService } from "~/services/api";
-import type { AuthFormMode } from "~/pages/auth/types";
+import { authService, isAPIError } from "~/services/api";
+import type { AuthFormMode } from "~/types";
 
 const emit = defineEmits<{
 	change: [value: AuthFormMode];
@@ -91,37 +90,13 @@ const registerNewUser = handleSubmit(async (values) => {
 		showSuccessToast(data?.message ?? "Successfully registered");
 		emit("change", "login");
 	}
-	catch (e) {
-		showErrorToast((e as Error).message);
+	catch (error) {
+		if (isAPIError(error)) {
+			showErrorToast(error.message);
+		}
 	}
 	finally {
 		isLoading.value = false;
 	}
 });
 </script>
-
-<style module>
-.content {
-  display: flex;
-  flex-direction: column;
-  margin-top: 40px;
-  min-width: 300px
-}
-
-.fields {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.registerInvitation {
-  text-align: center;
-  margin: 20px 0 30px;
-}
-
-.registerInvitation span {
-  color: #5AA9E6;
-  cursor: pointer;
-}
-</style>

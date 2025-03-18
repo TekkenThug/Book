@@ -5,4 +5,3 @@
 
 	<CommonMainLink class="absolute bottom-5 left-[50%] translate-x-[-50%] scale-50" />
 </template>
-
