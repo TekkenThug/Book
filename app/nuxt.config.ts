@@ -1,5 +1,6 @@
-export default defineNuxtConfig({
+import tailwindcss from "@tailwindcss/vite";
 
+export default defineNuxtConfig({
 	modules: [
 		"@primevue/nuxt-module",
 		"@pinia/nuxt",
@@ -44,6 +45,14 @@ export default defineNuxtConfig({
 				path: "/peer",
 			},
 		},
+	},
+
+	compatibilityDate: "2025-03-17",
+
+	vite: {
+		plugins: [
+			tailwindcss(),
+		],
 	},
 
 	typescript: {

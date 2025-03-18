@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "rm -rf /tmp/nitro && nuxt dev",
+    "dev": "nuxt dev",
     "prod": "nuxt build && node .output/server/index.mjs",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -16,7 +16,9 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.10.1",
+    "@primevue/forms": "^4.3.2",
     "@primevue/themes": "^4.0.0-beta.5",
+    "@tailwindcss/vite": "^4.0.14",
     "@vee-validate/nuxt": "^4.13.1",
     "@vee-validate/zod": "^4.13.1",
     "@vueuse/core": "^12.7.0",
@@ -33,6 +35,8 @@
     "quill": "^2.0.2",
     "reset-css": "^5.0.2",
     "socket.io-client": "^4.8.1",
+    "tailwindcss": "^4.0.14",
+    "tailwindcss-primeui": "^0.5.1",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2",
     "zod": "^3.23.8"

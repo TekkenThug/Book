@@ -1,5 +1,7 @@
-@import "_transitions.css";
-@import "_classes.css";
+@import "tailwindcss";
+@import "tailwindcss-primeui";
+@import "./_transitions.css";
+@import "./_classes.css";
 
 :root {
   --app-header-height: 96px;
