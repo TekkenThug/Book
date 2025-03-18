@@ -2,15 +2,21 @@ services:
   nuxt:
     build: ./app
     container_name: nuxt
-    volumes:
-      - ./app:/usr/src/app
-      - /usr/src/app/node_modules
     ports:
       - 3000:3000
     networks:
       - app-network
     depends_on:
       - api
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /usr/src/app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./app/package.json
 
   api:
     build: ./api
@@ -21,14 +27,20 @@ services:
       - ${PEER_PORT:-8031}:${PEER_PORT:-8031}
     env_file:
       - ./.env
-    volumes:
-      - ./api:/usr/src/app
-      - /usr/src/app/node_modules
     networks:
       - app-network
     depends_on:
       - postgres
       - s3
+    develop:
+      watch:
+        - action: sync
+          path: ./api
+          target: /usr/src/app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./api/package.json
 
   s3:
     image: minio/minio:latest
