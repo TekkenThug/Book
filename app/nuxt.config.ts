@@ -27,8 +27,6 @@ export default defineNuxtConfig({
 	},
 
 	css: [
-		"normalize.css",
-		"reset-css",
 		"primeicons/primeicons.css",
 		"~/assets/styles/global.css",
 	],
