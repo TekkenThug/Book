@@ -1,15 +1,15 @@
 <template>
 	<NuxtLayout name="alternative-full">
-		<div :class="$style.content">
+		<div class="text-center">
 			<h1 class="h1">
 				Error with {{ error.statusCode }}
 			</h1>
 
-			<p v-if="error.statusMessage" :class="['p1', $style.message]">
+			<p v-if="error.statusMessage" class="p1 mt-3">
 				{{ error.statusMessage }}
 			</p>
 
-			<NuxtLink :to="{ name: 'index' }" :class="$style.goToHomeButton">
+			<NuxtLink :to="{ name: 'index' }" class="block mt-10">
 				<Button
 					severity="secondary"
 					icon="pi pi-home"
@@ -25,18 +25,3 @@ import type { NuxtError } from "#app";
 
 defineProps<{ error: NuxtError }>();
 </script>
-
-<style module>
-.content {
-	text-align: center;
-}
-
-.message {
-	margin-top: 12px;
-}
-
-.goToHomeButton {
-	display: block;
-	margin-top: 40px;
-}
-</style>

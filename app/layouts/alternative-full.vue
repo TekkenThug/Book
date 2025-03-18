@@ -1,24 +1,8 @@
 <template>
-	<main :class="$style.main">
+	<main class="p-5 h-dvh flex justify-center items-center">
 		<slot />
 	</main>
 
-	<CommonMainLink :class="$style.logo" />
+	<CommonMainLink class="absolute bottom-5 left-[50%] translate-x-[-50%] scale-50" />
 </template>
 
-<style module>
-.main {
-	padding: 20px;
-    height: 100dvh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.logo {
-	position: absolute;
-	bottom: 20px;
-	left: 50%;
-	transform: translateX(-50%) scale(.5);
-}
-</style>

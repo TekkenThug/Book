@@ -1,7 +1,7 @@
 <template>
 	<CommonHeader fixed />
 
-	<main class="main">
+	<main>
 		<slot />
 	</main>
 </template>
