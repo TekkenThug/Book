@@ -1,5 +1,14 @@
 # Changelog
 
+## `v0.3.0` - 17.03.2025
+
+- `Added` Restore password
+- `Added` Template for client-side error
+- `Added` WebRTC calling rooms
+- `Added` Unsubscribe from event
+- `Changed` Rework API calls on axios
+
+
 ## `v0.2.0` - 31.08.2024
 
 - `Added` User avatar loading
