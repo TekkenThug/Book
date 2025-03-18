@@ -16,7 +16,7 @@ services:
           ignore:
             - node_modules/
         - action: rebuild
-          path: ./app/package.json
+          path: package.json
 
   api:
     build: ./api
@@ -40,7 +40,7 @@ services:
           ignore:
             - node_modules/
         - action: rebuild
-          path: ./api/package.json
+          path: package.json
 
   s3:
     image: minio/minio:latest
