@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { BookDto } from '../books/books.dto';
+import { IPostgresInterval } from 'postgres-interval';
 
 class Interval {
   @ApiProperty({ required: false })
@@ -36,7 +37,7 @@ export class CreateEventDto {
   @Matches(INTERVAL_REGEXP, {
     message: 'Duration is not to match interval template',
   })
-  duration: string;
+  duration: IPostgresInterval;
 
   @ApiProperty({ required: false })
   @IsOptional()

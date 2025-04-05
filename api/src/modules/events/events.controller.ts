@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { Public } from '@/decorators/public/public.decorator';
 import { EventsService } from './events.service';
 import { Request } from 'express';
@@ -12,6 +21,7 @@ import {
 import {
   ApiCreatedResponse,
   ApiExtraModels,
+  ApiForbiddenResponse,
   ApiNotAcceptableResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -21,7 +31,11 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { createErrorDoc, createSuccessDoc } from '@/utils/api';
+import {
+  createErrorDoc,
+  createMessageCod,
+  createSuccessDoc,
+} from '@/utils/api';
 
 @ApiTags('Events')
 @Controller('events')
@@ -123,5 +137,17 @@ export class EventsController {
   @Get(':id')
   async findById(@Param('id') id: number) {
     return await this.eventsService.getById(id);
+  }
+
+  @ApiOperation({ summary: 'Delete event by id' })
+  @ApiOkResponse(createMessageCod(200, 'Event deleted successfully'))
+  @ApiNotFoundResponse(createErrorDoc(404))
+  @ApiForbiddenResponse(createErrorDoc(403))
+  @ApiParam({ name: 'id', description: 'Event`s id' })
+  @Delete(':id')
+  async delete(@Req() request: Request, @Param('id') id: number) {
+    await this.eventsService.deleteEvent(id, request.user!.sub);
+
+    return { message: 'Event deleted successfully' };
   }
 }

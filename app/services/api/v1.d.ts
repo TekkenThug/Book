@@ -170,7 +170,8 @@ export interface paths {
 		get: operations["EventsController_findById"];
 		put?: never;
 		post?: never;
-		delete?: never;
+		/** Delete event by id */
+		delete: operations["EventsController_delete"];
 		options?: never;
 		head?: never;
 		patch?: never;
@@ -857,6 +858,47 @@ export interface operations {
 				};
 				content: {
 					"application/json": components["schemas"]["EventDto"];
+				};
+			};
+			/** @description Not Found */
+			404: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ApiErrorDto"];
+				};
+			};
+		};
+	};
+	EventsController_delete: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path: {
+				/** @description Event`s id */
+				id: number;
+			};
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description OK */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ApiMessageDto"];
+				};
+			};
+			/** @description Forbidden */
+			403: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ApiErrorDto"];
 				};
 			};
 			/** @description Not Found */

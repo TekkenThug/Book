@@ -29,7 +29,7 @@ export class Room {
   @JoinTable()
   participants: User[];
 
-  @OneToOne(() => Event)
+  @OneToOne(() => Event, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'event_id' })
   event: Event;
 }

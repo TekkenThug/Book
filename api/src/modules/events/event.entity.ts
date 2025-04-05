@@ -8,6 +8,7 @@ import {
 import { Book } from '@/modules/books/book.entity';
 import { User } from '@/modules/users/user.entity';
 import { Record } from '@/modules/records/record.entity';
+import { IPostgresInterval } from 'postgres-interval';
 
 @Entity({ name: 'events' })
 export class Event {
@@ -30,7 +31,7 @@ export class Event {
   members_count: number;
 
   @Column('interval')
-  duration: string;
+  duration: IPostgresInterval;
 
   @Column('text', { nullable: true })
   description: string;

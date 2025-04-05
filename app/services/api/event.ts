@@ -35,4 +35,8 @@ export default {
 	async getWithChecked(query: QueryParams) {
 		return await client.GET("/api/v1/events/with-checked", { params: { query } });
 	},
+
+	async delete(id: number) {
+		return await client.DELETE("/api/v1/events/{id}", { params: { path: { id } } });
+	},
 };

@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -14,6 +15,7 @@ import { BooksService } from '@/modules/books/books.service';
 import { UsersService } from '@/modules/users/users.service';
 import { RecordsService } from '@/modules/records/records.service';
 import { RoomsService } from '@/modules/rooms/rooms.service';
+import {add, isPast, isWithinInterval} from 'date-fns';
 
 export interface FilterOptions {
   book?: string | null;
@@ -167,5 +169,39 @@ export class EventsService {
   public async increaseMemberCount(event: Event) {
     ++event.members_count;
     await this.eventsRepository.save(event);
+  }
+
+  public async deleteEvent(id: number, userId: number) {
+    const event = await this.eventsRepository.findOneBy({
+      id,
+      author: { id: userId },
+    });
+
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
+
+    const inAction = isWithinInterval(new Date(), {
+      start: event.date,
+      end: add(event.date, {
+        hours: event.duration.hours,
+        minutes: event.duration.minutes,
+      }),
+    });
+
+    if (inAction) {
+      throw new ForbiddenException('Event in process');
+    }
+
+    const inPast = isPast(add(event.date, {
+      hours: event.duration.hours,
+      minutes: event.duration.minutes,
+    }));
+
+    if (inPast) {
+      throw new ForbiddenException('Event has gone');
+    }
+
+    await this.eventsRepository.remove(event);
   }
 }

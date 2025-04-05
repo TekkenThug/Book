@@ -10,11 +10,11 @@ export default () => {
 		summary: "Error",
 		detail: message,
 	});
-	const showSuccessToast = (message: string) => toast.add({
+	const showSuccessToast = (message?: string) => toast.add({
 		...DEFAULT_TOAST_PARAMS,
 		severity: "success",
 		summary: "Done",
-		detail: message,
+		detail: message ?? "Success",
 	});
 
 	return {

@@ -14,7 +14,7 @@ export class Record {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Event, (event) => event.records)
+  @ManyToOne(() => Event, (event) => event.records, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'event_id' })
   event: Event;
 }

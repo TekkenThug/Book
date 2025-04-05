@@ -85,7 +85,6 @@ To run this project, you will need to add the following environment variables to
 ## Roadmap
 
 -   Readable errors from validation / rework errors from api
--   Delete event
 -   Update Swagger doc utility
 -   Test auth for refreshing
 -   Rework services on frontend
@@ -100,3 +99,4 @@ This is the latest version's changelog. For past updates see `CHANGELOG.md`
 ### `v0.4.0` - Unreleased
 
 - `Added` Tailwind integration
+- `Added` Deleting event

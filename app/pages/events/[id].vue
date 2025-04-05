@@ -52,22 +52,59 @@
 						icon="pi pi-angle-right"
 						icon-pos="right"
 						label="Go to the room"
-						:disabled="buttonIsDisabled"
+						:disabled="!eventInProcess"
 						@click="goToRoom"
 					/>
 
 					<Button
+						v-if="isOwner"
+						label="Delete event"
+						icon="pi pi-trash"
+						icon-pos="right"
+						severity="danger"
+						:disabled="eventInProcess"
+						@click="isDeleteModalVisible = true"
+					/>
+
+					<Button
+						v-else
 						label="Unsubscribe from event"
 						icon="pi pi-user-minus"
 						icon-pos="right"
 						severity="danger"
-						:disabled="unsubscribeButtonIsDisabled"
+						:disabled="eventInProcess"
 						@click="unsubscribe"
 					/>
 				</div>
 			</div>
 		</div>
 	</section>
+
+	<Dialog
+		v-model:visible="isDeleteModalVisible"
+		modal
+		header="Deleting event"
+		class="w-[400px]"
+	>
+		You want to delete this event. Are you sure?
+
+		<div class="flex gap-4 mt-5">
+			<Button
+				label="Cancel"
+				class="grow"
+				:disabled="deleteIsLoading"
+				@click="isDeleteModalVisible = false"
+			/>
+
+			<Button
+				label="Delete"
+				class="grow"
+				severity="danger"
+				:loading="deleteIsLoading"
+				@click="deleteEvent"
+			/>
+		</div>
+	</Dialog>
 </template>
 
 <script lang="ts" setup>
@@ -81,25 +118,15 @@ const router = useRouter();
 const { showErrorToast, showSuccessToast } = useUI();
 
 const event = ref<MeetingEvent | null>(null);
+const idOfUserEvents = ref<number[]>([]);
+const isDeleteModalVisible = ref(false);
+const deleteIsLoading = ref(false);
 
-const buttonIsDisabled = computed(() => {
+const isOwner = computed(() => event.value && idOfUserEvents.value.includes(event.value.id));
+
+const eventInProcess = computed(() => {
 	if (!event.value) {
-		return true;
-	}
-
-	return !isWithinInterval(
-		new Date(),
-		{
-			start: event.value.date,
-			end: add(event.value.date, {
-				hours: event.value.duration.hours, minutes: event.value.duration.minutes,
-			}),
-		});
-});
-
-const unsubscribeButtonIsDisabled = computed(() => {
-	if (!event.value) {
-		return true;
+		return false;
 	}
 
 	return isWithinInterval(
@@ -112,7 +139,7 @@ const unsubscribeButtonIsDisabled = computed(() => {
 		});
 });
 
-const tooltipText = computed(() => buttonIsDisabled.value ? "Meeting time didn't come" : null);
+const tooltipText = computed(() => eventInProcess.value ? null : "Meeting time didn't come");
 
 const goToRoom = () => {
 	router.push({ name: "rooms-id", params: { id: event.value?.id } });
@@ -136,16 +163,46 @@ const unsubscribe = async () => {
 	}
 };
 
-onBeforeMount(async () => {
+const deleteEvent = async () => {
 	try {
-		const { data } = await eventService.getById(+(route.params.id as string));
+		if (!event.value) {
+			return;
+		}
+
+		deleteIsLoading.value = true;
+
+		const { data, error } = await eventService.delete(event.value.id);
 
 		if (data) {
-			event.value = data;
+			showSuccessToast(data.message);
+			isDeleteModalVisible.value = false;
+		}
+
+		if (error && isAPIError(error)) {
+			showErrorToast(error.message);
 		}
 	}
-	catch {
-		await router.push({ name: "index" });
+	finally {
+		deleteIsLoading.value = false;
+	}
+};
+
+onBeforeMount(async () => {
+	const [userEvents, eventInfo] = await Promise.all([
+		eventService.getUsersEvent(),
+		eventService.getById(+(route.params.id as string)),
+	]);
+
+	if (eventInfo.data) {
+		event.value = eventInfo.data;
+	}
+
+	if (userEvents.data) {
+		idOfUserEvents.value = userEvents.data.map(item => item.id);
+	}
+
+	if (userEvents.error || eventInfo.error) {
+		void router.push({ name: "index" });
 	}
 });
 </script>
