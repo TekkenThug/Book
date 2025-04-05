@@ -25,7 +25,7 @@ import {
   ApiForbiddenResponse,
 } from '@nestjs/swagger';
 import { ApiErrorDto, ApiMessageDto } from '@/data/dto';
-import { createErrorDoc, createMessageCod } from '@/utils/api';
+import { createErrorDoc, createSuccessDoc } from '@/utils/api';
 
 @ApiTags('Records')
 @Controller('records')
@@ -87,7 +87,9 @@ export class RecordsController {
   }
 
   @ApiOperation({ summary: 'Delete record' })
-  @ApiOkResponse(createMessageCod(200, 'Record successfully deleted'))
+  @ApiOkResponse(
+    createSuccessDoc({ code: 200, message: 'Record successfully deleted' }),
+  )
   @ApiNotFoundResponse(createErrorDoc(404))
   @ApiForbiddenResponse(
     createErrorDoc(403, 'You can`t delete the record, because you are owner'),

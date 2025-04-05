@@ -100,3 +100,4 @@ This is the latest version's changelog. For past updates see `CHANGELOG.md`
 
 - `Added` Tailwind integration
 - `Added` Deleting event
+- `Changed` Swagger doc utility updated

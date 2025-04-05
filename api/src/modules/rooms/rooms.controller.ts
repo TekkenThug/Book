@@ -19,7 +19,7 @@ export class RoomsController {
   constructor(private roomsService: RoomsService) {}
 
   @ApiOperation({ summary: 'Get room by event id' })
-  @ApiOkResponse(createSuccessDoc(200, RoomDto))
+  @ApiOkResponse(createSuccessDoc({ code: 200, dto: RoomDto }))
   @ApiNotFoundResponse(createErrorDoc(404))
   @ApiParam({ name: 'id', description: 'Event`s id' })
   @Get(':id')

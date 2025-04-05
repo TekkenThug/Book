@@ -31,11 +31,7 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import {
-  createErrorDoc,
-  createMessageCod,
-  createSuccessDoc,
-} from '@/utils/api';
+import { createErrorDoc, createSuccessDoc } from '@/utils/api';
 
 @ApiTags('Events')
 @Controller('events')
@@ -117,7 +113,7 @@ export class EventsController {
   }
 
   @ApiOperation({ summary: 'Create event' })
-  @ApiCreatedResponse(createSuccessDoc(201, EventDto))
+  @ApiCreatedResponse(createSuccessDoc({ code: 201, dto: EventDto }))
   @ApiNotAcceptableResponse(createErrorDoc(406, 'Too many events on this date'))
   @Post()
   async create(
@@ -131,7 +127,7 @@ export class EventsController {
   }
 
   @ApiOperation({ summary: 'Get event by id' })
-  @ApiOkResponse(createSuccessDoc(200, EventDto))
+  @ApiOkResponse(createSuccessDoc({ code: 200, dto: EventDto }))
   @ApiNotFoundResponse(createErrorDoc(404))
   @ApiParam({ name: 'id', description: 'Event`s id' })
   @Get(':id')
@@ -140,7 +136,9 @@ export class EventsController {
   }
 
   @ApiOperation({ summary: 'Delete event by id' })
-  @ApiOkResponse(createMessageCod(200, 'Event deleted successfully'))
+  @ApiOkResponse(
+    createSuccessDoc({ code: 200, message: 'Event deleted successfully' }),
+  )
   @ApiNotFoundResponse(createErrorDoc(404))
   @ApiForbiddenResponse(createErrorDoc(403))
   @ApiParam({ name: 'id', description: 'Event`s id' })

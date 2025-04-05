@@ -1,38 +1,34 @@
 import { ApiErrorDto, ApiMessageDto } from '@/data/dto';
 import { getReasonPhrase } from 'http-status-codes';
 
-export const createSuccessDoc = <T>(
-  statusCode: number,
-  dto: T,
-  message?: string,
-) => {
-  return {
-    description: message ?? getReasonPhrase(statusCode),
-    type: dto,
-  };
+export const createSuccessDoc = <T>({
+  code,
+  message,
+  dto,
+}: {
+  code: number;
+  dto?: T;
+  message?: string;
+}) => {
+  if (dto) {
+    return {
+      description: getReasonPhrase(code),
+      type: dto,
+    };
+  } else {
+    return {
+      description: getReasonPhrase(code),
+      type: ApiMessageDto,
+      example: {
+        message,
+      },
+    };
+  }
 };
 
-export const createMessageCod = (
-  statusCode: number,
-  message: string,
-  description?: string,
-) => {
+export const createErrorDoc = (statusCode: number, message?: string) => {
   return {
-    description: description ?? getReasonPhrase(statusCode),
-    type: ApiMessageDto,
-    example: {
-      message,
-    },
-  };
-};
-
-export const createErrorDoc = (
-  statusCode: number,
-  message?: string,
-  description?: string,
-) => {
-  return {
-    description: description ?? message ?? getReasonPhrase(statusCode),
+    description: getReasonPhrase(statusCode),
     type: ApiErrorDto,
     example: {
       message: message ?? getReasonPhrase(statusCode),

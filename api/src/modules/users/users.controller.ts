@@ -24,11 +24,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  createErrorDoc,
-  createMessageCod,
-  createSuccessDoc,
-} from '@/utils/api';
+import { createErrorDoc, createSuccessDoc } from '@/utils/api';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('User')
@@ -37,14 +33,16 @@ export class UsersController {
   constructor(public usersService: UsersService) {}
 
   @ApiOperation({ summary: 'Get data for settings' })
-  @ApiOkResponse(createSuccessDoc(200, SettingsDataDto))
+  @ApiOkResponse(createSuccessDoc({ code: 200, dto: SettingsDataDto }))
   @Get('settings')
   async getSettings(@Req() request: Request) {
     return await this.usersService.getEditableSettings(request.user!.sub);
   }
 
   @ApiOperation({ summary: 'Update settings' })
-  @ApiOkResponse(createMessageCod(200, 'Settings successfully updated'))
+  @ApiOkResponse(
+    createSuccessDoc({ code: 200, message: 'Settings successfully updated' }),
+  )
   @ApiBadRequestResponse(createErrorDoc(400))
   @Patch('settings')
   async updateSettings(
@@ -60,7 +58,9 @@ export class UsersController {
   })
   @ApiBody({ type: UpdateAvatarDto })
   @ApiConsumes('multipart/form-data')
-  @ApiOkResponse(createMessageCod(200, 'Avatar successfully uploaded'))
+  @ApiOkResponse(
+    createSuccessDoc({ code: 200, message: 'Avatar successfully uploaded' }),
+  )
   @ApiBadRequestResponse(createErrorDoc(400))
   @UseInterceptors(FileInterceptor('avatar'))
   @Patch('avatar')
@@ -73,7 +73,7 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Get user`s metadata' })
-  @ApiOkResponse(createSuccessDoc(200, UserMetadataDto))
+  @ApiOkResponse(createSuccessDoc({ code: 200, dto: UserMetadataDto }))
   @ApiNotFoundResponse(createErrorDoc(404, 'User not found'))
   @Get('me')
   async getUserInfo(@Req() request: Request) {
