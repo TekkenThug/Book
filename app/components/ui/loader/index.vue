@@ -1,9 +1,3 @@
 <template>
-	<i :class="['pi', 'pi-spin', 'pi-spinner', $style.loader]" />
+	<i class="pi pi-spin pi-spinner text-3xl" />
 </template>
-
-<style module>
-.loader {
-  font-size: 32px;
-}
-</style>

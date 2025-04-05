@@ -25,8 +25,7 @@
 			<transition name="slide-up">
 				<ul
 					v-if="events.length"
-					class="flex flex-col gap-5 absolute"
-					:class="$style.result"
+					class="flex flex-col gap-5 absolute w-[360px] top-[calc(100%_+_20px)]"
 				>
 					<li v-for="event in events" :key="event.id">
 						<Card>
@@ -147,11 +146,3 @@ onBeforeMount(async () => {
 	}
 });
 </script>
-
-<style module>
-.result {
-  top: calc(100% + 20px);
-  left: calc(50% - 180px);
-  width: 360px;
-}
-</style>

@@ -1,13 +1,13 @@
 <template>
 	<section class="page">
 		<div class="container">
-			<div :class="$style.wrapper">
-				<Menu :model="items" :class="$style.menu">
+			<div class="flex items-start gap-5">
+				<Menu :model="items">
 					<template #item="{ item }">
 						<NuxtLink
 							:to="{ name: item.route }"
-							:class="$style.menuItem"
-							:active-class="$style.menuItemActive"
+							class="flex gap-2.5 p-2 items-center"
+							active-class="bg-zinc-800"
 						>
 							<span :class="item.icon" />
 
@@ -40,26 +40,3 @@ const items = ref([
 	},
 ]);
 </script>
-
-<style module>
-.wrapper {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-}
-
-.menu :global(.p-menu-item-content) {
-  background-color: transparent;
-  overflow: hidden;
-}
-
-.menuItem {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-}
-
-.menuItemActive {
-  background-color: var(--p-menu-item-focus-background);
-}
-</style>

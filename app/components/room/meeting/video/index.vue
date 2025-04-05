@@ -1,22 +1,26 @@
 <template>
-	<section :class="$style.videoWindow">
-		<div :class="$style.videoList">
+	<section class="grid grid-rows-[1fr_80px]">
+		<div class="flex items-center justify-center flex-wrap gap-3">
 			<div
 				v-for="item in frames"
 				:key="item.id"
-				:class="$style.videoWrapper"
+				class="max-w-[400px] rounded-md overflow-hidden relative aspect-video"
 			>
-				<video autoplay :srcObject.prop="item.stream" />
+				<video
+					autoplay
+					:srcObject.prop="item.stream"
+					class="w-full h-full object-cover object-center"
+				/>
 
 				<img
 					v-show="!item.activity.video"
-					:class="$style.videoAvatar"
+					class="absolute w-[100px] rounded-full top-[50%] left-[50%] transform-[translate(-50%,_-50%)]"
 					:src="findAvatar(item.id)"
 				>
 			</div>
 		</div>
 
-		<div :class="$style.videoControls">
+		<div class="flex items-center justify-center gap-3">
 			<Button
 				icon="pi pi-video"
 				:severity="activity.video ? 'secondary' : 'danger'"
@@ -47,6 +51,7 @@
 
 <script lang="ts" setup>
 import type { Participant } from "~/services/api/room";
+import type { Frame, RemoteUserOptions } from "~/composables/usePeer";
 
 const props = defineProps<{
 	participants: Participant[];
@@ -59,49 +64,3 @@ const findAvatar = (id: string) => {
 	return props.participants.find(participant => participant.id.toString() === id)?.avatar ?? "";
 };
 </script>
-
-<style module>
-.videoWindow {
-	display: grid;
-	grid-template-rows: 1fr 80px;
-}
-
-.videoList {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 12px;
-	flex-wrap: wrap;
-}
-
-.videoWrapper {
-	max-width: 400px;
-	border-radius: 4px;
-	aspect-ratio: 16 / 9;
-	overflow: hidden;
-	position: relative;
-}
-
-.videoWrapper video {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	object-position: center center;
-}
-
-.videoAvatar {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 100px;
-	border-radius: 50%;
-}
-
-.videoControls {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 12px;
-}
-</style>

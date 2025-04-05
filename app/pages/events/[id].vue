@@ -2,13 +2,13 @@
 	<section class="page">
 		<div class="container">
 			<div v-if="event">
-				<h1 :class="[$style.title, 'h1']">
+				<h1 class="h1 mb-10">
 					{{ event.title }}
 				</h1>
 
-				<ul :class="$style.list">
+				<ul class="flex flex-wrap gap-7">
 					<li>
-						<h3 class="h3">
+						<h3 class="h3 mb-2.5">
 							When:
 						</h3>
 
@@ -18,7 +18,7 @@
 					</li>
 
 					<li>
-						<h3 class="h3">
+						<h3 class="h3 mb-2.5">
 							Duration:
 						</h3>
 
@@ -28,7 +28,7 @@
 					</li>
 
 					<li>
-						<h3 class="h3">
+						<h3 class="h3 mb-2.5">
 							Members count:
 						</h3>
 
@@ -37,8 +37,8 @@
 						</p>
 					</li>
 
-					<li>
-						<h3 class="h3">
+					<li class="w-full">
+						<h3 class="h3 mb-2.5">
 							Description:
 						</h3>
 
@@ -46,7 +46,7 @@
 					</li>
 				</ul>
 
-				<div :class="$style.actions">
+				<div class="mt-10 flex gap-2.5">
 					<Button
 						v-tooltip.bottom="tooltipText"
 						icon="pi pi-angle-right"
@@ -127,7 +127,7 @@ const unsubscribe = async () => {
 		const { data } = await recordService.unsubscribe(event.value?.id);
 
 		showSuccessToast(data?.message ?? "Success");
-		router.push({ name: "profile-events" });
+		void router.push({ name: "profile-events" });
 	}
 	catch (error) {
 		if (isAPIError(error)) {
@@ -149,29 +149,3 @@ onBeforeMount(async () => {
 	}
 });
 </script>
-
-<style module>
-.title {
-  margin-bottom: 40px;
-}
-
-.list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-}
-
-.list li h3 {
-  margin-bottom: 10px;
-}
-
-.list li:last-child {
-  width: 100%;
-}
-
-.actions {
-  margin-top: 40px;
-  display: flex;
-  gap: 12px;
-}
-</style>

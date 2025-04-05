@@ -1,5 +1,5 @@
 <template>
-	<section :class="$style.section">
+	<section class="flex flex-col items-center justify-center p-5 min-h-dvh">
 		<CommonMainLink />
 
 		<FormsNewPassword :token="preparedToken" />
@@ -28,14 +28,3 @@ onBeforeMount(() => {
 	}
 });
 </script>
-
-<style module>
-.section {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	min-height: 100dvh;
-	padding: 20px;
-}
-</style>

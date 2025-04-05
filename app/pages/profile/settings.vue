@@ -3,9 +3,8 @@
 		<UiLoader v-if="isLoading" />
 
 		<template v-else>
-			<div v-if="userStore.user" :class="$style.avatarField">
+			<div v-if="userStore.user" class="flex items-center mb-10">
 				<UiAvatar
-					:class="$style.avatar"
 					:image="uploadedAvatar || userStore.user.avatar"
 					size="xlarge"
 					shape="circle"
@@ -14,13 +13,13 @@
 				<Button
 					icon="pi pi-pencil"
 					rounded
-					:class="$style.editAvatarButton"
+					class="left-[-40px] bottom-[-40px]"
 					@click="handleClickOnUploader"
 				/>
 
 				<input
 					ref="avatarUploader"
-					:class="$style.avatarUploader"
+					class="hidden"
 					type="file"
 					accept="image/*"
 					@change="handleUploadedAvatar"
@@ -28,40 +27,40 @@
 			</div>
 
 			<form v-if="initialSettings && editableSettings">
-				<div :class="$style.fields">
-					<div :class="$style.fieldContainer">
-						<label for="username">Email</label>
+				<div class="grid gap-6 flex-wrap mb-5 grid-cols-3">
+					<label class="flex flex-col gap-2.5">
+						Email
 
 						<InputText
 							:model-value="initialSettings.email"
 							type="email"
 							disabled
 						/>
-					</div>
+					</label>
 
-					<div :class="$style.fieldContainer">
-						<label for="username">First name</label>
+					<label class="flex flex-col gap-2.5">
+						First name
 
 						<InputText v-model="editableSettings.first_name" type="text" />
-					</div>
+					</label>
 
-					<div :class="$style.fieldContainer">
-						<label for="username">Last name</label>
+					<label class="flex flex-col gap-2.5">
+						Last name
 
 						<InputText v-model="editableSettings.last_name" type="text" />
-					</div>
+					</label>
 
-					<div :class="$style.fieldContainer">
-						<label for="username">New password</label>
+					<label class="flex flex-col gap-2.5">
+						New password
 
 						<UiPasswordInput v-model="editableSettings.password" />
-					</div>
+					</label>
 
-					<div :class="$style.fieldContainer">
-						<label for="username">Repeat password</label>
+					<label class="flex flex-col gap-2.5">
+						Repeat password
 
 						<InputText v-model="editableSettings.repeat_password" type="password" />
-					</div>
+					</label>
 				</div>
 
 				<Button
@@ -74,7 +73,7 @@
 			</form>
 
 			<Button
-				:class="$style.logoutButton"
+				class="mt-5"
 				icon="pi pi-sign-out"
 				label="Logout"
 				severity="secondary"
@@ -214,43 +213,8 @@ const logout = async () => {
 		await authStore.logout();
 		await router.push({ name: "index" });
 	}
-	catch (e) {
-		console.log(e);
+	catch (error) {
+		console.log(error);
 	}
 };
 </script>
-
-<style module>
-.fields {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-.fieldContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.avatarField {
-  display: flex;
-  align-items: center;
-  margin-bottom: 40px;
-}
-
-.editAvatarButton {
-  left: -40px;
-  bottom: -40px;
-}
-
-.avatarUploader {
-  display: none;
-}
-
-.logoutButton {
-  margin-top: 20px;
-}
-</style>

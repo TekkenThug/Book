@@ -9,7 +9,7 @@
 		</template>
 		<template #footer>
 			<Divider />
-			<ul :class="$style.passwordPopover">
+			<ul class="flex flex-col gap-1 text-sm">
 				<li>Minimum 8 characters</li>
 				<li>At least one lowercase</li>
 				<li>At least one uppercase</li>
@@ -24,12 +24,3 @@
 const model = defineModel<string>();
 defineProps<{ placeholder?: string }>();
 </script>
-
-<style module>
-.passwordPopover {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  font-size: 14px;
-}
-</style>

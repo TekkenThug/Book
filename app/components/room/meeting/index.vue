@@ -1,5 +1,5 @@
 <template>
-	<div v-if="room.peer.localFrame.value" :class="$style.meeting">
+	<div v-if="room.peer.localFrame.value" class="p-5 w-full h-dvh grid grid-cols-[280px_1fr_390px]">
 		<RoomMeetingParticipants :participants="room.participants.value" />
 
 		<RoomMeetingVideo
@@ -23,13 +23,3 @@ const props = defineProps<{ roomId: number }>();
 const authStore = useAuthStore();
 const room = useRoom(authStore.userId, props.roomId, authStore.token);
 </script>
-
-<style module>
-.meeting {
-	padding: 20px;
-    width: 100%;
-    height: 100dvh;
-    display: grid;
-    grid-template-columns: 280px 1fr 390px;
-}
-</style>

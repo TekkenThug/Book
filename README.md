@@ -86,20 +86,17 @@ To run this project, you will need to add the following environment variables to
 
 -   Readable errors from validation / rework errors from api
 -   Delete event
--   Tailwind integration
 -   Update Swagger doc utility
 -   Test auth for refreshing
 -   Rework services on frontend
 -   E2E testing
+-   Newsfeed
+-   Moderation
 
 ## Changelog
 
-This is latest version's changelog. For past updates see `CHANGELOG.md`
+This is the latest version's changelog. For past updates see `CHANGELOG.md`
 
-### `v0.3.0` - 17.03.2025
+### `v0.4.0` - Unreleased
 
-- `Added` Restore password
-- `Added` Template for client-side error
-- `Added` WebRTC calling rooms
-- `Added` Unsubscribe from event
-- `Changed` Rework API calls on axios
+- `Added` Tailwind integration

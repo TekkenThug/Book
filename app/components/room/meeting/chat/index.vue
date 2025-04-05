@@ -1,25 +1,29 @@
 <template>
-	<aside :class="$style.chat">
-		<ul ref="messageList" :class="$style.chatList">
+	<aside class="flex flex-col gap-3">
+		<ul
+			ref="messageList"
+			:class="['flex flex-col gap-6 p-4 overflow-y-auto border border-primary-500 rounded-sm', $style.chatList]"
+		>
 			<li
 				v-for="item in history"
 				:key="item.id"
 			>
 				<h4>
 					{{ item.fullname }}
-					<span :class="$style.messageTime">{{ parseDateTime(item.datetime, true)[1] }}</span>
+					<span class="text-primary-400 text-xs">{{ parseDateTime(item.datetime, true)[1] }}</span>
 				</h4>
 
-				<div :class="$style.message">
+				<div class="p-3 bg-primary-700 w-fit rounded-lg mt-2 break-all">
 					{{ item.text }}
 				</div>
 			</li>
 		</ul>
 
-		<div :class="$style.chatControls">
+		<div class="flex gap-3 mt-auto">
 			<Textarea
 				v-model="message"
 				rows="2"
+				class="grow resize-none"
 				placeholder="Type message to the chat..."
 				maxlength="512"
 				@keyup.enter="sendMessage"
@@ -29,6 +33,7 @@
 				aria-label="Send message"
 				icon="pi pi-send"
 				size="large"
+				class="shrink-0 grow-0"
 				:disabled="!message"
 				@click="sendMessage"
 			/>
@@ -43,7 +48,7 @@ defineProps<{ history: ChatLog }>();
 const emit = defineEmits<{ sendMessage: [message: string] }>();
 
 const message = ref("");
-const messageList = useTemplateRef("messageList");
+const messageList = useTemplateRef<HTMLUListElement>("messageList");
 
 const scrollListToBottom = () => {
 	if (!messageList.value) {
@@ -61,50 +66,7 @@ const sendMessage = () => {
 </script>
 
 <style module>
-.chat {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
 .chatList {
-	display: flex;
-	flex-direction: column;
-    overflow-y: auto;
-    border: 1px solid var(--p-primary-500);
-	border-radius: var(--p-border-radius-lg);
-    padding: 18px;
-	gap: 24px;
 	height: calc(100dvh - ((20px * 2) + 55px + 12px));
-}
-
-.chatControls {
-    display: flex;
-    gap: 12px;
-    margin-top: auto;
-}
-
-.chatControls>*:nth-child(2) {
-    flex-shrink: 0;
-	flex-grow: 0;
-}
-
-.chatControls>*:nth-child(1) {
-	flex-grow: 1;
-	resize: none;
-}
-
-.message {
-	border-radius: 8px;
-	background-color: var(--p-primary-700);
-	padding: 12px;
-	width: fit-content;
-	margin-top: 8px;
-	word-break: break-all;
-}
-
-.messageTime {
-	color: var(--p-primary-400);
-	font-size: 10px;
 }
 </style>

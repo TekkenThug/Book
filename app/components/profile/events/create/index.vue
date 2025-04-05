@@ -146,9 +146,9 @@ const sendToCreateEvent = handleSubmit(async (values) => {
 		emit("submit");
 	}
 	catch (error) {
-    if (isAPIError(error)) {
-      showErrorToast(error.message);
-    }
+		if (isAPIError(error)) {
+			showErrorToast(error.message);
+		}
 	}
 	finally {
 		isLoading.value = false;

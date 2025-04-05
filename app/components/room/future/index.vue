@@ -17,7 +17,7 @@
 				:to="{ name: 'profile-events' }"
 				custom
 			>
-				<Button :class="$style.goToEventButton" @click="navigate">
+				<Button class="mt-3" @click="navigate">
 					Go to events
 				</Button>
 			</NuxtLink>
@@ -31,9 +31,3 @@ import { parseInterval } from "~/utils/date";
 
 defineProps<{ event: MeetingEvent }>();
 </script>
-
-<style module>
-.goToEventButton {
-	margin-top: 12px;
-}
-</style>

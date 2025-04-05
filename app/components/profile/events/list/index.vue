@@ -68,7 +68,7 @@ const getTagCaptionState = (role: string) => {
 	return role === "owner" ? ["warn", "Owner"] : ["info", "Member"];
 };
 
-onBeforeMount( () => {
+onBeforeMount(() => {
 	getEvents();
 });
 </script>

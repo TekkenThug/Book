@@ -1,14 +1,14 @@
 <template>
 	<aside>
-		<h3 :class="['h3', $style.participantTitle]">
+		<h3 class="h3 mb-5">
 			Participants
 		</h3>
 
-		<ul :class="$style.participants">
+		<ul class="flex flex-col gap-3">
 			<li
 				v-for="participant in participants"
 				:key="participant.id"
-				:class="$style.participantItem"
+				class="flex gap-4 items-center"
 			>
 				<UiAvatar shape="circle" :image="participant.avatar" />
 
@@ -25,21 +25,3 @@ defineProps<{
 	participants: Participant[];
 }>();
 </script>
-
-<style module>
-.participantTitle {
-    margin-bottom: 24px;
-}
-
-.participants {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.participantItem {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-}
-</style>
