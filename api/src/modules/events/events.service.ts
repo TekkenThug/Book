@@ -15,7 +15,7 @@ import { BooksService } from '@/modules/books/books.service';
 import { UsersService } from '@/modules/users/users.service';
 import { RecordsService } from '@/modules/records/records.service';
 import { RoomsService } from '@/modules/rooms/rooms.service';
-import {add, isPast, isWithinInterval} from 'date-fns';
+import { add, isPast, isWithinInterval } from 'date-fns';
 
 export interface FilterOptions {
   book?: string | null;
@@ -193,10 +193,12 @@ export class EventsService {
       throw new ForbiddenException('Event in process');
     }
 
-    const inPast = isPast(add(event.date, {
-      hours: event.duration.hours,
-      minutes: event.duration.minutes,
-    }));
+    const inPast = isPast(
+      add(event.date, {
+        hours: event.duration.hours,
+        minutes: event.duration.minutes,
+      }),
+    );
 
     if (inPast) {
       throw new ForbiddenException('Event has gone');
