@@ -11,7 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     EnvModule,
     JwtModule.registerAsync({
       imports: [EnvModule],
-      useFactory: async (envService: EnvService) => ({
+      useFactory: (envService: EnvService) => ({
         global: true,
         secret: envService.get('JWT_SECRET'),
         signOptions: {

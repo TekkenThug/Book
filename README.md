@@ -85,7 +85,6 @@ To run this project, you will need to add the following environment variables to
 ## Roadmap
 
 -   Readable errors from validation / rework errors from api
--   Update Swagger doc utility
 -   Test auth for refreshing
 -   Rework services on frontend
 -   E2E testing

@@ -48,8 +48,8 @@ export class BooksService {
     url.searchParams.append('title', titleQuery);
     url.searchParams.append('limit', `${limitation}`);
 
-    const data: OpenLibraryResponse = await fetch(url).then((res) =>
-      res.json(),
+    const data: OpenLibraryResponse = await fetch(url).then(
+      (res) => res.json() as unknown as OpenLibraryResponse,
     );
 
     return this.mapResponseFromAPI(data);
@@ -61,8 +61,8 @@ export class BooksService {
     url.searchParams.append('limit', `${1}`);
     url.searchParams.append('q', id);
 
-    const data: OpenLibraryResponse = await fetch(url).then((res) =>
-      res.json(),
+    const data: OpenLibraryResponse = await fetch(url).then(
+      (res) => res.json() as unknown as OpenLibraryResponse,
     );
 
     return this.mapResponseFromAPI(data);

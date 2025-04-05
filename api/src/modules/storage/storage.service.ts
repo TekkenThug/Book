@@ -18,7 +18,7 @@ export class StorageService {
       secretKey: envService.get('S3_SECRET_KEY'),
     });
 
-    this.checkBucketExisting();
+    void this.checkBucketExisting();
   }
 
   private async checkBucketExisting() {

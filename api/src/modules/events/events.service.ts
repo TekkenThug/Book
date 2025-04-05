@@ -152,7 +152,7 @@ export class EventsService {
 
     const savedEvent = await this.eventsRepository.findOneBy({ id: event.id });
 
-    this.roomsService.create(event);
+    void this.roomsService.create(event);
 
     if (savedEvent) {
       return omit(savedEvent, 'author', 'book');

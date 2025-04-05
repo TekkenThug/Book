@@ -21,7 +21,7 @@ export class UpdateSettingsDto {
   password?: string;
 
   @ApiProperty({ required: false })
-  @ValidateIf((o) => o.password)
+  @ValidateIf((o) => Boolean(o.password))
   @Match('password', { message: "Passwords don't match" })
   repeat_password?: string;
 }
