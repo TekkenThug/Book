@@ -3,7 +3,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import pick from 'lodash.pick';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
