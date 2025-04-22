@@ -1,28 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { createTransport } from 'nodemailer';
-import { EnvService } from '@/env/env.service';
+import { ConfigService } from '@nestjs/config';
+import { Config } from '@/config/common.config';
 
 @Injectable()
 export class MailService {
-  constructor(private envService: EnvService) {}
+  constructor(private configService: ConfigService<Config>) {}
 
   private readonly mailer = createTransport(
     {
-      host: this.envService.get('SMTP_HOST'),
-      port: this.envService.get('SMTP_PORT'),
+      host: this.configService.getOrThrow('SMTP_HOST'),
+      port: this.configService.getOrThrow('SMTP_PORT'),
       secure: true,
       auth: {
-        user: this.envService.get('SMTP_USER'),
-        pass: this.envService.get('SMTP_PASSWORD'),
+        user: this.configService.getOrThrow('SMTP_USER'),
+        pass: this.configService.getOrThrow('SMTP_PASSWORD'),
       },
     },
     {
-      from: `Books ${this.envService.get('SMTP_USER')}`,
+      from: `Books ${this.configService.getOrThrow('SMTP_USER')}`,
     },
   );
 
   public sendWelcomeMail(email: string, name: string, token: string) {
-    const url = new URL(this.envService.get('APP_CLIENT_URL'));
+    const url = new URL(this.configService.getOrThrow('APP_CLIENT_URL'));
     url.searchParams.append('emailToken', token);
 
     void this.mailer.sendMail({
@@ -33,7 +34,7 @@ export class MailService {
   }
 
   public sendResetPasswordEmail(email: string, name: string, token: string) {
-    const url = new URL(this.envService.get('APP_CLIENT_URL'));
+    const url = new URL(this.configService.getOrThrow('APP_CLIENT_URL'));
     url.searchParams.append('resetToken', token);
 
     void this.mailer.sendMail({

@@ -5,18 +5,19 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '@/modules/users/users.service';
 import { addMinutes, getTime } from 'date-fns';
-import { EnvService } from '@/env/env.service';
 import { TokenTypes } from '@/data/enums';
 import { ApproveResetPasswordDto, SignUpDto, VerifyEmailDto } from './auth.dto';
 import { MailService } from '@/modules/mail/mail.service';
 import { TokenService } from '@/modules/tokens/token.service';
+import { ConfigService } from '@nestjs/config';
+import { Config } from '@/config/common.config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private mailService: MailService,
     private usersService: UsersService,
-    private envService: EnvService,
+    private configService: ConfigService<Config>,
     private tokenService: TokenService,
   ) {}
 
@@ -53,7 +54,7 @@ export class AuthService {
       getTime(
         addMinutes(
           new Date(),
-          +this.envService.get('JWT_EMAIL_VERIFY_EXPIRATION_MINUTES'),
+          +this.configService.getOrThrow('JWT_EMAIL_VERIFY_EXPIRATION_MINUTES'),
         ),
       ),
       TokenTypes.VERIFY_EMAIL,
@@ -85,7 +86,9 @@ export class AuthService {
       getTime(
         addMinutes(
           new Date(),
-          +this.envService.get('JWT_RESET_PASSWORD_EXPIRATION_MINUTES'),
+          +this.configService.getOrThrow(
+            'JWT_RESET_PASSWORD_EXPIRATION_MINUTES',
+          ),
         ),
       ),
       TokenTypes.RESET_PASSWORD,

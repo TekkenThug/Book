@@ -1,22 +1,25 @@
 import { Client } from 'minio';
 import crypto from 'crypto';
 import { Injectable } from '@nestjs/common';
-import { EnvService } from '@/env/env.service';
 import { Destination } from '@/modules/storage/storage.types';
+import { ConfigService } from '@nestjs/config';
+import { Config } from '@/config/common.config';
 
 @Injectable()
 export class StorageService {
   private minioClient: Client;
-  private readonly bucketName = this.envService.get('S3_BUCKET');
+  private readonly bucketName: string;
 
-  constructor(private envService: EnvService) {
+  constructor(private configService: ConfigService<Config>) {
     this.minioClient = new Client({
-      endPoint: envService.get('S3_HOST'),
-      port: envService.get('S3_PORT'),
+      endPoint: configService.getOrThrow('S3_HOST'),
+      port: configService.getOrThrow('S3_PORT'),
       useSSL: false,
-      accessKey: envService.get('S3_ACCESS_KEY'),
-      secretKey: envService.get('S3_SECRET_KEY'),
+      accessKey: configService.getOrThrow('S3_ACCESS_KEY'),
+      secretKey: configService.getOrThrow('S3_SECRET_KEY'),
     });
+
+    this.bucketName = this.configService.getOrThrow('S3_BUCKET');
 
     void this.checkBucketExisting();
   }
@@ -47,7 +50,7 @@ export class StorageService {
   }
 
   private getLinkToFile(filename: string) {
-    return `${this.envService.get('S3_EXTERNAL_URL')}:${this.envService.get('S3_PORT')}/${this.bucketName}/${filename}`;
+    return `${this.configService.getOrThrow('S3_EXTERNAL_URL')}:${this.configService.getOrThrow('S3_PORT')}/${this.bucketName}/${filename}`;
   }
 
   async putFile(file: Express.Multer.File, destination: Destination) {

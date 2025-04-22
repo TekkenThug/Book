@@ -95,4 +95,4 @@ export const validate = (env: Record<string, unknown>) => {
   return validatedConfig;
 };
 
-export type Env = EnvVariables;
+export type Config = EnvVariables;

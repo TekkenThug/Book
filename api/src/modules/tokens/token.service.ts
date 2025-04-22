@@ -5,9 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TokenTypes } from '@/data/enums';
 import { User } from '@/modules/users/user.entity';
 import { JwtService } from '@nestjs/jwt';
-import { EnvService } from '@/env/env.service';
 import { addDays, addMinutes, getTime } from 'date-fns';
 import { JWTToken } from './token.types';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TokenService {
@@ -15,7 +15,7 @@ export class TokenService {
     @InjectRepository(Token)
     private tokensRepository: Repository<Token>,
     private jwtService: JwtService,
-    private envService: EnvService,
+    private configService: ConfigService,
   ) {}
 
   public async generateToken(
@@ -41,7 +41,7 @@ export class TokenService {
       getTime(
         addMinutes(
           new Date(),
-          +this.envService.get('JWT_ACCESS_EXPIRATION_MINUTES'),
+          +this.configService.getOrThrow('JWT_ACCESS_EXPIRATION_MINUTES'),
         ),
       ),
       TokenTypes.ACCESS,
@@ -51,7 +51,7 @@ export class TokenService {
       getTime(
         addDays(
           new Date(),
-          +this.envService.get('JWT_REFRESH_EXPIRATION_DAYS'),
+          +this.configService.getOrThrow('JWT_REFRESH_EXPIRATION_DAYS'),
         ),
       ),
       TokenTypes.REFRESH,

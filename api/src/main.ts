@@ -1,13 +1,14 @@
 import cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { EnvService } from './env/env.service';
 import helmet from 'helmet';
 import morganConfig from '@/config/morgan.config';
 import docsConfig from '@/config/docs.config';
 import corsConfig from '@/config/cors.config';
 import { ValidationPipe } from '@nestjs/common';
 import { PeerServer } from 'peer';
+import { ConfigService } from '@nestjs/config';
+import { Config } from '@/config/common.config';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let peerServer: ReturnType<typeof PeerServer>;
@@ -21,7 +22,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  const configService = app.get(EnvService);
+  const configService = app.get(ConfigService<Config>);
   const port = configService.get('APP_PORT');
 
   peerServer = PeerServer({
@@ -35,7 +36,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors(
     corsConfig(
-      configService.get('APP_CLIENT_URL'),
+      configService.getOrThrow('APP_CLIENT_URL'),
       configService.get('APP_ENV') === 'dev',
     ),
   );
