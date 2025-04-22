@@ -176,6 +176,7 @@ const deleteEvent = async () => {
 		if (data) {
 			showSuccessToast(data.message);
 			isDeleteModalVisible.value = false;
+			void router.push({ name: "profile-events" });
 		}
 
 		if (error && isAPIError(error)) {
