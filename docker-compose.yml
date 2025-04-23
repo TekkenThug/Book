@@ -1,5 +1,6 @@
 services:
   nuxt:
+    restart: always
     build: ./app
     container_name: nuxt
     ports:
@@ -21,6 +22,7 @@ services:
   api:
     build: ./api
     container_name: api
+    restart: always
     ports:
       - ${APP_PORT:-8000}:${APP_PORT:-8000}
       - ${WS_PORT:-8030}:${WS_PORT:-8030}
@@ -45,6 +47,7 @@ services:
   s3:
     image: minio/minio:latest
     container_name: s3
+    restart: always
     ports:
       - ${S3_PORT:-9000}:${S3_PORT:-9000}
       - 8900:8900
