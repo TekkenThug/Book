@@ -2,7 +2,6 @@ import cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
-import morganConfig from '@/config/morgan.config';
 import docsConfig from '@/config/docs.config';
 import corsConfig from '@/config/cors.config';
 import { ValidationPipe } from '@nestjs/common';
@@ -15,8 +14,6 @@ let peerServer: ReturnType<typeof PeerServer>;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  app.use(morganConfig);
 
   app.setGlobalPrefix('/api/v1');
 
