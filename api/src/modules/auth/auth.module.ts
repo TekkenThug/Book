@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { UsersModule } from '@/modules/users/users.module';
 import { MailModule } from '@/modules/mail/mail.module';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from '@/common/guards/auth.guard';
 import { TokenModule } from '@/modules/tokens/token.module';
 
 @Module({
