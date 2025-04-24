@@ -31,6 +31,7 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { ApiErrorDto, ApiMessageDto } from '@/data/dto';
+import { createErrorDoc, createSuccessDoc } from '@/utils/api';
 
 const setRefreshToken = (
   res: Response,
@@ -50,7 +51,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Login as user' })
   @ApiOkResponse({ description: 'OK', type: TokenDto })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized', type: ApiErrorDto })
+  @ApiUnauthorizedResponse(createErrorDoc(401))
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
@@ -74,24 +75,8 @@ export class AuthController {
     type: ApiMessageDto,
     example: { message: 'Check your email for confirmation registration' },
   })
-  @ApiBadRequestResponse({
-    description: 'Invalid data',
-    type: ApiErrorDto,
-    example: {
-      message: 'Invalid email',
-      statusCode: 400,
-      error: 'Bad request',
-    },
-  })
-  @ApiUnprocessableEntityResponse({
-    description: 'User already exists',
-    type: ApiErrorDto,
-    example: {
-      message: 'User already exists',
-      statusCode: 422,
-      error: 'Unprocessable entity',
-    },
-  })
+  @ApiBadRequestResponse(createErrorDoc(400))
+  @ApiUnprocessableEntityResponse(createErrorDoc(422, 'User already exists'))
   @Public()
   @Post('register')
   async register(
@@ -115,15 +100,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Refresh JWT tokens' })
   @ApiOkResponse({ description: 'OK', type: TokenDto })
-  @ApiUnauthorizedResponse({
-    description: 'Unauthorized',
-    type: ApiErrorDto,
-    example: {
-      message: 'Unauthorized',
-      statusCode: 401,
-      error: 'Unauthorized',
-    },
-  })
+  @ApiUnauthorizedResponse(createErrorDoc(401))
   @HttpCode(HttpStatus.OK)
   @Public()
   @Post('refresh')
@@ -140,11 +117,9 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Verify email' })
-  @ApiOkResponse({
-    description: 'OK',
-    type: ApiMessageDto,
-    example: { message: 'Email is verified successfully' },
-  })
+  @ApiOkResponse(
+    createSuccessDoc({ code: 200, message: 'Email is verified successfully' }),
+  )
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
     type: ApiErrorDto,
@@ -163,20 +138,10 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Send mail with token for reset password' })
-  @ApiOkResponse({
-    description: 'OK',
-    type: ApiMessageDto,
-    example: { message: 'Check email for reset password' },
-  })
-  @ApiNotFoundResponse({
-    description: 'Not found',
-    type: ApiErrorDto,
-    example: {
-      message: 'User with this email not found',
-      statusCode: 404,
-      error: 'Not found',
-    },
-  })
+  @ApiOkResponse(
+    createSuccessDoc({ code: 200, message: 'Check email for reset password' }),
+  )
+  @ApiNotFoundResponse(createErrorDoc(404, 'User with this email not found'))
   @Public()
   @Post('reset-password')
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
@@ -186,30 +151,17 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Reset password by token' })
-  @ApiOkResponse({
-    description: 'OK',
-    type: ApiMessageDto,
-    example: { message: 'Password changed sucessfully' },
-  })
-  @ApiUnauthorizedResponse({
-    type: ApiErrorDto,
-    example: {
-      message: 'Incorrect user or password',
-      statusCode: 401,
-      error: 'Unauthorized',
-    },
-  })
-  @ApiNotFoundResponse({
-    type: ApiErrorDto,
-  })
-  @ApiBadRequestResponse({
-    type: ApiErrorDto,
-  })
+  @ApiOkResponse(
+    createSuccessDoc({ code: 200, message: 'Password changed successfully' }),
+  )
+  @ApiUnauthorizedResponse(createErrorDoc(401, 'Incorrect user or password'))
+  @ApiNotFoundResponse(createErrorDoc(404))
+  @ApiBadRequestResponse(createErrorDoc(400))
   @Public()
   @Patch('reset-password')
   async approveResetPassword(@Body() dto: ApproveResetPasswordDto) {
     await this.authService.approveResetPassword(dto);
 
-    return { message: 'Password changed sucessfully' };
+    return { message: 'Password changed successfully' };
   }
 }
